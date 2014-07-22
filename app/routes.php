@@ -17,7 +17,7 @@ Route::get('/', function()
 });
 
 Route::get('/home', function(){
-    return 1;
+    return Config::get('database');
 });
 
 Route::get('/test', function(){

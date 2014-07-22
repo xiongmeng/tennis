@@ -55,9 +55,10 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'forge',
-			'username'  => 'forge',
-			'password'  => '',
+            'port'      => $_ENV['DB_GOTENNIS_PORT'],
+            'database'  => 'gotennis',
+            'username'  => $_ENV['DB_GOTENNIS_USERNAME'],
+            'password'  => $_ENV['DB_GOTENNIS_PASSWORD'],
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
