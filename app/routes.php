@@ -27,3 +27,7 @@ Route::get('/test', function(){
 Route::get('/test-push-github', function(){
     return 'test-push-github';
 });
+
+Route::get('/login', function(){
+    Auth::attempt(array('nickname' => 'rener', 'password' => 123456));
+});

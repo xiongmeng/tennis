@@ -58,6 +58,7 @@ Patchwork\Utf8\Bootup::initMbstring();
 
 Illuminate\Support\ClassLoader::register();
 
+\Illuminate\Support\ClassLoader::addDirectories(array(__DIR__ . '/../app/libraries',));
 /*
 |--------------------------------------------------------------------------
 | Register The Workbench Loaders
@@ -73,3 +74,4 @@ if (is_dir($workbench = __DIR__.'/../workbench'))
 {
 	Illuminate\Workbench\Starter::start($workbench);
 }
+
