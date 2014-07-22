@@ -21,7 +21,7 @@ Route::get('/home', function(){
 });
 
 Route::get('/test', function(){
-   return 'test1';
+   return 'test2';
 });
 
 Route::get('/test-push-github', function(){
