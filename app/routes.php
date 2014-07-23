@@ -11,6 +11,9 @@
 |
 */
 
+require_once 'route/xmTest.php';
+require_once 'route/fjTest.php';
+
 Route::get('/', function()
 {
 	return View::make('hello');
