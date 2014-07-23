@@ -28,6 +28,16 @@ Route::get('/test-push-github', function(){
     return 'test-push-github';
 });
 
-Route::get('/login', function(){
-    Auth::attempt(array('nickname' => 'rener', 'password' => 123456));
+Route::get('/login/{nickname?}/{password?}', function($nickname, $password){
+    $isLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
+    echo $isLog ? '成功' : '失败';
+});
+
+Route::get('/user', function(){
+    if(Auth::check()){
+        $user = Auth::getUser();
+        if($user instanceof Eloquent){
+            return $user->getAttributes();
+        }
+    };
 });
