@@ -77,5 +77,9 @@ App::down(function()
 | definitions instead of putting them all in the main routes file.
 |
 */
-
 require app_path().'/filters.php';
+
+
+DB::listen(function($sql, $bindings, $time){
+    Log::info($sql, array('bindings' => $bindings, 'time'=> $time));
+});

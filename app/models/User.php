@@ -25,4 +25,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
+    public function search($aQuery){
+        return User::where(function(\Illuminate\Database\Eloquent\Builder $builder) use ($aQuery){
+            if(!empty($aQuery['nickname'])){
+                $builder->where('nickname', 'like', '%' . $aQuery['nickname'] . '%');
+            }
+            if(!empty($aQuery['telephone'])){
+                $builder->where('telephone', 'like', $aQuery['telephone']);
+            }
+        })
+        ->paginate(2);
+    }
 }
