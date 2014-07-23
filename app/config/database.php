@@ -56,7 +56,7 @@ return array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
             'port'      => $_ENV['DB_GOTENNIS_PORT'],
-            'database'  => 'gotennis',
+            'database'  =>  $_ENV['DB_GOTENNIS_DATABASE'],
             'username'  => $_ENV['DB_GOTENNIS_USERNAME'],
             'password'  => $_ENV['DB_GOTENNIS_PASSWORD'],
 			'charset'   => 'utf8',
