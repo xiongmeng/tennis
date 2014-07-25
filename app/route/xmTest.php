@@ -28,7 +28,7 @@ Route::group(array('prefix' => 'xm'), function(){
         $userModel = new User();
         $users = $userModel->search($queries);
 
-        return View::make('xm.layout')->nest('content', 'xm.user.profile', array('users' => $users));
+        return View::make('xm.layout')->nest('content', 'xm.user.profile', array('users' => $users, 'queries' => $queries));
     });
 
     Route::get('/sport', function(){
