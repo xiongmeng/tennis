@@ -36,4 +36,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         })
         ->paginate($iPageSize);
     }
+    public function roles()
+    {
+        return $this->belongsToMany('Role', 'gt_relation_user_role', 'user_id', 'role_id');
+    }
+
+
+
 }
