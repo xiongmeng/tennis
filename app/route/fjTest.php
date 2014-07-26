@@ -40,7 +40,7 @@ Route::group(array('prefix' => 'fj'), function(){
             return $view =View::make('home')->nest('top','format.top');
         }
         else{
-        return $view = View::make('login')->nest('header', 'format.header');
+            return $view = View::make('login')->nest('header', 'format.header');
         }
     });
     Route::post('/logining', function(){

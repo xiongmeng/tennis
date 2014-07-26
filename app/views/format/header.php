@@ -22,15 +22,13 @@
                     <li class="devider">
                         <a href="#"></a>
                     </li>
-                    <li class="devider">
-                        <a href="http://www.wangqiuer.com">网球通</a>
-                    </li>
-                    <li class="devider">
-                        <a href="home">首页</a>
-                    </li>
-                    <li class="devider">
-                        <a href="instant">即时订场</a>
-                    </li>
+                    <?php foreach($headers as $headerId => $header) { ?>
+                        <?php if(in_array($headerId, $acl)){ ?>
+                        <li class="devider">
+                            <a href="<?php echo $header['url']?>"><?php echo $header['label']?></a>
+                        </li>
+                        <?php } ?>
+                    <?php } ?>
 
                     <!--<li class="hidden-sm"><a class="search"><i class="icon-search search-btn"></i></a></li>-->
                 </ul>

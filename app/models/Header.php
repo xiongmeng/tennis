@@ -24,9 +24,9 @@ class Header extends Eloquent implements UserInterface, RemindableInterface {
      * @var array
      */
 
-    public function role()
+    public function children()
     {
-        return $this->belongsToMany('Header','gt_relation_header','header_id','p_id');
+        return $this->belongsToMany('Header','gt_relation_header','p_id','header_id');
     }
 
 

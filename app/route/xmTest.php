@@ -34,4 +34,46 @@ Route::group(array('prefix' => 'xm'), function(){
     Route::get('/sport', function(){
         return \Sports\Constant\Finance::ACCOUNT_BALANCE;
     });
+
+    Route::get('/user-role', function(){
+        $roles = User::find(888928)->roles;
+        return View::make('xm.user.user-role', array('roles' => $roles));
+//        foreach($roles as $role){
+//            print_r($role->label);
+//            print_r($role->pivot->getAttributes());
+//        }
+//        print_r(count($roles));
+    });
+
+    Route::get('/role-header', function(){
+        $headers = Role::find(1)->headers;
+        return View::make('xm.user.role-header', array('headers' => $headers));
+    });
+
+    Route::get('/header-header', function(){
+        $headers = Header::find(0)->children;
+        return View::make('xm.user.header-header', array('headers' => $headers));
+    });
+
+    Route::get('/acl-cfg', function(){
+        $roles = user::find(888928)->roles;
+
+        $roleIds = array();
+        foreach($roles as $role){
+            $roleIds[] = $role->role_id;
+        }
+
+        $headers = Config::get('acl.headers');
+
+        $allRolesHeaders = Config::get('acl.roles_headers');
+
+        $acl = array();
+        foreach($allRolesHeaders as $roleId => $rolesHeaders){
+            if(in_array($roleId, $roleIds)){
+                $acl = array_merge($acl, $rolesHeaders);
+            }
+        }
+
+        return $view = View::make('login')->nest('header', 'format.header', array('headers' => $headers, 'acl' => $acl));
+    });
 });
