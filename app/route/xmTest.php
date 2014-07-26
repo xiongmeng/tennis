@@ -38,11 +38,6 @@ Route::group(array('prefix' => 'xm'), function(){
     Route::get('/user-role', function(){
         $roles = User::find(888928)->roles;
         return View::make('xm.user.user-role', array('roles' => $roles));
-//        foreach($roles as $role){
-//            print_r($role->label);
-//            print_r($role->pivot->getAttributes());
-//        }
-//        print_r(count($roles));
     });
 
     Route::get('/role-header', function(){
