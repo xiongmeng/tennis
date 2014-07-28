@@ -71,4 +71,24 @@ Route::group(array('prefix' => 'xm'), function(){
         $data = array('headers' => $headers, 'acl' => $acl);
         return $view = View::make('home')->nest('top','format.top')->nest('header', 'format.header',array('headers' => $headers, 'acl' => $acl) );
     });
+
+    Route::get('/fsm-init', function(){
+        $instantOrder = InstantOrder::create(array());
+        $fsm = new InstantOrderFsm($instantOrder);
+        echo $fsm->getCurrentState();
+    });
+
+    Route::get('/fsm-operate/{id?}/{operate?}', function($id, $operate){
+        $instantOrder = InstantOrder::findOrFail($id);
+        $fsm = new InstantOrderFsm($instantOrder);
+        $previousState = $fsm->getCurrentState();
+
+        $fsm->apply($operate);
+
+        echo "<br/>";
+        echo $previousState;
+        echo '->';
+        echo $fsm->getCurrentState();
+    });
+
 });
