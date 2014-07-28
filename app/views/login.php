@@ -76,7 +76,7 @@
                         <label class="checkbox"><input type="checkbox">记住登录</label>
                     </div>
                     <div class="col-md-6">
-                        <button class="btn-u pull-right" type="submit"><a href="logining">登录</a></button>
+                        <input class="btn-u pull-right" type="submit" value="登录">
                     </div>
                 </div>
 
