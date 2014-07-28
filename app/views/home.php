@@ -32,46 +32,8 @@
 <?php echo $top;?><!--/top-->
 <!--=== End Top ===-->    
 
-<!--=== Header ===-->    
-<div class="header">
-    <div class="navbar navbar-default" role="navigation">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">
-                    <img id="logo-header" src="/assets/img/logo.png" alt="Logo">
-                </a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-responsive-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="devider">
-                        <a href="#"></a>
-                    </li>
-                    <li class="devider">
-                        <a href="http://www.wangqiuer.com">网球通</a>
-                    </li>
-                    <li class="devider">
-                        <a href="index.html">首页</a>
-                    </li>
-                    <li class="devider">
-                        <a href="instant.html">即时订场</a>
-                    </li>
-                    
-
-                </ul>
-
-            </div><!-- /navbar-collapse -->
-        </div>    
-    </div>    
-</div><!--/header-->
+<!--=== Header ===-->
+<?php echo $header;  ?><!--/header-->
 <!--=== End Header ===-->    
 
 <!--=== Slider ===-->
@@ -163,7 +125,7 @@
 <div class="footer">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 md-margin-bottom-40">
+            <div class="col-md-6 md-margin-bottom-40">
                 <!-- About -->
                 <div class="headline"><h2>关于我们</h2></div>
                 <p class="margin-bottom-25 md-margin-bottom-40"></p>
@@ -173,31 +135,8 @@
 
             </div><!--/col-md-4-->
 
-            <div class="col-md-4 md-margin-bottom-40">
-                <div class="posts">
-                    <div class="headline"><h2>loading</h2></div>
-                    <dl class="dl-horizontal">
-                        <dt><a href="#"><img src="/assets/img/sliders/elastislide/6.jpg" alt="" /></a></dt>
-                        <dd>
-                            <p><a href="#"></a></p>
-                        </dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt><a href="#"><img src="/assets/img/sliders/elastislide/10.jpg" alt="" /></a></dt>
-                        <dd>
-                            <p><a href="#"></a></p>
-                        </dd>
-                    </dl>
-                    <dl class="dl-horizontal">
-                        <dt><a href="#"><img src="/assets/img/sliders/elastislide/11.jpg" alt="" /></a></dt>
-                        <dd>
-                            <p><a href="#"></a></p>
-                        </dd>
-                    </dl>
-                </div>
-            </div><!--/col-md-4-->
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <!-- Monthly Newsletter -->
                 <div class="headline"><h2>联系我们</h2></div>
 
@@ -213,7 +152,7 @@
 		<div class="row">
 			<div class="col-md-6">						
 	            <p class="copyright-space">
-                    2013 &copy; Unify. ALL Rights Reserved. 
+                    2013 &copy; Unify. ALL Rights Reserved.
                     <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
                 </p>
 			</div>

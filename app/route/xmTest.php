@@ -73,7 +73,7 @@ Route::group(array('prefix' => 'xm'), function(){
                 $acl = array_merge($acl, $rolesHeaders);
             }
         }
-
-        return $view = View::make('login')->nest('header', 'format.header', array('headers' => $headers, 'acl' => $acl));
+        $data = array('headers' => $headers, 'acl' => $acl);
+        return $view = View::make('home')->nest('top','format.top')->nest('header', 'format.header',array('headers' => $headers, 'acl' => $acl) );
     });
 });

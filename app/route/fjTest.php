@@ -17,27 +17,44 @@ Route::group(array('prefix' => 'fj'), function(){
     View::creator('format.header', function($view)
     {
         if(Auth::check()){
-            $data = Auth::getUser();
-            $user_id = $data['user_id'];
-            $role_id = DB::select('select `role_id` from `gt_relation_user_role` where `user_id`='.$user_id);
-            if($role_id[0]->role_id){}
-            //data要包含role信息 然后把导航信息赋给$data
+            $user = Auth::getUser();
+            $user_id = $user['user_id'];
+            $roles = user::find($user_id)->roles;
+
+            $roleIds = array();
+            foreach($roles as $role){
+                $roleIds[] = $role->role_id;
+            }
+
+            $headers = Config::get('acl.headers');
+
+            $allRolesHeaders = Config::get('acl.roles_headers');
+
+            $acl = array();
+            foreach($allRolesHeaders as $roleId => $rolesHeaders){
+                if(in_array($roleId, $roleIds)){
+                    $acl = array_merge($acl, $rolesHeaders);
+                }
+            }
+            $data =array('headers' => $headers, 'acl' => $acl);
         }
-        else{$data = array();}
+        else{$data =array();}
 
         $view->with('data',$data);
     });
 
     Route::get('/homel', function(){
-        return $view =View::make('home')->nest('top','format.top');
-});
+
+        return $view = View::make('home')->nest('top','format.top')->nest('header', 'format.header');
+
+    });
     Route::get('/logout', function(){
         Auth::logout();
-        return $view =View::make('home')->nest('top','format.top');
+        return $view =View::make('home')->nest('top','format.top')->nest('header', 'format.header');
     });
     Route::get('/login', function(){
         if(Auth::check()){
-            return $view =View::make('home')->nest('top','format.top');
+            return $view =View::make('home')->nest('top','format.top')->nest('header', 'format.header');
         }
         else{
             return $view = View::make('login')->nest('header', 'format.header');
@@ -50,7 +67,7 @@ Route::group(array('prefix' => 'fj'), function(){
         $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
         if ($isNickLog | $isTeleLog){
 
-            return $view =View::make('home')->nest('top','format.top');
+            return $view =View::make('home')->nest('top','format.top')->nest('header', 'format.header');
 
         }
         else {echo '登陆失败';}
@@ -64,29 +81,10 @@ Route::group(array('prefix' => 'fj'), function(){
         }
     });
     Route::get('/test', function(){
-        $header = Header::find(1)->role();
+        $header = User::find(888928)->roles;
         print_r( $header);
     });
-    Route::get('/test1', function(){
-        $roles = User::find(888928)->roles;
-//        if($roles instanceof \Illuminate\Database\Eloquent\Collection){
-//            $roles->get(0);
-//        }
-        foreach($roles as $role){
-            echo $role->pivot->label;
-//            if($role instanceof \Illuminate\Database\Eloquent\Model){
-//                print_r($role->getAttributes());
-//                $relations = $role->getRelations();
-//                foreach($relations as $relation){
-//                    if($relation instanceof \Illuminate\Database\Eloquent\Model){
-//                        print_r($relation->getAttributes());
-//                    }
-//                }
-//            }
 
-        }
-//        print_r ($roles->get(0));
-    });
 
 });
 Route::get('/userid', function(){
@@ -94,7 +92,7 @@ Route::get('/userid', function(){
         $data = Auth::getUser();
         $user_id = $data['user_id'];
         $role_id = DB::select('select `role_id` from `gt_relation_user_role` where `user_id`='.$user_id);
-        print_r($role_id[0]->role_id);
+        print_r($user_id);
     };
 });
 
