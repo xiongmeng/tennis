@@ -8,7 +8,8 @@
 		"laravel/framework": "4.2.*",
 		"barryvdh/laravel-ide-helper": "1.*",
         "tennis/libs": "dev-master",
-        "yohang/finite": "1.*"
+        "yohang/finite": "1.*",
+        "doctrine/dbal": "2.4.*"
 	},
 	"autoload": {
 		"classmap": [
