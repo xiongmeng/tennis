@@ -56,9 +56,11 @@ class GenerateCourt extends Command {
             $groupId = $hall->CourtGroup->id;
             $this->info(sprintf("generating for hall (%s) with %s court" , $hallId, $courtNum));
 
+            $courtBaseId = $hallId<<8;
             for($number=0; $number < $courtNum; $number++){
                 $batchInserts[] = array(
-                    'number' => $number,
+                    'id' => $courtBaseId + $number + 1,
+                    'number' => $number + 1,
                     'hall_id' => $hallId,
                     'group_id' => $groupId,
                     'created_at' => $curTime,
