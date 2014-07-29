@@ -10,4 +10,5 @@
 | the console gets access to each of the command object instances.
 |
 */
-
+Artisan::add(new GenerateCourt());
+Artisan::add(new CleanCourt());
