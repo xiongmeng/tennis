@@ -19,7 +19,7 @@ class GenerateCourt extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = "generate court from table gt_hall_court.";
+	protected $description = "generate court from table gt_hall_court by hall ids.";
 
 	/**
 	 * Create a new command instance.
@@ -95,7 +95,7 @@ class GenerateCourt extends Command {
 	{
 		return array(
 			array(self::ARGUMENT_HALL, null,
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'the hall id', null)
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'the hall ids', null)
         );
 	}
 

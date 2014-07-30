@@ -20,7 +20,7 @@ class CleanCourt extends Command {
      *
      * @var string
      */
-    protected $description = "clean court for hall id.";
+    protected $description = "clean court by hall ids.";
 
     /**
      * Create a new command instance.
@@ -64,7 +64,7 @@ class CleanCourt extends Command {
     {
         return array(
             array(self::ARGUMENT_HALL, null,
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'the hall id', null),
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'the hall ids', null),
         );
     }
 

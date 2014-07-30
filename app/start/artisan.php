@@ -12,3 +12,5 @@
 */
 Artisan::add(new GenerateCourt());
 Artisan::add(new CleanCourt());
+Artisan::add(new InstantOrderGenerate());
+Artisan::add(new InstantOrderClear());
