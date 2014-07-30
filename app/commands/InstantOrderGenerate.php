@@ -147,6 +147,7 @@ class InstantOrderGenerate extends Command
         $dateTimestamps = $this->formatDateAndCheckIsHoliday($dates);
         if(!$dateTimestamps){
             $this->error(sprintf('the inputted date(%s) is unusable', implode(',', $dates)));
+            return;
         }
 
         HallMarket::with(

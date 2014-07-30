@@ -91,4 +91,8 @@ Route::group(array('prefix' => 'xm'), function(){
         echo $fsm->getCurrentState();
     });
 
+    Route::get('/artisan', function(){
+        Artisan::call('instantOrder:generate', array('--date' => array('2014-07-30')),
+            new \Symfony\Component\Console\Output\StreamOutput(fopen(storage_path() . '/logs/artisan.log', 'w')));
+    });
 });
