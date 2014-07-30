@@ -4,7 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Database\Eloquent\Builder;
 
-class InstantOrderClear extends Command
+class InstantOrderClean extends Command
 {
     const OPTION_HALL = 'hall';
     const OPTION_DATE = 'date';
@@ -15,7 +15,7 @@ class InstantOrderClear extends Command
      *
      * @var string
      */
-    protected $name = 'instantOrder:clear';
+    protected $name = 'instantOrder:clean';
 
     /**
      * The console command description.
@@ -55,7 +55,7 @@ class InstantOrderClear extends Command
             if (count($dates) > 0){
                 $builder->getQuery()->whereIn('event_date', $dates);
             }
-        })->whereRaw('updated_at > created_at')->count();
+        })->whereRaw('updated_at > created_at')->exists();
 
         if($isExistChanged){
             $this->error('specified condition has been changed!');
@@ -96,7 +96,7 @@ class InstantOrderClear extends Command
     {
         return array(
             array(self::OPTION_DATE, null,
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'date with php supported format .', null),
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'date with php supported format .', null),
             array(self::OPTION_HALL, null,
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'hall ids.', null),
             array(self::OPTION_COURT, null,

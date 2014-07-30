@@ -2,9 +2,10 @@
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Database\Eloquent\Builder;
 
-class CleanCourt extends Command {
+class CleanCourt extends Command
+{
 
     const ARGUMENT_HALL = 'hall';
 
@@ -40,7 +41,24 @@ class CleanCourt extends Command {
     public function fire()
     {
         $hallIds = $this->option(self::ARGUMENT_HALL);
-        $res = Court::whereIn('hall_id', $hallIds)->delete();
+
+        $isExistChanged = Court::where(function (Builder $builder) use ($hallIds) {
+            if (count($hallIds) > 0) {
+                $builder->getQuery()->whereIn('hall_id', $hallIds);
+            }
+        })->whereRaw('updated_at > created_at')->exists();
+
+        if ($isExistChanged) {
+            $this->error('specified condition has been changed!');
+            return;
+        }
+
+        $res = Court::where(function (Builder $builder) use ($hallIds) {
+            if (count($hallIds) > 0) {
+                $builder->getQuery()->whereIn('hall_id', $hallIds);
+            }
+        })->delete();
+
         $this->info('clean over with affected rows ' . $res);
     }
 
@@ -51,8 +69,7 @@ class CleanCourt extends Command {
      */
     protected function getArguments()
     {
-        return array(
-        );
+        return array();
     }
 
     /**
@@ -64,7 +81,7 @@ class CleanCourt extends Command {
     {
         return array(
             array(self::ARGUMENT_HALL, null,
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'the hall ids', null),
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'the hall ids', null),
         );
     }
 

@@ -81,5 +81,6 @@ require app_path().'/filters.php';
 
 
 DB::listen(function($sql, $bindings, $time){
-    Log::info($sql, array('bindings' => $bindings, 'time'=> $time));
+    Log::info(substr($sql, 0, 512), array(
+        'bindings' => count($bindings) > 100 ? 'binding is over 100' : $bindings, 'time'=> $time));
 });
