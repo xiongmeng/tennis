@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 class CleanCourt extends Command
 {
 
-    const ARGUMENT_HALL = 'hall';
+    const OPTION_HALL = 'hall';
 
     /**
      * The console command name.
@@ -40,7 +40,7 @@ class CleanCourt extends Command
      */
     public function fire()
     {
-        $hallIds = $this->option(self::ARGUMENT_HALL);
+        $hallIds = $this->option(self::OPTION_HALL);
 
         $isExistChanged = Court::where(function (Builder $builder) use ($hallIds) {
             if (count($hallIds) > 0) {
@@ -80,7 +80,7 @@ class CleanCourt extends Command
     protected function getOptions()
     {
         return array(
-            array(self::ARGUMENT_HALL, null,
+            array(self::OPTION_HALL, null,
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'the hall ids', null),
         );
     }

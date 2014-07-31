@@ -18,6 +18,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     protected $primaryKey = 'user_id';
 
+    protected $fillable = array('nickname', 'password');
     /**
 	 * The attributes excluded from the model's JSON form.
 	 *
@@ -36,11 +37,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         })
         ->paginate($iPageSize);
     }
-    public function roles()
-    {
+
+    public function roles(){
         return $this->belongsToMany('Role', 'gt_relation_user_role', 'user_id', 'role_id');
     }
 
-
+    public function Halls(){
+        return $this->belongsToMany('Hall', 'gt_relation_user_hall', 'user_id', 'hall_id')->withTimestamps();
+    }
 
 }

@@ -95,4 +95,10 @@ Route::group(array('prefix' => 'xm'), function(){
         Artisan::call('instantOrder:generate', array('--date' => array('2014-07-30')),
             new \Symfony\Component\Console\Output\StreamOutput(fopen(storage_path() . '/logs/artisan.log', 'w')));
     });
+
+    Route::get('/register', function(){
+//        User::create(array('nickname' => 'hall8888', 'password' =>Hash::make('123456')));
+        $res = Auth::validate(array('nickname' => 'hall8888', 'password' => '123456'));
+        echo $res;
+    });
 });

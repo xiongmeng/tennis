@@ -103,7 +103,7 @@ class InstantOrderGenerate extends Command
             foreach ($hallMarkets as $hallMarket) {
                 $generatedPrice = $hallMarket->HallPrice->vip;
                 for ($time = $hallMarket->start; $time < $hallMarket->end; $time++) {
-                    foreach ($hallMarket->Court as $court) {
+                    foreach ($hallMarket->Courts as $court) {
                         $instantOrders[] = array(
                             'created_at' => $curTime,
                             'updated_at' => $curTime,
@@ -151,12 +151,12 @@ class InstantOrderGenerate extends Command
         }
 
         HallMarket::with(
-            array('Hall', 'HallPrice', 'CourtGroup', 'Court' => function (HasMany $builder) use ($courtIds) {
+            array('Hall', 'HallPrice', 'CourtGroup', 'Courts' => function (HasMany $builder) use ($courtIds) {
                     if (count($courtIds) > 0) {
                         $builder->getBaseQuery()->whereIn('id', $courtIds);
                     }
                 }))
-            ->whereHas('Court', function(Builder $builder) use($hallIds, $courtIds){
+            ->whereHas('Courts', function(Builder $builder) use($hallIds, $courtIds){
                 if (count($hallIds) > 0) {
                     $builder->getQuery()->whereIn('gt_court.hall_id', $hallIds);
                 }

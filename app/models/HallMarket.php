@@ -11,7 +11,7 @@ class HallMarket extends Eloquent {
         return $this->hasOne('HallPrice', 'id', 'price');
     }
 
-    public function Court(){
+    public function Courts(){
         return $this->hasMany('Court', 'hall_id', 'hall_id');
     }
 
