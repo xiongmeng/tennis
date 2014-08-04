@@ -42,7 +42,11 @@ class SmsQueueHander extends Command
 
         switch($argument){
             case 'send':
-                $queueService = new \Sports\Sms\QueueService(\Sports\Utility\DBHelper::masterAdapterFromLaravel());
+                $dbConfig = \Config::get('database.connections.mysql');
+                $dbConfig['driver'] = 'Mysqli';
+                $dbConfig['options'] = array('buffer_results' => true);
+                $queueService = new \Sports\Sms\QueueService(new \Zend\Db\Adapter\Adapter($dbConfig));
+
                 $result = $queueService->sendLoop(10);
                 $this->info('send completed');
                 $this->info(print_r($result, true));
