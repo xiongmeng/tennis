@@ -13206,5 +13206,101 @@ namespace {
 		 }
 
 	}
+	class Finance extends \FinanceServiceFacades{
+		/**
+		 * 
+		 *
+		 * @param $iUserId
+		 * @param $ePurpose
+		 * @return null|Account\AccountObject
+		 * @static 
+		 */
+		 public static function ensureAccountExisted($iUserId, $ePurpose){
+			//Method inherited from \Sports\Finance\FinanceService
+			return \Sports\Finance\FinanceService::ensureAccountExisted($iUserId, $ePurpose);
+		 }
+
+		/**
+		 * 
+		 *
+		 * @param $iUserId
+		 * @param $ePurpose
+		 * @return \Sports\Finance\Account\AccountObject|null
+		 * @static 
+		 */
+		 public static function getUserAccount($iUserId, $ePurpose){
+			//Method inherited from \Sports\Finance\FinanceService
+			return \Sports\Finance\FinanceService::getUserAccount($iUserId, $ePurpose);
+		 }
+
+		/**
+		 * 
+		 *
+		 * @param ActionObject $oAction
+		 * @return int
+		 * @throws \Sports\Exception\LogicException
+		 * @static 
+		 */
+		 public static function executionAction($oAction){
+			//Method inherited from \Sports\Finance\FinanceService
+			return \Sports\Finance\FinanceService::executionAction($oAction);
+		 }
+
+		/**
+		 * 执行操作
+		 *
+		 * @param OperateObject $oOperate
+		 * @static 
+		 */
+		 public static function execute($oOperate){
+			//Method inherited from \Sports\Finance\FinanceService
+			 \Sports\Finance\FinanceService::execute($oOperate);
+		 }
+
+		/**
+		 * 撤销操作
+		 *
+		 * @param $iOperationId
+		 * @return int
+		 * @throws \Sports\Exception\ItemNotExistException
+		 * @static 
+		 */
+		 public static function reversal($iOperationId){
+			//Method inherited from \Sports\Finance\FinanceService
+			return \Sports\Finance\FinanceService::reversal($iOperationId);
+		 }
+
+		/**
+		 * 
+		 *
+		 * @static 
+		 */
+		 public static function __construct($oDbAdapter){
+			//Method inherited from \Sports\Finance\BaseService
+			 \Sports\Finance\FinanceService::__construct($oDbAdapter);
+		 }
+
+		/**
+		 * 
+		 *
+		 * @static 
+		 */
+		 public static function setDbAdapter($oDbAdapter){
+			//Method inherited from \Sports\Finance\BaseService
+			 \Sports\Finance\FinanceService::setDbAdapter($oDbAdapter);
+		 }
+
+		/**
+		 * 
+		 *
+		 * @return Adapter
+		 * @static 
+		 */
+		 public static function getDbAdapter(){
+			//Method inherited from \Sports\Finance\BaseService
+			return \Sports\Finance\FinanceService::getDbAdapter();
+		 }
+
+	}
 }
 

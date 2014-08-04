@@ -15,4 +15,6 @@ Artisan::add(new CleanCourt());
 Artisan::add(new InstantOrderGenerate());
 Artisan::add(new InstantOrderClean());
 Artisan::add(new UserHallRelationSupport());
+Artisan::add(new AccountBillingStaging());
+Artisan::add(new SmsQueueHander());
 Artisan::add(new InstantExpire());
