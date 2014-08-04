@@ -39,7 +39,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     }
 
     public function roles(){
-        return $this->belongsToMany('Role', 'gt_relation_user_role', 'user_id', 'role_id');
+        return $this->hasMany('Role');
     }
 
     public function Halls(){

@@ -15,3 +15,4 @@ Artisan::add(new CleanCourt());
 Artisan::add(new InstantOrderGenerate());
 Artisan::add(new InstantOrderClean());
 Artisan::add(new UserHallRelationSupport());
+Artisan::add(new InstantExpire());

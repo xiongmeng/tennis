@@ -21,7 +21,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <?php if(!$data){?>
                     <li class="divider">
-                        <a href="homel">首页</a>
+                        <a href="home">首页</a>
                     <li class="divider">
                         <a href="instant">即时订场</a>
                         <?php }?>
@@ -35,7 +35,7 @@
                             </a>
                                 <ul class="dropdown-menu">
 
-                                    <?php foreach($header['children'] as $childrenid =>$children) {?>
+                                    <?php foreach($header['children'] as $children) {?>
                                         <li><a href="<?php echo $children['url']?>"><?php echo $children['label']?></a></li>
                                     <?php } ?>
                                 </ul>

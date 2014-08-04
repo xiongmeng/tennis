@@ -14,7 +14,7 @@ class Role extends Eloquent implements UserInterface, RemindableInterface {
      *
      * @var string
      */
-    protected $table = 'gt_role';
+    protected $table = 'gt_relation_user_role';
 
     protected $primaryKey = 'role_id';
 

@@ -1,15 +1,16 @@
 <?php //echo Form::open(array('method' => 'get')) ?>
 <?php echo Form::model($queries, array('method' => 'GET'))?>
-    <?php echo Form::label('昵称：')?><?php echo Form::input('text', 'nickname')?>
-    <?php echo Form::label('手机号：')?><?php echo Form::input('text', 'telephone')?>
+    <?php echo Form::label('卖家：')?><?php echo Form::input('text', 'nicknam')?>
+
     <?php echo Form::submit('查询')?>
 <?php echo Form::close() ?>
 
 <div class="container">
     <table>
         <tr>
-            <th>昵称</th>
-            <th>手机号</th>
+            <th>订单号</th>
+            <th>场馆ID</th>
+
         </tr>
         <?php foreach ($users as $user): ?>
             <tr>
