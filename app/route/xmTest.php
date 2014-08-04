@@ -101,4 +101,28 @@ Route::group(array('prefix' => 'xm'), function(){
         $res = Auth::validate(array('nickname' => 'hall8888', 'password' => '123456'));
         echo $res;
     });
+
+    Route::get('/finance/freeze/{id?}', function($iInstantOrderId){
+        $instantOrder = InstantOrder::findOrFail($iInstantOrderId);
+
+        $instantOrderFinance = new InstantOrderFinance($instantOrder);
+        $instantOrderFinance->freeze();
+
+        $buyerAccount = Finance::getUserAccount($instantOrder->buyer, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
+        $sellerAccount = Finance::getUserAccount($instantOrder->seller, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
+
+        return array('buyer' => $buyerAccount->toArraySerializable(), 'seller' =>$sellerAccount->toArraySerializable());
+    });
+
+    Route::get('finance/execute/{id?}', function($iInstantOrderId){
+        $instantOrder = InstantOrder::findOrFail($iInstantOrderId);
+
+        $instantOrderFinance = new InstantOrderFinance($instantOrder);
+        $instantOrderFinance->execute();
+
+        $buyerAccount = Finance::getUserAccount($instantOrder->buyer, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
+        $sellerAccount = Finance::getUserAccount($instantOrder->seller, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
+
+        return array('buyer' => $buyerAccount->toArraySerializable(), 'seller' =>$sellerAccount->toArraySerializable());
+    });
 });

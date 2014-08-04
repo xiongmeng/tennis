@@ -68,6 +68,11 @@ class InstantOrderGenerate extends Command
         return $dateTimestamps;
     }
 
+    /**
+     * @param HallMarket[] $hallMarkets
+     * @param $dateTimestamps
+     * @return array
+     */
     private function findMarketForDate(&$hallMarkets, &$dateTimestamps){
         $dateHitHallMarkets = array();
         foreach ($dateTimestamps as $dateTimestamp => $holiday) {
@@ -94,37 +99,36 @@ class InstantOrderGenerate extends Command
         return $dateHitHallMarkets;
     }
 
-    private function generateInstanceOrderFromDatedHallMarkets($dateHitHallMarkets){
-        $instantOrders = array();
-
+    /**
+     * @param HallMarket[] $hallMarkets
+     * @param $eventDate
+     * @param $curTimeFormatted
+     */
+    private function generateInstantOrderFromHallMarkets(&$hallMarkets, &$eventDate, &$instantOrderOut){
         $curTime = date('Y-m-d H:i:s');
-        foreach ($dateHitHallMarkets as $dateTimestamp => $hallMarkets) {
-            $mysqlDate = date('Y-m-d H:i:s', $dateTimestamp);
-            foreach ($hallMarkets as $hallMarket) {
-                $generatedPrice = $hallMarket->HallPrice->vip;
-                for ($time = $hallMarket->start; $time < $hallMarket->end; $time++) {
-                    foreach ($hallMarket->Courts as $court) {
-                        $instantOrders[] = array(
-                            'created_at' => $curTime,
-                            'updated_at' => $curTime,
-                            'hall_id' => $hallMarket->hall_id,
-                            'court_id' => $court->id,
-                            'event_date' => $mysqlDate,
-                            'start_hour' => $time,
-                            'end_hour' => $time + 1,
-                            'seller' => '',
-                            'generated_price' => $generatedPrice,
-                            'quote_price' => $generatedPrice,
-                            'seller_service_fee' => '',
-                            'hall_name' => $hallMarket->Hall->name,
-                            'court_tags' => $hallMarket->CourtGroup->name,
-                        );
-                    }
+
+        foreach ($hallMarkets as $hallMarket) {
+            $generatedPrice = $hallMarket->HallPrice->vip;
+            for ($time = $hallMarket->start; $time < $hallMarket->end; $time++) {
+                foreach ($hallMarket->Courts as $court) {
+                    $instantOrderOut[] = array(
+                        'created_at' => $curTime,
+                        'updated_at' => $curTime,
+                        'hall_id' => $hallMarket->hall_id,
+                        'court_id' => $court->id,
+                        'event_date' => $eventDate,
+                        'start_hour' => $time,
+                        'end_hour' => $time + 1,
+                        'seller' => '',
+                        'generated_price' => $generatedPrice,
+                        'quote_price' => $generatedPrice,
+                        'seller_service_fee' => '',
+                        'hall_name' => $hallMarket->Hall->name,
+                        'court_tags' => $hallMarket->CourtGroup->name,
+                    );
                 }
             }
         }
-
-        return $instantOrders;
     }
 
     /**
@@ -168,7 +172,11 @@ class InstantOrderGenerate extends Command
 
                 $dateHitHallMarkets = $this->findMarketForDate($hallMarkets, $dateTimestamps);
 
-                $instantOrders = $this->generateInstanceOrderFromDatedHallMarkets($dateHitHallMarkets);
+                $instantOrders = array();
+                foreach ($dateHitHallMarkets as $dateTimestamp => $hallMarkets) {
+                    $mysqlDate = date('Y-m-d H:i:s', $dateTimestamp);
+                    $this->generateInstantOrderFromHallMarkets($hallMarkets, $mysqlDate, $instantOrders);
+                }
 
                 InstantOrder::insert($instantOrders);
                 $this->info('generated records ' . count($instantOrders));

@@ -1,0 +1,110 @@
+{"driver":"Mysqli","database":"gotennis","username":"homestead","password":"secret","host":"127.0.0.1","port":"33060","charset":"utf8","options":{"buffer_results":true}}	
+
+财务迁移：
+	- 余额的读
+	- 余额的写
+	- 流水表展示
+	- SMS的实现 ， 日志写尚未完成
+	- libs库的引入，不再引入vender库
+	- 旧数据迁移
+		- 账户迁移
+		- 流水迁移
+		- 账户与用户中间表去掉 - 查询比较慢
+
+	发布流程：
+		- 在laravel下composer update下libs代码
+		- pull laravel代码
+		- 配置nginx中gotennis设置LIBS_PATH变量
+		- 在laravel下执行迁移
+		- 更新gotennis代码
+		- 执行脚本
+			php artisan bill:stage merge
+		- 增加脚本-
+			短信发送脚本，流水增量增加脚本，短信脚本每隔一分钟执行一次，流水增量每隔两分钟执行一次，然后夜间跑一次
+		
+短信队列操作脚本
+	//展示各个状态的值
+	php artisan sms:queue list
+	//发送短信队列
+	php artisan sms:queue send
+	
+billing表查询和展示数据脚本处理 
+	- 初步是将其放到一个中间表里面
+	//查看帮助文档
+	php artisan bill:stage --help
+	//将billing中新增加的merge到中间表中
+	php artisan bill:stage merge
+	//刷新中间表，重新做一遍
+	php artisan bill:stage refresh
+	//清空中间表
+	php artisan bill:stage clean
+	
+初始化场地脚本
+	- 将目前网球通的场地信息格式，初始化成具备场地编号的场地信息
+	- 输入：场馆id
+	
+	//生成
+	php artisan court:generate --hall=8888 --hall=8889
+	//清除
+	php artisan court:clean --hall=8888 --hall=8889
+	
+构造待售场地脚本
+	- 根据目前网球通的场地信息格式，及场地信息，构建制定日期内的代售场地信息
+	- 输入：日期，场馆id(可选)，场地id(可选)，存储表名(可选)
+	//生成
+	php artisan instantOrder:generate --hall=8888 --hall=8889 --hall=9000 --court=2275329 --court=2275590 --date='2014-07-31'
+	//清除
+	php artisan instantOrder:generate --hall=8888 --hall=8889 --hall=9000 --court=2275329 --court=2275590 --date='2014-07-31'
+
+用户和场馆关系维护脚本
+	- 添加关系
+		php artisan user:hall add --hall 8888 --hall 8889 --user 889082
+	- 移除关系
+		php artisan user:hall remove --hall 8888 --hall 8889 --user 889082
+	- 为场馆添加用户
+		php artisan user:hall generate --hall=8889
+	- 销毁为场馆添加的用户
+		php artisan user:hall destroy --hall=8889	
+	
+去除过期的待售场地信息
+	- 初期由于上架的场地很少，故需要将大量的未上架场地去除掉
+	
+fsm过期刷新脚本
+	- 
+
+fsm的引入 - 采用闭包的形式
+
+财务采用积分方式处理	
+	
+暂时先不采用knockout的实现方式
+
+
+1.地图暂时采用“百度”
+2.支付调研“网银，支付宝，微信”，（刘桑的一九付）
+3.推送这一块，我先去了解下，参考“百度云推送”，“友盟”，“极光推送”,苹果采用“APNS”
+4.ios证书
+5.中信银行的异度支付，银行app接入
+6.手机页面的UI，UE工作开展
+
+根据大家沟通情况，我整理了一下开发计划如下：
+1、8月10日，新业务线的网站能够搭建完成，开始内测；
+2、8月15日，开启APP（iOS和Android）开发工作；
+3、8月20日，微信服务号搭建完毕
+4、8月30日，新业务网站正式上线；
+5、9月15日，完成APP（iOS和Android）开发，开始内测；
+6、9月25日，APP正式上线。
+
+
+	
+	
+    box: Downloading: https://vagrantcloud.com/laravel/homestead/version/7/provi
+der/virtualbox.box
+
+D:/HashiCorp/Vagrant/Homestead/scripts/homestead.rb:26:in `expand_path': no impl
+icit conversion of nil into String (TypeError)
+
+
+vboxmanage controlvm test_default_1405521534944_21907 keyboardputscancode 1c
+
+
+powercfg -h off
