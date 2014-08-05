@@ -184,6 +184,40 @@ Route::get('/fsm-operate/{id?}/{operate?}', function ($id, $operate) {
         $url = URL::previous();
         return $redirect = Redirect::to($url);
     }
-
-
 });
+
+Route::get('/billing_buyer', array('before' => 'auth', function(){
+    $queries = Input::all();
+
+    !isset($queries['purpose']) && $queries['purpose']=\Sports\Constant\Finance::PURPOSE_ACCOUNT;
+
+    $defaultQueries = array();
+    $user = Auth::getUser();
+    if($user instanceof User){
+        $defaultQueries['user_id'] = $user->user_id;
+    }
+
+    $billingStagingModel = new BillingStaging();
+    $billingStagings = $billingStagingModel->search(array_merge($queries, $defaultQueries));
+
+    return View::make('layout')->nest('content', 'user.billing_buyer',
+        array('queries' => $queries, 'billingStagings' => $billingStagings));
+}));
+
+Route::get('/billing_seller', array('before' => 'auth', function(){
+    $queries = Input::all();
+
+    !isset($queries['purpose']) && $queries['purpose']=\Sports\Constant\Finance::PURPOSE_ACCOUNT;
+
+    $defaultQueries = array();
+    $user = Auth::getUser();
+    if($user instanceof User){
+        $defaultQueries['user_id'] = $user->user_id;
+    }
+
+    $billingStagingModel = new BillingStaging();
+    $billingStagings = $billingStagingModel->search(array_merge($queries, $defaultQueries));
+
+    return View::make('layout')->nest('content', 'user.billing_seller',
+        array('queries' => $queries, 'billingStagings' => $billingStagings));
+}));
