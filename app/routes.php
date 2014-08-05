@@ -16,8 +16,21 @@ require_once 'route/fjTest.php';
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return View::make('layout')->nest('content', 'home');
-    } else {
+        $user = Auth::getUser();
+        $user_id = $user['user_id'];
+        $roles = user::find($user_id)->roles;
+        $role = $roles[0]->role_id;
+        if($role == 1){
+            return Redirect::to('instant_order_on_sale');
+        }
+        if($role == 2){
+            return Redirect::to('instant_order_mgr');
+        }
+        if($role == 3){
+            return Redirect::to('order_court_manage?hall_id=&court_id=');
+        }
+    }
+    else {
         return View::make('layout')->nest('content', 'login');
     }
 });
@@ -64,14 +77,14 @@ View::creator('layout', function(\Illuminate\View\View $view)
 
 Route::get('/home', function () {
 
-    //return $view = View::make('home')->nest('top', 'format.top')->nest('header', 'format.header');
     return View::make('layout')->nest('content', 'home');
 });
 
 Route::get('/login',array('as' => 'login', function () {
     if (Auth::check()) {
-        return View::make('layout')->nest('content', 'home');
-    } else {
+        return Redirect::to('/');
+    }
+    else {
         return View::make('layout')->nest('content', 'login');
     }
 }));
@@ -124,7 +137,7 @@ Route::get('/instant_order_buyer', function () {
         array('instants' => $instants, 'states' => $states, 'userID' => $userID, 'queries' => $queries));
 });
 
-Route::get('/instant_order_on_sale', function () {
+Route::get('/instant_order_on_sale',array('as' => 'order_on_sale', function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
     $array['expire_time'] = time();
@@ -137,7 +150,7 @@ Route::get('/instant_order_on_sale', function () {
     $states = Config::get('state.data');
     return View::make('layout')->nest('content','instantOrder.order_on_sale',
         array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID));
-});
+}));
 
 Route::get('/instant_order_seller', function () {
     $queries = Input::all();
@@ -157,8 +170,8 @@ Route::get('/order_court_manage', function () {
     if (Auth::check()) {
         $instantModel = new InstantOrder();
         $user = Auth::getUser();
-        $hallID = $_GET['hall_id'];
-        $courtID = $_GET['court_id'];
+        $hallID = Input::get('hall_id');
+        $courtID = Input::get('court_id');
         $halls = $user->Halls;
         if (!$hallID && count($halls) > 0) {
             $hallID = $halls[0]->id;

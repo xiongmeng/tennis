@@ -124,7 +124,7 @@ return array(
 
     'roles_headers' => array(
         '1' => array(
-            '1', '2', '4'
+             '2', '4'
         ),
         '2' => array(
             '4', '5', '6', '7', '8'
