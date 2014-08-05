@@ -93,13 +93,8 @@ return array(
             'label' => '订单管理',
             'name' => 'instant_order_seller',
             'url' => 'instant_order_seller',
-            'children' => array(
-                '801' => array(
-                    'label' => '即时订单',
-                    'name' => 'instant_order_seller',
-                    'url' => 'instant_order_seller'
-                )
-            )
+            'children' => array()
+
         ),
         '9' => array(
             'label' => '场地管理',

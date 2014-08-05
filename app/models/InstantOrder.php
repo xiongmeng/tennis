@@ -54,16 +54,17 @@ class InstantOrder extends Eloquent implements \Finite\StatefulInterface {
                 $builder->where('state', 'like', '%' . $aQuery['state'] . '%');
             }
             if(!empty($array['expire_time'])){
-                $builder->where('expire_time', '=',$array['expire_time']);
+                $builder->where('expire_time', '>',$array['expire_time']);
             }
-            if(!empty($array['expire_time'])){
-                $builder->where('expire_time', '=',$array['expire_time']);
-            }
+
             if(!empty($array['seller'])){
                 $builder->where('seller', '=',$array['seller']);
             }
             if(!empty($array['buyer'])){
                 $builder->where('buyer', '=',$array['buyer']);
+            }
+            if(!empty($array['state'])){
+                $builder->where('state', '!=',$array['state']);
             }
         })
             ->paginate($iPageSize);

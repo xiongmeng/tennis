@@ -16,9 +16,9 @@ require_once 'route/fjTest.php';
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return $view = View::make('home')->nest('top', 'format.top')->nest('header', 'format.header');
+        return View::make('layout')->nest('content', 'home');
     } else {
-        return $view = View::make('login')->nest('header', 'format.header');
+        return View::make('layout')->nest('content', 'login');
     }
 });
 
@@ -56,23 +56,29 @@ View::creator('format.header', function ($view) {
     $view->with('data', $data);
 });
 
+View::creator('layout', function(\Illuminate\View\View $view)
+{
+    $view->nest('top','format.top')->nest('header', 'format.header')
+         ->nest('footer', 'format.footer')->nest('copyright', 'format.copyright');
+});
+
 Route::get('/home', function () {
 
-    return $view = View::make('home')->nest('top', 'format.top')->nest('header', 'format.header');
-
+    //return $view = View::make('home')->nest('top', 'format.top')->nest('header', 'format.header');
+    return View::make('layout')->nest('content', 'home');
 });
 
-Route::get('/login', function () {
+Route::get('/login',array('as' => 'login', function () {
     if (Auth::check()) {
-        return $view = View::make('home')->nest('top', 'format.top')->nest('header', 'format.header');
+        return View::make('layout')->nest('content', 'home');
     } else {
-        return $view = View::make('login')->nest('header', 'format.header');
+        return View::make('layout')->nest('content', 'login');
     }
-});
+}));
 
 Route::get('/logout', function () {
     Auth::logout();
-    return $view = View::make('home')->nest('top', 'format.top')->nest('header', 'format.header');
+    return Redirect::to('login');
 });
 
 Route::post('/logining', function () {
@@ -94,12 +100,13 @@ Route::get('/instant_order_mgr', function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
     $array = array();
+    $array['state'] = 'draft';
     $instants = $instantModel->search($queries,$array);
 
     $states = Config::get('state.data');
 
-
-    return View::make('instantOrder.order_mgr', array('instants' => $instants, 'queries' => $queries, 'states' => $states))->nest('top', 'format.top')->nest('header', 'format.header');
+    return View::make('layout')->nest('content','instantOrder.order_mgr',
+        array('instants' => $instants, 'queries' => $queries, 'states' => $states));
 });
 
 Route::get('/instant_order_buyer', function () {
@@ -112,7 +119,9 @@ Route::get('/instant_order_buyer', function () {
     $array['buyer'] = $userID;
     $instants = $instantModel->search($queries, $array);
     $states = Config::get('state.data');
-    return View::make('instantOrder.order_buyer', array('instants' => $instants, 'states' => $states, 'userID' => $userID, 'queries' => $queries))->nest('top', 'format.top')->nest('header', 'format.header');
+
+    return View::make('layout')->nest('content','instantOrder.order_buyer',
+        array('instants' => $instants, 'states' => $states, 'userID' => $userID, 'queries' => $queries));
 });
 
 Route::get('/instant_order_on_sale', function () {
@@ -120,12 +129,14 @@ Route::get('/instant_order_on_sale', function () {
     $instantModel = new InstantOrder();
     $array['expire_time'] = time();
     $instants = $instantModel->search($queries, $array);
+
     if (Auth::check()) {
         $user = Auth::getUser();
         $userID = $user['user_id'];
     }
     $states = Config::get('state.data');
-    return View::make('instantOrder.order_on_sale', array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID))->nest('top', 'format.top')->nest('header', 'format.header');
+    return View::make('layout')->nest('content','instantOrder.order_on_sale',
+        array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID));
 });
 
 Route::get('/instant_order_seller', function () {
@@ -138,7 +149,8 @@ Route::get('/instant_order_seller', function () {
     $array['seller'] = $userID;
     $instants = $instantModel->search($queries, $array);
     $states = Config::get('state.data');
-    return View::make('instantOrder.order_seller', array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID))->nest('top', 'format.top')->nest('header', 'format.header');
+    return View::make('layout')->nest('content','instantOrder.order_seller',
+        array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID));
 });
 
 Route::get('/order_court_manage', function () {
@@ -159,7 +171,8 @@ Route::get('/order_court_manage', function () {
         $instants = $instantModel->where('hall_id', '=', $hallID)->where('court_id', '=', $courtID)->where('event_date', '>=', date('Y-m-d'))->get();
         $dates = array(date('Y-m-d 00:00:00'), date('Y-m-d 00:00:00', strtotime('+1 day')), date('Y-m-d 00:00:00', strtotime('+2 day')), date('Y-m-d 00:00:00', strtotime('+3 day')), date('Y-m-d 00:00:00', strtotime('+4 day')));
 
-        return View::make('instantOrder.order_court_manage', array('instants' => $instants, 'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates))->nest('top', 'format.top')->nest('header', 'format.header');
+        return View::make('layout')->nest('content','instantOrder.order_court_manage',
+            array('instants' => $instants, 'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates));
     }
 });
 
