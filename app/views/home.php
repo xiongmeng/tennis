@@ -86,8 +86,8 @@
 
 <!--=== Content Part ===-->
 <div class="container">	
-	
-    
+
+
 	<!-- Info Blokcs -->
 	<div class="row">
     	<!-- Welcome Block -->
@@ -104,7 +104,7 @@
                         <li><i class="icon-ok color-green"></i> Corporate and Creative</li>
                         <li><i class="icon-ok color-green"></i> Responsive Bootstrap Template</li>
                         <li><i class="icon-ok color-green"></i> Corporate and Creative</li>
-                    </ul>                    
+                    </ul>
                 </div>
             </div>
 
@@ -112,10 +112,10 @@
                 <p></p>
                 <small>CEO, Jack Bour</small>
             </blockquote>
-        </div><!--/col-md-8-->        
+        </div><!--/col-md-8-->
 
        <!--/col-md-4-->
-	</div><!--/row-->	
+	</div><!--/row-->
 	<!-- End Info Blokcs -->
 
 </div><!--/container-->		

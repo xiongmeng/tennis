@@ -1,26 +1,4 @@
-{"driver":"Mysqli","database":"gotennis","username":"homestead","password":"secret","host":"127.0.0.1","port":"33060","charset":"utf8","options":{"buffer_results":true}}	
 
-财务迁移：
-	- 余额的读
-	- 余额的写
-	- 流水表展示
-	- SMS的实现 ， 日志写尚未完成
-	- libs库的引入，不再引入vender库
-	- 旧数据迁移
-		- 账户迁移
-		- 流水迁移
-		- 账户与用户中间表去掉 - 查询比较慢
-
-	发布流程：
-		- 在laravel下composer update下libs代码
-		- pull laravel代码
-		- 配置nginx中gotennis设置LIBS_PATH变量
-		- 在laravel下执行迁移
-		- 更新gotennis代码
-		- 执行脚本
-			php artisan bill:stage merge
-		- 增加脚本-
-			短信发送脚本，流水增量增加脚本，短信脚本每隔一分钟执行一次，流水增量每隔两分钟执行一次，然后夜间跑一次
 		
 短信队列操作脚本
 	//展示各个状态的值
@@ -95,6 +73,29 @@ fsm的引入 - 采用闭包的形式
 6、9月25日，APP正式上线。
 
 
+{"driver":"Mysqli","database":"gotennis","username":"homestead","password":"secret","host":"127.0.0.1","port":"33060","charset":"utf8","options":{"buffer_results":true}}	
+
+财务迁移：
+	- 余额的读
+	- 余额的写
+	- 流水表展示
+	- SMS的实现 ， 日志写尚未完成
+	- libs库的引入，不再引入vender库
+	- 旧数据迁移
+		- 账户迁移
+		- 流水迁移
+		- 账户与用户中间表去掉 - 查询比较慢
+
+	发布流程：
+		- 在laravel下composer update下libs代码
+		- pull laravel代码
+		- 配置nginx中gotennis设置LIBS_PATH变量
+		- 在laravel下执行迁移
+		- 更新gotennis代码
+		- 执行脚本
+			php artisan bill:stage merge
+		- 增加脚本-
+			短信发送脚本，流水增量增加脚本，短信脚本每隔一分钟执行一次，流水增量每隔两分钟执行一次，然后夜间跑一次
 	
 	
     box: Downloading: https://vagrantcloud.com/laravel/homestead/version/7/provi

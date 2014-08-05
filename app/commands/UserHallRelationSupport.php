@@ -85,6 +85,8 @@ class UserHallRelationSupport extends Command
 
                 Hall::whereIn('id' , $hallIds)->chunk(20, function($halls){
                     foreach($halls as $hall){
+                        DB::beginTransaction();
+
                         $hallId = $hall->id;
                         $this->info(sprintf('generate for hall (%s)', $hallId));
 
@@ -92,14 +94,19 @@ class UserHallRelationSupport extends Command
                             array('nickname' => $hall->code . $hallId, 'password' => Hash::make(self::DEFAULT_PASSWORD))
                         );
 
-                        $this->info(sprintf('created user(%s) with name(%s), password(%s)',
-                            $createdUser->user_id, $createdUser->nickname, self::DEFAULT_PASSWORD));
+                        if($createdUser instanceof User){
+                            $this->info(sprintf('created user(%s) with name(%s), password(%s)',
+                                $createdUser->user_id, $createdUser->nickname, self::DEFAULT_PASSWORD));
 
-                        $createdUser->roles()->attach(3);
+                            $createdUser->roles()->save(new Role(array('role_id' => 3)));
 
-                        $this->info('attached the role 3(hall) to user');
+                            $this->info('attached the role 3(hall) to user');
 
-                        $createdUser->Halls()->attach($hall->id);
+                            $createdUser->Halls()->attach($hall->id);
+
+                        }
+
+                        DB::commit();
 
                         $this->info('attached the hall with the user');
                     }
@@ -108,20 +115,23 @@ class UserHallRelationSupport extends Command
             case 'destroy':
                 Hall::with('Users')->whereIn('id' , $hallIds)->chunk(20, function($halls){
                     foreach($halls as $hall){
+                        DB::beginTransaction();
                         $this->info(sprintf('destroy for hall (%s)', $hall->id));
-
                         foreach($hall->Users as $user){
-                            $this->info(sprintf('destroy user (%s)', $user->user_id));
+                            if($user instanceof User){
+                                $this->info(sprintf('destroy user (%s)', $user->user_id));
 
-                            $user->roles()->sync(array());
-                            $this->info('delete the role relation with user');
+                                Role::where('user_id', '=', $user->user_id)->delete();
+                                $this->info('delete the role relation with user');
 
-                            $user->Halls()->sync(array());
-                            $this->info('delete the hall relation with user');
+                                $user->Halls()->sync(array());
+                                $this->info('delete the hall relation with user');
 
-                            $user->delete();
-                            $this->info('delete the user');
+                                $user->delete();
+                                $this->info('delete the user');
+                            }
                         }
+                        DB::commit();
                     }
                 });
                 break;
