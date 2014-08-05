@@ -20,7 +20,6 @@ Route::group(array('prefix' => 'fj'), function(){
             $user = Auth::getUser();
             $user_id = $user['user_id'];
             $roles = user::find($user_id)->roles;
-//print_r($roles);exit;
             $roleIds = array();
             foreach($roles as $role){
                 $roleIds[] = $role->role_id;

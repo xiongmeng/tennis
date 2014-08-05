@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en"> <!--<![endif]-->
 <head>
     <title>网球通</title>
 
@@ -29,11 +32,11 @@
 <body>
 
 <!--=== Top ===-->
-<?php echo $top;?><!--/top-->
+<?php echo $top; ?><!--/top-->
 <!--=== End Top ===-->
 
 <!--=== Header ===-->
-<?php echo $header;  ?><!--/header-->
+<?php echo $header; ?><!--/header-->
 <!--=== End Header ===-->
 
 <!--=== Breadcrumbs ===-->
@@ -42,7 +45,8 @@
         <h1 class="pull-left">我的订单</h1>
 
     </div>
-</div><!--/breadcrumbs-->
+</div>
+<!--/breadcrumbs-->
 <!--=== End Breadcrumbs ===-->
 
 <!--=== Content ===-->
@@ -51,9 +55,9 @@
         <div class="col-md-12">
 
 
-            <?php echo Form::model($queries, array('method' => 'GET'))?>
-            <?php echo Form::label('日期：')?><?php echo Form::input('text', 'seller')?>
-            <?php echo Form::submit('查询')?>
+            <?php echo Form::model($queries, array('method' => 'GET')) ?>
+            <?php echo Form::label('日期：') ?><?php echo Form::input('text', 'seller') ?>
+            <?php echo Form::submit('查询') ?>
             <?php echo Form::close() ?><br/>
             <!--Basic Table Option (Spacing)-->
             <div class="panel panel-green margin-bottom-40">
@@ -76,25 +80,31 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ( $instants as $instant){?>
-                            <?php   $fsm = new InstantOrderFsm($instant);?>
+                        <?php foreach ($instants as $instant) { ?>
+                            <?php $fsm = new InstantOrderFsm($instant); ?>
 
-                                <tr>
-                                    <td><?php echo $instant->id; ?></td>
-                                    <td><?php echo $instant->hall_name; ?></td>
-                                    <td><?php echo $instant->court_tags; ?></td>
-                                    <td><?php echo substr($instant->event_date , 0 , 10); ?></td>
-                                    <td><?php echo $instant->start_hour.'-'.$instant->end_hour; ?></td>
-                                    <td><?php echo $instant->quote_price; ?></td>
-                                    <td><?php echo $states[$instant->state]['label']; ?></td>
-                                    <td><?php if($fsm->can('pay_success')){ ?>
-                                            <button class="btn btn-success btn-xs"><a href="fsm-operate/<?php echo $instant->id;?>/pay_success"><i class="icon-ok"></i>去支付</a></button>
+                            <tr>
+                                <td><?php echo $instant->id; ?></td>
+                                <td><?php echo $instant->hall_name; ?></td>
+                                <td><?php echo $instant->court_tags; ?></td>
+                                <td><?php echo substr($instant->event_date, 0, 10); ?></td>
+                                <td><?php echo $instant->start_hour . '-' . $instant->end_hour; ?></td>
+                                <td><?php echo $instant->quote_price; ?></td>
+                                <td><?php echo $states[$instant->state]['label']; ?></td>
+                                <td><?php if ($fsm->can('pay_success')) { ?>
+                                        <button class="btn btn-success btn-xs"><a
+                                                href="fsm-operate/<?php echo $instant->id; ?>/pay_success"><i
+                                                    class="icon-ok"></i>去支付</a></button>
+                                    <?php } ?>
+                                    <?php if ($fsm->can('confirm')) { ?>
+                                        <button class="btn btn-info btn-xs"><a
+                                                href="fsm-operate/<?php echo $instant->id; ?>/confirm"><i
+                                                    class="icon-check"></i>确认打球</a></button>
+                                    <?php } ?>
 
-                                        <?php }?>
+                            </tr>
 
-                                </tr>
-
-                            <?php } ?>
+                        <?php } ?>
 
 
                         </tbody>
@@ -133,7 +143,7 @@
 <script type="text/javascript" src="/assets/js/app.js"></script>
 <script type="text/javascript" src="/assets/js/pages/index.js"></script>
 <script type="text/javascript">
-    jQuery(document).ready(function() {
+    jQuery(document).ready(function () {
         App.init();
         App.initSliders();
         Index.initParallaxSlider();

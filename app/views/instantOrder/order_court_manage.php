@@ -59,7 +59,7 @@
         <div class="col-md-2">
             <ul class="nav nav-pills nav-stacked" role="tablist">
                 <?php foreach($courts as $court){?>
-                    <li role="presentation" class="active"><a href="order_court_manage?hall_id=<?php echo $court->hall_id; ?>&court_id=<?php echo $court->id?>"><h3><?php echo $court->number?>号场</h3></a></li>
+                    <li role="presentation"><a href="order_court_manage?hall_id=<?php echo $court->hall_id; ?>&court_id=<?php echo $court->id?>"><h3><?php echo $court->number?>号场</h3></a></li>
 
                 <?php }?>
             </ul>

@@ -5,7 +5,7 @@ return array(
         '1' => array(
             'label' => '首页',
             'name' => 'index',
-            'url' => 'home',
+            'url' => 'login',
             'children' => array(),
         ),
         '2' => array(
