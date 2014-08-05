@@ -199,10 +199,37 @@ Route::get('/fsm-operate/{id?}/{operate?}', function ($id, $operate) {
     }
 });
 
-Route::get('/billing_buyer', array('before' => 'auth', function(){
+Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function($curTab){
+    $tabs = array(
+        'account_balance' => array(
+            'label' => '账户收支明细',
+            'url' => '/billing_buyer/account_balance',
+            'query' => array(
+                'purpose' => \Sports\Constant\Finance::PURPOSE_ACCOUNT,
+                'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
+            )
+        ),
+        'account_free' => array(
+            'label' => '账户冻结明细',
+            'url' => '/billing_buyer/account_free',
+            'query' => array(
+                'purpose' => \Sports\Constant\Finance::PURPOSE_ACCOUNT,
+                'billing_type' => \Sports\Constant\Finance::ACCOUNT_FREEZE
+            )
+        ),
+        'points_balance' => array(
+            'label' => '积分明细',
+            'url' => '/billing_buyer/points_balance',
+            'query' => array(
+                'purpose' => \Sports\Constant\Finance::PURPOSE_POINTS,
+                'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
+            )
+        ),
+    );
+
     $queries = Input::all();
 
-    !isset($queries['purpose']) && $queries['purpose']=\Sports\Constant\Finance::PURPOSE_ACCOUNT;
+    $queries = array_merge($queries, $tabs[$curTab]['query']);
 
     $defaultQueries = array();
     $user = Auth::getUser();
@@ -214,7 +241,7 @@ Route::get('/billing_buyer', array('before' => 'auth', function(){
     $billingStagings = $billingStagingModel->search(array_merge($queries, $defaultQueries));
 
     return View::make('layout')->nest('content', 'user.billing_buyer',
-        array('queries' => $queries, 'billingStagings' => $billingStagings));
+        array('tabs' => $tabs, 'curTab'=>$curTab, 'queries' => $queries, 'billingStagings' => $billingStagings));
 }));
 
 Route::get('/billing_seller', array('before' => 'auth', function(){

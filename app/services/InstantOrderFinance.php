@@ -38,7 +38,23 @@ class InstantOrderFinance {
      */
     public function cancel(){
         $oOperate = new OperateObject();
-        $oOperate->setRelationId($this->instantOrder->id)->setRelationType(FinanceConstant::RELATION_BUY_INSTANT_ORDER);
+        $oOperate->setRelationId($this->instantOrder->id)->setRelationType(FinanceConstant::RELATION_CANCEL_INSTANT_ORDER);
+
+        //解冻买方钱
+        $oAction = new ActionObject();
+        $oAction->setUserId($this->instantOrder->buyer)->setAmount($this->instantOrder->quote_price)
+            ->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)->setOperateType(FinanceConstant::OPERATE_UNFREEZE);
+        $oOperate->addAction($oAction);
+
+        Finance::execute($oOperate);
+    }
+
+    /**
+     * 解冻买方钱
+     */
+    public function terminate(){
+        $oOperate = new OperateObject();
+        $oOperate->setRelationId($this->instantOrder->id)->setRelationType(FinanceConstant::RELATION_TERMINATE_INSTANT_ORDER);
 
         //解冻买方钱
         $oAction = new ActionObject();

@@ -34,7 +34,7 @@ return array(
                 '402' => array(
                     'label' => '账户明细',
                     'name' => 'mgr_court',
-                    'url' => 'billing_buyer',
+                    'url' => '/billing_buyer/account_balance',
                     'children' => array()
                 )
             )),

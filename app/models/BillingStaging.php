@@ -28,6 +28,10 @@ class BillingStaging extends Eloquent {
             if(!empty($aQuery['billing_created_time_end'])){
                 $builder->where('billing_created_time', '<=', strtotime($aQuery['billing_created_time_end']));
             }
+            if(!empty($aQuery['billing_type'])){
+                is_array($aQuery['billing_type']) ? $builder->getQuery()->whereIn('billing_type', $aQuery['billing_type']) :
+                    $builder->where('billing_type', '=', $aQuery['billing_type']);
+            }
             if(!empty($aQuery['hall_id'])){
                 is_array($aQuery['hall_id']) ? $builder->getQuery()->whereIn('hall_id', $aQuery['hall_id']) :
                     $builder->where('hall_id', '=', $aQuery['hall_id']);
