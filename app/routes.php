@@ -14,9 +14,13 @@
 require_once 'route/xmTest.php';
 require_once 'route/fjTest.php';
 
-Route::get('/', function()
-{
-	return View::make('hello');
+Route::get('/', function(){
+    if(Auth::check()){
+        return $view =View::make('home')->nest('top','format.top')->nest('header', 'format.header');
+    }
+    else{
+        return $view = View::make('login')->nest('header', 'format.header');
+    }
 });
 
 Route::get('/test', function(){
@@ -27,8 +31,6 @@ Route::get('/test-push-github', function(){
     return 'test-push-github';
 });
 
-
-
 Route::get('/user', function(){
     if(Auth::check()){
         $user = Auth::getUser();
@@ -37,6 +39,7 @@ Route::get('/user', function(){
         }
     };
 });
+
 View::creator('format.top', function($view)
 {
     if(Auth::check()){
@@ -45,22 +48,19 @@ View::creator('format.top', function($view)
 
     $view->with('user',$user);
 });
+
 View::creator('format.header', function($view)
 {
     if(Auth::check()){
         $user = Auth::getUser();
         $user_id = $user['user_id'];
         $roles = user::find($user_id)->roles;
-//print_r($roles);exit;
         $roleIds = array();
         foreach($roles as $role){
             $roleIds[] = $role->role_id;
         }
-
         $headers = Config::get('acl.headers');
-
         $allRolesHeaders = Config::get('acl.roles_headers');
-
         $acl = array();
         foreach($allRolesHeaders as $roleId => $rolesHeaders){
             if(in_array($roleId, $roleIds)){
@@ -69,15 +69,18 @@ View::creator('format.header', function($view)
         }
         $data =array('headers' => $headers, 'acl' => $acl);
     }
-    else{$data =array();}
-
+    else{
+        $data =array();
+    }
     $view->with('data',$data);
 });
+
 Route::get('/home', function(){
 
     return $view = View::make('home')->nest('top','format.top')->nest('header', 'format.header');
 
 });
+
 Route::get('/login', function(){
     if(Auth::check()){
         return $view =View::make('home')->nest('top','format.top')->nest('header', 'format.header');
@@ -86,10 +89,12 @@ Route::get('/login', function(){
         return $view = View::make('login')->nest('header', 'format.header');
     }
 });
+
 Route::get('/logout', function(){
     Auth::logout();
     return $view =View::make('home')->nest('top','format.top')->nest('header', 'format.header');
 });
+
 Route::post('/logining', function(){
     $nickname = Input::get('nickname');
     $password = Input::get('password');
@@ -103,6 +108,7 @@ Route::post('/logining', function(){
     }
     else {echo '登陆失败';}
 });
+
 Route::get('/instant_order_mgr',function(){
     $queries = Input::all();
     $instantModel = new InstantOrder();
@@ -114,6 +120,7 @@ Route::get('/instant_order_mgr',function(){
 
     return View::make('instantOrder.order_mgr', array('instants' => $instants, 'queries' => $queries,'states' => $states))->nest('top','format.top')->nest('header', 'format.header');
 });
+
 Route::get('/instant_order_buyer',function(){
     $queries = Input::all();
     if(Auth::check()){
@@ -125,21 +132,19 @@ Route::get('/instant_order_buyer',function(){
     $states = Config::get('state.data');
     return View::make('instantOrder.order_buyer', array('instants' => $instants, 'states' => $states,'userID'=>$userID,'queries'=>$queries))->nest('top','format.top')->nest('header', 'format.header');
 });
+
 Route::get('/instant_order_on_sale',function(){
     $queries = Input::all();
     $instantModel = new InstantOrder();
-
     $instants = $instantModel->on_sale($queries);
-    //foreach($instants as $instant){print_r($instant);}exit;
     if(Auth::check()){
         $user = Auth::getUser();
         $userID =$user['user_id'];
     }
     $states = Config::get('state.data');
-
-
     return View::make('instantOrder.order_on_sale', array('instants' => $instants, 'queries' => $queries,'states' => $states,'userID'=>$userID))->nest('top','format.top')->nest('header', 'format.header');
 });
+
 Route::get('/instant_order_seller',function(){
     $queries = Input::all();
     $instantModel = new InstantOrder();
@@ -151,6 +156,7 @@ Route::get('/instant_order_seller',function(){
     $states = Config::get('state.data');
     return View::make('instantOrder.order_seller', array('instants' => $instants, 'queries' => $queries,'states' => $states,'userID'=>$userID))->nest('top','format.top')->nest('header', 'format.header');
 });
+
 Route::get('/order_court_manage',function(){
     if(Auth::check()){
         $instantModel = new InstantOrder();
@@ -168,14 +174,19 @@ Route::get('/order_court_manage',function(){
         $states = Config::get('state.data');
         $instants = $instantModel->where('hall_id', '=', $hallID)->where('court_id', '=', $courtID)->where('event_date','>=',date('Y-m-d'))->get();
         $dates =array(date('Y-m-d 00:00:00'),date('Y-m-d 00:00:00',strtotime('+1 day')),date('Y-m-d 00:00:00',strtotime('+2 day')),date('Y-m-d 00:00:00',strtotime('+3 day')),date('Y-m-d 00:00:00',strtotime('+4 day')));
-        //print_r($instants);exit;
+
         return View::make('instantOrder.order_court_manage', array('instants' => $instants,'states' => $states,'courts'=>$courts,'halls'=>$halls,'dates'=>$dates))->nest('top','format.top')->nest('header', 'format.header');
     }
 });
+
 Route::get('/fsm-operate/{id?}/{operate?}', function($id, $operate){
+    if(Auth::check()){
     $instantOrder = InstantOrder::findOrFail($id);
     $fsm = new InstantOrderFsm($instantOrder);
     $fsm->apply($operate);
     $url =  URL::previous();
     return $redirect = Redirect::to($url);
+    }
+
+
 });

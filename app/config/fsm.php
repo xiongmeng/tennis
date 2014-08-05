@@ -92,13 +92,13 @@ return array(
                     'to' => 'paying',
                     'do' => function(InstantOrder $instant, \Finite\Event\TransitionEvent $e) {
                             //记录expire_time = update_at->支付过期时间--暂定两分钟
-                            $expireTime = strtotime($instant->updated_at)+120;
-                            InstantOrder::where('id','=',$instant->id)->update(array('expire_time'=>$expireTime));
-                            if(Auth::check()){
-                                $user = Auth::getUser();
-                                $userID =$user['user_id'];
-                                $userName = $user['nickname'];
-                            InstantOrder::where('id','=',$instant->id)->update(array('buyer'=>$userID,'buyer_name'=>$userName));
+                            $user = Auth::getUser();
+                            if($user instanceof User){
+                                $instant->buyer = $user->user_id;
+                                $instant->buyer_name = $user->nickname;
+                                $expireTime = strtotime($instant->updated_at)+120;
+                                $instant->expire_time = $expireTime;
+                                $instant->save();
                             }
                         }
                 ),
