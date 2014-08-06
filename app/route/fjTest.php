@@ -14,33 +14,33 @@ Route::group(array('prefix' => 'fj'), function(){
 
         $view->with('user',$user);
     });
-    View::creator('format.header', function($view)
-    {
-        if(Auth::check()){
-            $user = Auth::getUser();
-            $user_id = $user['user_id'];
-            $roles = user::find($user_id)->roles;
-            $roleIds = array();
-            foreach($roles as $role){
-                $roleIds[] = $role->role_id;
-            }
-
-            $headers = Config::get('acl.headers');
-
-            $allRolesHeaders = Config::get('acl.roles_headers');
-
-            $acl = array();
-            foreach($allRolesHeaders as $roleId => $rolesHeaders){
-                if(in_array($roleId, $roleIds)){
-                    $acl = array_merge($acl, $rolesHeaders);
-                }
-            }
-            $data =array('headers' => $headers, 'acl' => $acl);
-        }
-        else{$data =array();}
-
-        $view->with('data',$data);
-    });
+//    View::creator('format.header', function($view)
+//    {
+//        if(Auth::check()){
+//            $user = Auth::getUser();
+//            $user_id = $user['user_id'];
+//            $roles = user::find($user_id)->roles;
+//            $roleIds = array();
+//            foreach($roles as $role){
+//                $roleIds[] = $role->role_id;
+//            }
+//
+//            $headers = Config::get('acl.headers');
+//
+//            $allRolesHeaders = Config::get('acl.roles_headers');
+//
+//            $acl = array();
+//            foreach($allRolesHeaders as $roleId => $rolesHeaders){
+//                if(in_array($roleId, $roleIds)){
+//                    $acl = array_merge($acl, $rolesHeaders);
+//                }
+//            }
+//            $data =array('headers' => $headers, 'acl' => $acl);
+//        }
+//        else{$data =array();}
+//
+//        $view->with('data',$data);
+//    });
 
     Route::get('/homel', function(){
 

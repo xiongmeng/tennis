@@ -17,8 +17,7 @@ require_once 'route/fjTest.php';
 Route::get('/', function () {
     if (Auth::check()) {
         $user = Auth::getUser();
-        $user_id = $user['user_id'];
-        $roles = user::find($user_id)->roles;
+        $roles = $user->roles;
         $role = $roles[0]->role_id;
         if($role == 1){
             return Redirect::to('instant_order_on_sale');
@@ -48,8 +47,7 @@ View::creator('format.top', function ($view) {
 View::creator('format.header', function ($view) {
     if (Auth::check()) {
         $user = Auth::getUser();
-        $user_id = $user['user_id'];
-        $roles = user::find($user_id)->roles;
+        $roles = $user->roles;
         $roleIds = array();
         foreach ($roles as $role) {
             $roleIds[] = $role->role_id;
@@ -261,3 +259,7 @@ Route::get('/billing_seller', array('before' => 'auth', function(){
     return View::make('layout')->nest('content', 'user.billing_seller',
         array('queries' => $queries, 'billingStagings' => $billingStagings));
 }));
+
+Route::get('/test', function(){
+    return View::make('layout', array('content' => 'hello world'));
+});
