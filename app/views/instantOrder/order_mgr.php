@@ -45,7 +45,7 @@
                         <tbody>
                         <?php foreach ($instants as $instant) { ?>
                             <?php $fsm = new InstantOrderFsm($instant); ?>
-                            <?php if (($instant->state) != 'draft' && ($instant->state) != 'expired') { ?>
+
                                 <tr>
                                     <td><?php echo $instant->id; ?></td>
                                     <td><?php echo $instant->hall_id; ?></td>
@@ -54,7 +54,7 @@
                                     <td><?php echo $instant->start_hour . '-' . $instant->end_hour; ?></td>
                                     <td><?php echo $instant->quote_price; ?></td>
                                     <td><?php echo $instant->seller; ?></td>
-                                    <td><?php echo $instant->buyer; ?></td>
+                                    <td><?php echo $instant->buyer_name; ?></td>
                                     <td><?php echo $states[$instant->state]['label']; ?></td>
 
                                     <td><?php if ($fsm->can('cancel')) { ?>
@@ -78,7 +78,7 @@
 
                             <?php } ?>
 
-                        <?php } ?>
+
                         </tbody>
                     </table>
                 </div>

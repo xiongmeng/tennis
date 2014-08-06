@@ -109,6 +109,7 @@ Route::get('/instant_order_mgr',  array('before' => 'auth',function () {
     $instantModel = new InstantOrder();
     $array = array();
     $array['state'] = 'draft';
+    $array['expired'] = 'expired';
     $instants = $instantModel->search($queries, $array);
 
     $states = Config::get('state.data');
