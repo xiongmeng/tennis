@@ -94,7 +94,7 @@ class AccountBillingStaging extends Command
 
         $this->info('update instant_order info');
         DB::update('
-            UPDATE gt_account_billing_staging b INNER JOIN gt_instant_order o ON b.relation_id=o.id AND b.relation_type IN(12,13,14) INNER JOIN gt_hall_tiny h ON o.hall_id=h.id INNER JOIN gt_court c ON o.court_id=c.id
+            UPDATE gt_account_billing_staging b INNER JOIN gt_instant_order o ON b.relation_id=o.id AND b.relation_type IN(12,13,14,15) INNER JOIN gt_hall_tiny h ON o.hall_id=h.id INNER JOIN gt_court c ON o.court_id=c.id
             SET b.booking_event_date=UNIX_TIMESTAMP(o.event_date), b.booking_start_time=o.start_hour, b.booking_end_time=o.end_hour,
             b.instant_order_court_id=c.id, b.instant_order_court_number=c.number, b.instant_order_quote_price=o.quote_price, b.instant_order_state=o.state,
             b.hall_id=o.hall_id, b.hall_name=h.`name`' . $where);

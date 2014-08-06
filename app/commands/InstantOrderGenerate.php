@@ -139,9 +139,13 @@ class InstantOrderGenerate extends Command
     public function fire()
     {
         $dates = $this->option(self::OPTION_DATE);
-        $hallIds = $this->option(self::OPTION_HALL);
-        $courtIds = $this->option(self::OPTION_COURT);
+        $dates = !empty($dates) ? explode(',', $dates) : array();
 
+        $hallIds = $this->option(self::OPTION_HALL);
+        $hallIds = !empty($hallIds) ? explode(',', $hallIds) : array();
+
+        $courtIds = $this->option(self::OPTION_COURT);
+        $courtIds = !empty($courtIds) ? explode(',', $courtIds) : array();
 
         if($this->isExist($dates, $hallIds, $courtIds)){
             $this->error('specified condition has been generated!');
@@ -201,12 +205,9 @@ class InstantOrderGenerate extends Command
     protected function getOptions()
     {
         return array(
-            array(self::OPTION_DATE, null,
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'date with php supported format .', null),
-            array(self::OPTION_HALL, null,
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'hall ids.', null),
-            array(self::OPTION_COURT, null,
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'court ids.', null),
+            array(self::OPTION_DATE, null, InputOption::VALUE_OPTIONAL, 'date with php supported format .', null),
+            array(self::OPTION_HALL, null, InputOption::VALUE_OPTIONAL, 'hall ids.', null),
+            array(self::OPTION_COURT, null, InputOption::VALUE_OPTIONAL, 'court ids.', null),
         );
     }
 

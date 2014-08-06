@@ -18,4 +18,12 @@ class Hall extends Eloquent {
     public function Users(){
         return $this->belongsToMany('User', 'gt_relation_user_hall', 'hall_id', 'user_id');
     }
+
+    public function Courts(){
+        return $this->hasMany('Court', 'hall_id');
+    }
+
+    public function InstantOrders(){
+        return $this->hasMany('InstantOrder', 'hall_id');
+    }
 }

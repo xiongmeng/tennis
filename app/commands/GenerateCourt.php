@@ -40,6 +40,7 @@ class GenerateCourt extends Command
     public function fire()
     {
         $hallIds = $this->option(self::OPTION_HALL);
+        $hallIds = explode(',', $hallIds);
 
         if (Court::where(function (Builder $builder) use ($hallIds) {
             if (count($hallIds) > 0) {
@@ -53,7 +54,7 @@ class GenerateCourt extends Command
 
         Hall::with(array('CourtGroup'))->where(function (Builder $builder) use ($hallIds) {
             if (count($hallIds) > 0) {
-                $builder->getQuery()->whereIn('hall_id', $hallIds);
+                $builder->getQuery()->whereIn('id', $hallIds);
             }
         })->has('CourtGroup')
             ->chunk(100, function ($halls) {
@@ -105,8 +106,7 @@ class GenerateCourt extends Command
     protected function getOptions()
     {
         return array(
-            array(self::OPTION_HALL, null,
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'the hall ids', null)
+            array(self::OPTION_HALL, null, InputOption::VALUE_OPTIONAL, "the hall ids, contact with ',' [8888,8889]", null)
         );
     }
 
