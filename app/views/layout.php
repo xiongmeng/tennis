@@ -45,7 +45,7 @@
 
 <?php echo $content; ?>
 
-<?php echo $footer; ?>
+
 
 <?php echo $copyright; ?>
 

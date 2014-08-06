@@ -72,7 +72,7 @@ View::creator('format.header', function ($view) {
 View::creator('layout', function(\Illuminate\View\View $view)
 {
     $view->nest('top','format.top')->nest('header', 'format.header')
-         ->nest('footer', 'format.footer')->nest('copyright', 'format.copyright');
+         ->nest('copyright', 'format.copyright');
 });
 
 Route::get('/home', function () {
@@ -80,14 +80,14 @@ Route::get('/home', function () {
     return View::make('layout')->nest('content', 'home');
 });
 
-Route::get('/login',array('as' => 'login', function () {
+Route::get('/login', function () {
     if (Auth::check()) {
         return Redirect::to('/');
     }
     else {
         return View::make('layout')->nest('content', 'login');
     }
-}));
+});
 
 Route::get('/logout', function () {
     Auth::logout();
