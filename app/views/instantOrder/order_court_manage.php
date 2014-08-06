@@ -1,10 +1,10 @@
 <!--=== Breadcrumbs ===-->
 <div class="breadcrumbs margin-bottom-20">
     <div class="container">
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-pills" role="tablist">
             <?php foreach ($halls as $hall) { ?>
 
-                <li role="presentation" class="active"><a
+                <li role="presentation" class="<?php if ($hall->id ==$hallID) { ?>active<?php } ?>"><a
                         href="order_court_manage?hall_id=<?php echo $hall->id ?>&court_id=">
                         <h3><?php echo $hall->name; ?></h3></a></li>
 
@@ -21,7 +21,7 @@
         <div class="col-md-2">
             <ul class="nav nav-pills nav-stacked" role="tablist">
                 <?php foreach ($courts as $court) { ?>
-                    <li role="presentation"><a
+                    <li role="presentation" class="<?php if ($court->id == $courtID) { ?>active<?php } ?>"><a
                             href="order_court_manage?hall_id=<?php echo $court->hall_id; ?>&court_id=<?php echo $court->id ?>">
                             <h3><?php echo $court->number ?>号场</h3></a></li>
 

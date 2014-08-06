@@ -177,7 +177,7 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
     $dates = array(date('Y-m-d 00:00:00'), date('Y-m-d 00:00:00', strtotime('+1 day')), date('Y-m-d 00:00:00', strtotime('+2 day')), date('Y-m-d 00:00:00', strtotime('+3 day')), date('Y-m-d 00:00:00', strtotime('+4 day')));
 
     return View::make('layout')->nest('content', 'instantOrder.order_court_manage',
-        array('instants' => $instants, 'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates));
+        array('instants' => $instants, 'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates,'hallID'=>$hallID,'courtID'=>$courtID));
 
 }));
 
