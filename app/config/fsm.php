@@ -76,7 +76,7 @@ return array(
                     'do' => function (InstantOrder $instant, \Finite\Event\TransitionEvent $e) {
                             //解冻会员金额
                             $instantOrderFinance = new InstantOrderFinance($instant);
-                            $instantOrderFinance->cancel();
+                            $instantOrderFinance->terminate();
                         }
                 ),
                 array( //待确认->完成

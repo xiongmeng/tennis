@@ -4,14 +4,14 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class InstantExpire extends Command {
+class InstantOrderExpire extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'instant:expire';
+	protected $name = 'instantOrder:expire';
 
 	/**
 	 * The console command description.

@@ -83,18 +83,25 @@ class AccountBillingStaging extends Command
 
         $this->info('update recharge info');
         DB::update('
-            UPDATE gt_account_billing_staging b LEFT JOIN gt_recharge r ON b.relation_id=r.id AND b.relation_type=5
+            UPDATE gt_account_billing_staging b INNER JOIN gt_recharge r ON b.relation_id=r.id AND b.relation_type=5
             SET b.recharge_type=r.type, b.recharge_token=r.sToken' . $where);
 
         $this->info('update booking info');
         DB::update('
-            UPDATE gt_account_billing_staging b LEFT JOIN gt_order o ON b.relation_id=o.id AND b.relation_type IN(1,3,4,6) LEFT JOIN gt_hall_tiny h ON o.hall_id=h.id
+            UPDATE gt_account_billing_staging b INNER JOIN gt_order o ON b.relation_id=o.id AND b.relation_type IN(1,3,4,6) INNER JOIN gt_hall_tiny h ON o.hall_id=h.id
             SET b.booking_event_date=o.event_date, b.booking_start_time=o.start_time, b.booking_end_time=o.end_time, b.hall_id=o.hall_id, b.booking_court_num=o.court_num,
             b.booking_cost=o.cost, b.booking_cost_text=o.cost_text, b.booking_stat=o.stat, b.booking_created_time=o.createtime, b.hall_name=h.`name`' . $where);
 
+        $this->info('update instant_order info');
+        DB::update('
+            UPDATE gt_account_billing_staging b INNER JOIN gt_instant_order o ON b.relation_id=o.id AND b.relation_type IN(12,13,14) INNER JOIN gt_hall_tiny h ON o.hall_id=h.id INNER JOIN gt_court c ON o.court_id=c.id
+            SET b.booking_event_date=UNIX_TIMESTAMP(o.event_date), b.booking_start_time=o.start_hour, b.booking_end_time=o.end_hour,
+            b.instant_order_court_id=c.id, b.instant_order_court_number=c.number, b.instant_order_quote_price=o.quote_price, b.instant_order_state=o.state,
+            b.hall_id=o.hall_id, b.hall_name=h.`name`' . $where);
+
         $this->info('update custom finance info');
          DB::update('
-            UPDATE gt_account_billing_staging b LEFT JOIN gt_finance_custom c ON b.relation_id=c.id AND b.relation_type IN (10,11)
+            UPDATE gt_account_billing_staging b INNER JOIN gt_finance_custom c ON b.relation_id=c.id AND b.relation_type IN (10,11)
              SET b.finance_custom_reason=c.reason' . $where);
 
          $this->info('migrate completed');

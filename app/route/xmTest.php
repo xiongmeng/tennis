@@ -125,28 +125,4 @@ Route::group(array('prefix' => 'xm'), function(){
 
         return array('buyer' => $buyerAccount->toArraySerializable(), 'seller' =>$sellerAccount->toArraySerializable());
     });
-
-    Route::get('billing', array('before' => 'auth', function(){
-        $queries = Input::all();
-
-        !isset($queries['purpose']) && $queries['purpose']=\Sports\Constant\Finance::PURPOSE_ACCOUNT;
-
-        $defaultQueries = array();
-        $user = Auth::getUser();
-        if($user instanceof User){
-            $defaultQueries['user_id'] = $user->user_id;
-        }
-
-        $billingStagingModel = new BillingStaging();
-        $billingStagings = $billingStagingModel->search(array_merge($queries, $defaultQueries));
-
-        return View::make('xm.layout')->nest('content', 'xm.user.billing',
-            array('queries' => $queries, 'billingStagings' => $billingStagings));
-    }));
-
-    View::creator('xm.layout', function(\Illuminate\View\View $view)
-    {
-        $view->nest('top','format.top')->nest('header', 'format.header')
-            ->nest('footer', 'format.footer')->nest('copyright', 'format.copyright');
-    });
 });
