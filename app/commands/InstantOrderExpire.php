@@ -41,9 +41,10 @@ class InstantOrderExpire extends Command {
 
         $instants = $instantOrderModel::where('expire_time','>',0)->where('expire_time','<',time())->get();
 
+        $fsm = new InstantOrderFsm();
         foreach($instants as $instant){
+            $fsm->resetObject($instant);
 
-            $fsm = new InstantOrderFsm($instant);
             if($fsm->can('expire')){
                 $fsm->apply('expire');
                 $this->info($instant->id,'expire');

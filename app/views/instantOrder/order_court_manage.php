@@ -58,8 +58,10 @@
                         </thead>
                         <tbody>
                         <tr>
+                            <?php $fsm = new InstantOrderFsm(); ?>
+
                             <td><?php foreach ($instants as $instant) { ?>
-                                    <?php $fsm = new InstantOrderFsm($instant); ?>
+                                    <?php $fsm->resetObject($instant);?>
                                     <?php if (($instant->event_date) == $date) { ?>
                                         <div class="pricing hover-effect">
                                             <div class="pricing-head">
