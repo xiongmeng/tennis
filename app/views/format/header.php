@@ -20,42 +20,38 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <!--                    --><?php //if (!$data){ ?>
-                    <!--                    <li class="divider">-->
-                    <!--                        <a href="login">首页</a>-->
-                    <!--                        --><?php //} ?>
-                    <?php if ($data) { ?>
+                        <?php //if (!$data){ ?>
+<!--                        <li class="divider">-->
+<!--                        <a href="login">首页</a>-->
+                        <?php //} ?>
+                        <?php if ($data){ ?>
                         <?php foreach ($data['headers'] as $headerId => $header) { ?>
-                            <?php if (in_array($headerId, $data['acl'])) { ?>
-                                <?php if ($header['children']) { ?>
-                                    <li class="dropdown">
-                                    <a href="<?php echo $header['url'] ?>" class="dropdown-toggle"
-                                       data-toggle="dropdown"
-                                       data-hover="dropdown" data-delay="0"
-                                       data-close-others="false"><?php echo $header['label'] ?>
-                                        <!--  <i class="icon-angle-down"></i>-->
-                                    </a>
-                                    <ul class="dropdown-menu">
+                        <?php if (in_array($headerId, $data['acl'])){ ?>
+                        <?php if ($header['children']){ ?>
+                <li class="dropdown">
+                <a href="<?php echo $header['url'] ?>" class="dropdown-toggle" data-toggle="dropdown"
+                   data-hover="dropdown" data-delay="0" data-close-others="false"><?php echo $header['label'] ?>
+                    <!--  <i class="icon-angle-down"></i>-->
+                </a>
+                <ul class="dropdown-menu">
 
-                                        <?php foreach ($header['children'] as $children) { ?>
-                                            <li>
-                                                <a href="<?php echo $children['url'] ?>"><?php echo $children['label'] ?></a>
-                                            </li>
-                                        <?php } ?>
-                                    </ul>
-                                <?php } ?>
-                                <?php if (!$header['children']) { ?>
-                                    <li class="divider">
-                                    <a href="<?php echo $header['url'] ?>"><?php echo $header['label'] ?>
-                                        <!--  <i class="icon-angle-down"></i>-->
-                                    </a>
-                                <?php } ?>
-
-                                </li>
-
-                            <?php } ?>
-                        <?php } ?>
+                    <?php foreach ($header['children'] as $children) { ?>
+                        <li><a href="<?php echo $children['url'] ?>"><?php echo $children['label'] ?></a></li>
                     <?php } ?>
+                </ul>
+                <?php } ?>
+                <?php if (!$header['children']) { ?>
+                <li class="divider">
+                <a href="<?php echo $header['url'] ?>"><?php echo $header['label'] ?>
+                    <!--  <i class="icon-angle-down"></i>-->
+                </a>
+                <?php } ?>
+
+                </li>
+
+                <?php } ?>
+                <?php } ?>
+                <?php } ?>
 
                 </ul>
 
