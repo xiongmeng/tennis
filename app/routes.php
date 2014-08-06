@@ -19,17 +19,16 @@ Route::get('/', function () {
         $user = Auth::getUser();
         $roles = $user->roles;
         $role = $roles[0]->role_id;
-        if($role == 1){
+        if ($role == 1) {
             return Redirect::to('instant_order_on_sale');
         }
-        if($role == 2){
+        if ($role == 2) {
             return Redirect::to('instant_order_mgr');
         }
-        if($role == 3){
-            return Redirect::to('order_court_manage?hall_id=&court_id=');
+        if ($role == 3) {
+            return Redirect::to('order_court_manage');
         }
-    }
-    else {
+    } else {
         return View::make('layout')->nest('content', 'login');
     }
 });
@@ -67,10 +66,9 @@ View::creator('format.header', function ($view) {
     $view->with('data', $data);
 });
 
-View::creator('layout', function(\Illuminate\View\View $view)
-{
-    $view->nest('top','format.top')->nest('header', 'format.header')
-         ->nest('copyright', 'format.copyright');
+View::creator('layout', function (\Illuminate\View\View $view) {
+    $view->nest('top', 'format.top')->nest('header', 'format.header')
+        ->nest('copyright', 'format.copyright');
 });
 
 Route::get('/home', function () {
@@ -81,8 +79,7 @@ Route::get('/home', function () {
 Route::get('/login', function () {
     if (Auth::check()) {
         return Redirect::to('/');
-    }
-    else {
+    } else {
         return View::make('layout')->nest('content', 'login');
     }
 });
@@ -107,35 +104,33 @@ Route::post('/logining', function () {
     }
 });
 
-Route::get('/instant_order_mgr', function () {
+Route::get('/instant_order_mgr',  array('before' => 'auth',function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
     $array = array();
     $array['state'] = 'draft';
-    $instants = $instantModel->search($queries,$array);
+    $instants = $instantModel->search($queries, $array);
 
     $states = Config::get('state.data');
 
-    return View::make('layout')->nest('content','instantOrder.order_mgr',
+    return View::make('layout')->nest('content', 'instantOrder.order_mgr',
         array('instants' => $instants, 'queries' => $queries, 'states' => $states));
-});
+}));
 
-Route::get('/instant_order_buyer', function () {
+Route::get('/instant_order_buyer', array('before' => 'auth', function () {
     $queries = Input::all();
-    if (Auth::check()) {
-        $user = Auth::getUser();
-        $userID = $user['user_id'];
-    }
-    $instantModel = new InstantOrder();
+    $user = Auth::getUser();
+    $userID = $user['user_id'];
     $array['buyer'] = $userID;
+    $instantModel = new InstantOrder();
     $instants = $instantModel->search($queries, $array);
     $states = Config::get('state.data');
 
-    return View::make('layout')->nest('content','instantOrder.order_buyer',
+    return View::make('layout')->nest('content', 'instantOrder.order_buyer',
         array('instants' => $instants, 'states' => $states, 'userID' => $userID, 'queries' => $queries));
-});
+}));
 
-Route::get('/instant_order_on_sale',array('as' => 'order_on_sale', function () {
+Route::get('/instant_order_on_sale', array('before' => 'auth', function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
     $array['expire_time'] = time();
@@ -146,11 +141,11 @@ Route::get('/instant_order_on_sale',array('as' => 'order_on_sale', function () {
         $userID = $user['user_id'];
     }
     $states = Config::get('state.data');
-    return View::make('layout')->nest('content','instantOrder.order_on_sale',
+    return View::make('layout')->nest('content', 'instantOrder.order_on_sale',
         array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID));
 }));
 
-Route::get('/instant_order_seller', function () {
+Route::get('/instant_order_seller', array('before' => 'auth', function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
     if (Auth::check()) {
@@ -160,44 +155,42 @@ Route::get('/instant_order_seller', function () {
     $array['seller'] = $userID;
     $instants = $instantModel->search($queries, $array);
     $states = Config::get('state.data');
-    return View::make('layout')->nest('content','instantOrder.order_seller',
+    return View::make('layout')->nest('content', 'instantOrder.order_seller',
         array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID));
-});
+}));
 
-Route::get('/order_court_manage', function () {
-    if (Auth::check()) {
-        $instantModel = new InstantOrder();
-        $user = Auth::getUser();
-        $hallID = Input::get('hall_id');
-        $courtID = Input::get('court_id');
-        $halls = $user->Halls;
-        if (!$hallID && count($halls) > 0) {
-            $hallID = $halls[0]->id;
-        }
-        $courts = Court::where('hall_id', '=', $hallID)->get();
-        if (!$courtID && count($courts) > 0) {
-            $courtID = $courts[0]->id;
-        }
-        $states = Config::get('state.data');
-        $instants = $instantModel->where('hall_id', '=', $hallID)->where('court_id', '=', $courtID)->where('event_date', '>=', date('Y-m-d'))->get();
-        $dates = array(date('Y-m-d 00:00:00'), date('Y-m-d 00:00:00', strtotime('+1 day')), date('Y-m-d 00:00:00', strtotime('+2 day')), date('Y-m-d 00:00:00', strtotime('+3 day')), date('Y-m-d 00:00:00', strtotime('+4 day')));
-
-        return View::make('layout')->nest('content','instantOrder.order_court_manage',
-            array('instants' => $instants, 'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates));
+Route::get('/order_court_manage', array('before' => 'auth', function () {
+    $instantModel = new InstantOrder();
+    $user = Auth::getUser();
+    $hallID = Input::get('hall_id');
+    $courtID = Input::get('court_id');
+    $halls = $user->Halls;
+    if (!$hallID && count($halls) > 0) {
+        $hallID = $halls[0]->id;
     }
-});
-
-Route::get('/fsm-operate/{id?}/{operate?}', function ($id, $operate) {
-    if (Auth::check()) {
-        $instantOrder = InstantOrder::findOrFail($id);
-        $fsm = new InstantOrderFsm($instantOrder);
-        $fsm->apply($operate);
-        $url = URL::previous();
-        return $redirect = Redirect::to($url);
+    $courts = Court::where('hall_id', '=', $hallID)->get();
+    if (!$courtID && count($courts) > 0) {
+        $courtID = $courts[0]->id;
     }
-});
+    $states = Config::get('state.data');
+    $instants = $instantModel->where('hall_id', '=', $hallID)->where('court_id', '=', $courtID)->where('event_date', '>=', date('Y-m-d'))->get();
+    $dates = array(date('Y-m-d 00:00:00'), date('Y-m-d 00:00:00', strtotime('+1 day')), date('Y-m-d 00:00:00', strtotime('+2 day')), date('Y-m-d 00:00:00', strtotime('+3 day')), date('Y-m-d 00:00:00', strtotime('+4 day')));
 
-Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function($curTab){
+    return View::make('layout')->nest('content', 'instantOrder.order_court_manage',
+        array('instants' => $instants, 'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates));
+
+}));
+
+Route::get('/fsm-operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
+    $instantOrder = InstantOrder::findOrFail($id);
+    $fsm = new InstantOrderFsm($instantOrder);
+    $fsm->apply($operate);
+    $url = URL::previous();
+    return $redirect = Redirect::to($url);
+
+}));
+
+Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function ($curTab) {
     $tabs = array(
         'account_balance' => array(
             'label' => '账户收支明细',
@@ -231,7 +224,7 @@ Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function($curTa
 
     $defaultQueries = array();
     $user = Auth::getUser();
-    if($user instanceof User){
+    if ($user instanceof User) {
         $defaultQueries['user_id'] = $user->user_id;
     }
 
@@ -239,17 +232,17 @@ Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function($curTa
     $billingStagings = $billingStagingModel->search(array_merge($queries, $defaultQueries));
 
     return View::make('layout')->nest('content', 'user.billing_buyer',
-        array('tabs' => $tabs, 'curTab'=>$curTab, 'queries' => $queries, 'billingStagings' => $billingStagings));
+        array('tabs' => $tabs, 'curTab' => $curTab, 'queries' => $queries, 'billingStagings' => $billingStagings));
 }));
 
-Route::get('/billing_seller', array('before' => 'auth', function(){
+Route::get('/billing_seller', array('before' => 'auth', function () {
     $queries = Input::all();
 
-    !isset($queries['purpose']) && $queries['purpose']=\Sports\Constant\Finance::PURPOSE_ACCOUNT;
+    !isset($queries['purpose']) && $queries['purpose'] = \Sports\Constant\Finance::PURPOSE_ACCOUNT;
 
     $defaultQueries = array();
     $user = Auth::getUser();
-    if($user instanceof User){
+    if ($user instanceof User) {
         $defaultQueries['user_id'] = $user->user_id;
     }
 
@@ -260,6 +253,6 @@ Route::get('/billing_seller', array('before' => 'auth', function(){
         array('queries' => $queries, 'billingStagings' => $billingStagings));
 }));
 
-Route::get('/test', function(){
+Route::get('/test', function () {
     return View::make('layout', array('content' => 'hello world'));
 });
