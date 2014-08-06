@@ -10,12 +10,12 @@
                 echo '
 
                 <li>欢迎:</li>
-                <li><a href="login">'.$user->nickname.'</a></li>
+                <li><a href="/login">'.$user->nickname.'</a></li>
 
             <li class="devider"></li>
-            <li><a href="logout">退出登录</a></li>';}
+            <li><a href="/logout">退出登录</a></li>';}
             else{
-                echo '<li><a href="login">登录</a></li>
+                echo '<li><a href="/login">登录</a></li>
                 <!--<li class="devider"></li>-->
                 <li><a href="register"></a></li>';
 
