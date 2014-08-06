@@ -11,7 +11,7 @@ return array(
         '2' => array(
             'label' => '即时订场',
             'name' => 'instant',
-            'url' => 'instant_order_on_sale',
+            'url' => '/instant_order_on_sale',
             'children' => array()
         ),
         '3' => array(
@@ -28,7 +28,7 @@ return array(
                 '401' => array(
                     'label' => '我的订单',
                     'name' => 'mgr_court',
-                    'url' => 'instant_order_buyer',
+                    'url' => '/instant_order_buyer',
                     'children' => array()
                 ),
                 '402' => array(
@@ -91,34 +91,44 @@ return array(
         ),
         '8' => array(
             'label' => '订单管理',
-            'name' => 'instant_order_seller',
-            'url' => 'instant_order_seller',
+            'name' => 'instant_order_mgr',
+            'url' => '/instant_order_mgr',
             'children' => array()
 
         ),
         '9' => array(
             'label' => '场地管理',
             'name' => 'mgr_court',
-            'url' => 'order_court_manage?hall_id=&court_id=',
+            'url' => '/order_court_manage?hall_id=&court_id=',
             'children' => array()
         ),
         '10' => array(
             'label' => '账户详情',
             'name' => 'mgr_court',
-            'url' => 'billing_seller',
+            'url' => '/billing_seller',
             'children' => array()
-        )
+        ),
+        '11' => array(
+            'label' => '订单管理',
+            'name' => 'instant_order_seller',
+            'url' => '/instant_order_seller',
+            'children' => array()
+
+        ),
     ),
 
     'roles' => array(
         '1' => array(
-            'label' => '会员'
+            'label' => '会员',
+            'name' => 'user'
         ),
         '2' => array(
-            'label' => '管理员'
+            'label' => '管理员',
+            'name' => 'mgr'
         ),
         '3' => array(
-            'label' => '场馆'
+            'label' => '场馆',
+            'name' => 'hall'
         )
     ),
 
@@ -127,10 +137,10 @@ return array(
              '2', '4'
         ),
         '2' => array(
-            '4', '5', '6', '7', '8'
+            '8'
         ),
         '3' => array(
-            '8', '9', '10'
+            '11', '9', '10'
         )
     )
 );

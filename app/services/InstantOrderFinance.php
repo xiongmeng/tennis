@@ -72,24 +72,26 @@ class InstantOrderFinance {
      * - 卖家增加钱
      */
     public function execute(){
+        $order = $this->instantOrder;
         $oOperate = new OperateObject();
-        $oOperate->setRelationId($this->instantOrder->id)->setRelationType(FinanceConstant::RELATION_BUY_INSTANT_ORDER);
+        $oOperate->setRelationId($order->id)->setRelationType(FinanceConstant::RELATION_BUY_INSTANT_ORDER);
 
         //解冻买方钱
         $oAction = new ActionObject();
-        $oAction->setUserId($this->instantOrder->buyer)->setAmount($this->instantOrder->quote_price)
+        $oAction->setUserId($order->buyer)->setAmount($order->quote_price)
             ->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)->setOperateType(FinanceConstant::OPERATE_UNFREEZE);
         $oOperate->addAction($oAction);
 
         //扣除买家钱
         $oAction = new ActionObject();
-        $oAction->setUserId($this->instantOrder->buyer)->setAmount($this->instantOrder->quote_price)
+        $oAction->setUserId($order->buyer)->setAmount($order->quote_price)
             ->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)->setOperateType(FinanceConstant::OPERATE_CONSUME);
         $oOperate->addAction($oAction);
 
         //给卖家加钱
         $oAction = new ActionObject();
-        $oAction->setUserId($this->instantOrder->seller)->setAmount($this->instantOrder->quote_price)
+        $oAction->setUserId($order->seller)->setAmount($order->quote_price)
+            ->setRelationType(FinanceConstant::RELATION_SELL_INSTANT_ORDER)
             ->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)->setOperateType(FinanceConstant::OPERATE_RECHARGE);
         $oOperate->addAction($oAction);
 

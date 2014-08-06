@@ -18,3 +18,4 @@ Artisan::add(new UserHallRelationSupport());
 Artisan::add(new AccountBillingStaging());
 Artisan::add(new SmsQueueHander());
 Artisan::add(new InstantOrderExpire());
+Artisan::add(new UserRoleRelationSupport());
