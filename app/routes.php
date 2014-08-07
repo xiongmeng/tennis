@@ -177,6 +177,11 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
     $instants = InstantOrder::orderBy('start_hour', 'asc')->where('hall_id', '=', $hallID)
         ->where('court_id', '=', $courtID)->where('event_date', '>=', date('Y-m-d'))->get();
 
+    $formattedInstants = array();
+    foreach($instants as $instant){
+        $formattedInstants[$instant->event_date . '_' . $instant->start_hour] = $instant;
+    }
+
     $dates = array(date('Y-m-d 00:00:00'), date('Y-m-d 00:00:00', strtotime('+1 day')), date('Y-m-d 00:00:00', strtotime('+2 day')), date('Y-m-d 00:00:00', strtotime('+3 day')), date('Y-m-d 00:00:00', strtotime('+4 day')));
 
     $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
@@ -184,7 +189,7 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
     $states = Config::get('state.data');
     return View::make('layout')->nest('content', 'instantOrder.order_court_manage', array('instants' => $instants,
         'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates, 'hallID'=>$hallID,
-        'courtID'=>$courtID, 'weekdayOption' => $weekdayOption));
+        'courtID'=>$courtID, 'weekdayOption' => $weekdayOption, 'formattedInstants' => $formattedInstants));
 
 }));
 

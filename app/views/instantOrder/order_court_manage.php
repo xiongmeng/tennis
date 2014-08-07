@@ -53,9 +53,8 @@
                                 <tr>
                                     <?php foreach ($dates as $date) { ?>
                                         <td>
-                                            <?php foreach ($instants as $instant) { ?>
+                                            <?php $instant = $formattedInstants[$date.'_'.$startHour]?>
                                                 <?php $fsm->resetObject($instant); ?>
-                                                <?php if (($instant->event_date) == $date && ($instant->start_hour == $startHour)) { ?>
                                                     <div class="pricing hover-effect">
                                                         <div class="pricing-head">
                                                             <h4>
@@ -79,8 +78,6 @@
                                                                 <?php } ?>
                                                         </div>
                                                     </div>
-                                                <?php } ?>
-                                            <?php } ?>
                                         </td>
                                     <?php } ?>
                                 </tr>
