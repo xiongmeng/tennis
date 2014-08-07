@@ -48,7 +48,7 @@ class InstantOrderBack extends Command
 
         $this->info('insert data to ' . $backUpTableName);
         DB::insert("INSERT INTO $backUpTableName
-            SELECT * FROM gt_instant_order WHERE (event_date > $lastDate) || (state!='draft')");
+            SELECT * FROM gt_instant_order WHERE (event_date > '". $lastDate. "') || (state!='draft')");
 
         $this->info('swap table name');
         Schema::rename('gt_instant_order', 'gt_instant_order_swap');
