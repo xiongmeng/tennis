@@ -28,8 +28,12 @@
 
                 <hr>
 
-                <h4><a href="http://www.wangqiuer.com/user_passwordReset.html">忘记密码 ?</h4>
-                <p>不用担心，点击<a class="color-green" href="http://www.wangqiuer.com/user_passwordReset.html">这里</a>返回网球通订场网站去重置密码</p>
+<!--                <h4><a href="http://www.wangqiuer.com/user_passwordReset.html">忘记密码 ?</h4>-->
+<!--                <p>不用担心，点击<a class="color-green" href="http://www.wangqiuer.com/user_passwordReset.html">这里</a>返回网球通订场网站去重置密码</p>-->
+                <p>测试账号：</p>
+                <p>场馆：test_hall/666666</p>
+                <p>管理员：test_mgr/666666</p>
+                <p>用户：test_user/666666[有10000块钱预存]</p>
             </form>
         </div>
     </div><!--/row-->

@@ -20,3 +20,4 @@ Artisan::add(new SmsQueueHander());
 Artisan::add(new InstantOrderExpire());
 Artisan::add(new UserRoleRelationSupport());
 Artisan::add(new InstantOrderRefresh());
+Artisan::add(new InstantOrderBack());

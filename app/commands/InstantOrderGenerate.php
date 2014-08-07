@@ -125,6 +125,7 @@ class InstantOrderGenerate extends Command
                         'seller_service_fee' => '',
                         'hall_name' => $hallMarket->Hall->name,
                         'court_tags' => $hallMarket->CourtGroup->name,
+                        'state' => 'draft'
                     );
                 }
             }
