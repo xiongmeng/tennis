@@ -1,6 +1,4 @@
-<html>
-<body>
-<div class="header">
+<div class="header margin-bottom-10">
     <div class="navbar navbar-default" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -59,5 +57,3 @@
         </div>
     </div>
 </div>
-</body>
-</html>

@@ -1,8 +1,3 @@
-
-<html>
-<body>
-<!--=== Top ===-->
-
 <div class="top">
     <div class="container">
         <ul class="loginbar pull-right">
@@ -20,6 +15,3 @@
         </ul>
     </div>
 </div>
-<!--/top-->
-</body>
-</html>

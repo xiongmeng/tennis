@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <!--[if IE 8]>
-<html lang="en" class="ie8"> <![endif]-->
+<html lang="zh-CN" class="ie8"> <![endif]-->
 <!--[if IE 9]>
-<html lang="en" class="ie9"> <![endif]-->
+<html lang="zh-CN" class="ie9"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en"> <!--<![endif]-->
+<html lang="zh-CN"> <!--<![endif]-->
 <head>
     <title>Unify | Welcome...</title>
 
