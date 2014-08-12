@@ -4,8 +4,8 @@ return array(
     'data' => array(
         'draft' => array(
             'label' => '草稿',
-            'hall_label' => '-',
-            'hall_class' => 'btn btn-primary btn-block btn-lg',
+            'hall_label' => '&nbsp',
+            'hall_class' => 'btn btn-default btn-block btn-lg',
             ),
         'waste' => array(
             'label' => '过时',
@@ -15,7 +15,7 @@ return array(
         'on_sale' => array(
             'label' => '待售',
             'hall_label' => '待售',
-            'hall_class' => 'btn btn-danger btn-block btn-lg',
+            'hall_class' => 'btn btn-success btn-block btn-lg',
         ),
         'paying' => array(
             'label' => '等待支付',

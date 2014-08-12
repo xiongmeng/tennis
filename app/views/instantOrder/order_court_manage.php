@@ -32,7 +32,7 @@
                     <th></th>
                     <?php foreach ($dates as $date) { ?>
                         <th>
-                            <a class="btn btn-success btn-lg btn-block"><?php echo $weekdayOption[date('w', strtotime($date))]; ?>
+                            <a class="btn btn-primary btn-lg btn-block"><?php echo $weekdayOption[date('w', strtotime($date))]; ?>
                                 (<?php echo date('m-d', strtotime($date)) ?>)</a>
                         </th>
                     <?php } ?>
@@ -51,7 +51,7 @@
                     <?php for ($startHour = $instants->first()->start_hour; $startHour < $instants->last()->start_hour; $startHour++) { ?>
                         <tr>
                             <td>
-                                <a class="btn btn-success btn-block btn-lg"><?php echo $startHour . ':00 - ' . ($startHour + 1) . ':00'; ?></a>
+                                <a class="btn btn-primary btn-block btn-lg"><?php echo $startHour . ':00 - ' . ($startHour + 1) . ':00'; ?></a>
                             </td>
                             <?php foreach ($dates as $date) { ?>
                                 <td>
