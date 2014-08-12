@@ -31,6 +31,11 @@
     <!-- CSS Theme -->
     <link rel="stylesheet" href="/assets/css/themes/default.css" id="style_color">
     <link rel="stylesheet" href="/assets/css/themes/headers/default.css" id="style_color-header-1">
+
+    <!-- datePicker css-->
+    <link rel="stylesheet" href="/assets/plugins/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"></script>
+
+    <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
 </head>
 
 <body>
@@ -50,7 +55,6 @@
 <?php echo $copyright; ?>
 
 <!-- JS Global Compulsory -->
-<script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/hover-dropdown.min.js"></script>
@@ -62,6 +66,10 @@
 <!-- JS Page Level -->
 <script type="text/javascript" src="/assets/js/app.js"></script>
 <script type="text/javascript" src="/assets/js/pages/index.js"></script>
+<!-- datePicker -->
+<script type="text/javascript" src="/assets/plugins/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/assets/plugins/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+
 <script type="text/javascript">
     jQuery(document).ready(function () {
         App.init();

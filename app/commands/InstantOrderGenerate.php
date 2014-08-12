@@ -109,6 +109,7 @@ class InstantOrderGenerate extends Command
 
         foreach ($hallMarkets as $hallMarket) {
             $generatedPrice = $hallMarket->HallPrice->vip;
+            $costPrice = $hallMarket->HallPrice->purchase;
             for ($time = $hallMarket->start; $time < $hallMarket->end; $time++) {
                 foreach ($hallMarket->Courts as $court) {
                     $instantOrderOut[] = array(
@@ -116,16 +117,18 @@ class InstantOrderGenerate extends Command
                         'updated_at' => $curTime,
                         'hall_id' => $hallMarket->hall_id,
                         'court_id' => $court->id,
+                        'court_number' => $court->number,
                         'event_date' => $eventDate,
                         'start_hour' => $time,
                         'end_hour' => $time + 1,
                         'seller' => '',
                         'generated_price' => $generatedPrice,
                         'quote_price' => $generatedPrice,
+                        'cost_price' => $costPrice,
                         'seller_service_fee' => '',
                         'hall_name' => $hallMarket->Hall->name,
                         'court_tags' => $hallMarket->CourtGroup->name,
-                        'state' => 'draft'
+                        'state' => 'draft',
                     );
                 }
             }

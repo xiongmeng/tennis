@@ -8,6 +8,9 @@ return array(
                 'type' => Finite\State\StateInterface::TYPE_INITIAL,
                 'properties' => array('deletable' => true, 'editable' => true),
             ),
+            'waste' =>array( //废弃的，在草稿状态超过了当前时间的订单，-这个操作有脚本批量处理
+                'type' => Finite\State\StateInterface::TYPE_FINAL,
+            ),
             'on_sale' => array( //待售
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
                 'properties' => array(),
@@ -67,7 +70,7 @@ return array(
                     'do' => function (InstantOrder $instant, \Finite\Event\TransitionEvent $e) {
                             //冻结会员相应金额
                             $instantOrderFinance = new InstantOrderFinance($instant);
-                            $instantOrderFinance->freeze();
+                            $instantOrderFinance->buy();
                         }
                 ),
                 array( //打球中->终止

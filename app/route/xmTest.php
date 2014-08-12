@@ -106,7 +106,7 @@ Route::group(array('prefix' => 'xm'), function(){
         $instantOrder = InstantOrder::findOrFail($iInstantOrderId);
 
         $instantOrderFinance = new InstantOrderFinance($instantOrder);
-        $instantOrderFinance->freeze();
+        $instantOrderFinance->buy();
 
         $buyerAccount = Finance::getUserAccount($instantOrder->buyer, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
         $sellerAccount = Finance::getUserAccount($instantOrder->seller, \Sports\Constant\Finance::PURPOSE_ACCOUNT);

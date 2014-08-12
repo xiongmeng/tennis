@@ -23,48 +23,35 @@ class InstantOrder extends Eloquent implements \Finite\StatefulInterface {
         $this->save();
     }
 
-    public function search($aQuery, $array,$iPageSize =20){
-        return InstantOrder::where(function(\Illuminate\Database\Eloquent\Builder $builder) use ($aQuery,$array){
+    public function search($aQuery, $iPageSize =20){
+        return InstantOrder::where(function(\Illuminate\Database\Eloquent\Builder $builder) use ($aQuery){
             if(!empty($aQuery['id'])){
-                $builder->where('id', 'like', '%' . $aQuery['id'] . '%');
+                $builder->where('id', '=', $aQuery['id']);
             }
-            if(!empty($aQuery['hall_id'])){
-                $builder->where('hall_id', 'like', '%' . $aQuery['hall_id'] . '%');
-            }
-
-            if(!empty($aQuery['event_date'])){
-                $builder->where('event_date', 'like', '%' . $aQuery['event_date'] . '%');
-            }
-            if(!empty($aQuery['start_hour'])){
-                $builder->where('start_hour', 'like', '%' . $aQuery['start_hour'] . '%');
-            }
-            if(!empty($aQuery['end_hour'])){
-                $builder->where('end_hour', 'like', '%' . $aQuery['end_hour'] . '%');
-            }
-            if(!empty($aQuery['quote_price'])){
-                $builder->where('quote_price', 'like', '%' . $aQuery['quote_price'] . '%');
+            if(!empty($aQuery['expire_time_start'])){
+                $builder->where('expire_time', '>', $aQuery['expire_time_start']);
             }
             if(!empty($aQuery['seller'])){
-                $builder->where('seller', 'like', '%' . $aQuery['seller'] . '%');
+                $builder->where('seller', '=', $aQuery['seller']);
+            }
+            if(!empty($aQuery['buyer'])){
+                $builder->where('buyer', '=', $aQuery['buyer']);
+            }
+            if(!empty($aQuery['event_date_start'])){
+                $builder->where('event_date', '>=', $aQuery['event_date_start']);
+            }
+            if(!empty($aQuery['event_date_end'])){
+                $builder->where('event_date', '<=', $aQuery['event_date_end']);
             }
             if(!empty($aQuery['buyer_name'])){
                 $builder->where('buyer_name', 'like', '%' . $aQuery['buyer_name'] . '%');
             }
+            if(!empty($aQuery['hall_name'])){
+                $builder->where('hall_name', 'like', '%' . $aQuery['hall_name'] . '%');
+            }
             if(!empty($aQuery['state'])){
-                $builder->where('state', 'like', '%' . $aQuery['state'] . '%');
-            }
-            if(!empty($array['expire_time'])){
-                $builder->where('expire_time', '>',$array['expire_time']);
-            }
-
-            if(!empty($array['seller'])){
-                $builder->where('seller', '=',$array['seller']);
-            }
-            if(!empty($array['buyer'])){
-                $builder->where('buyer', '=',$array['buyer']);
-            }
-            if(!empty($array['state'])&&!empty($array['expired'])){
-                $builder->where('state', '!=',$array['state'])->where('state','!=',$array['expired']);
+                is_array($aQuery['state']) ? $builder->getQuery()->whereIn('state', $aQuery['state'])
+                    : $builder->where('state', '=', $aQuery['state']);
             }
 
         })

@@ -21,3 +21,4 @@ Artisan::add(new InstantOrderExpire());
 Artisan::add(new UserRoleRelationSupport());
 Artisan::add(new InstantOrderRefresh());
 Artisan::add(new InstantOrderBack());
+Artisan::add(new InstantOrderWaste());

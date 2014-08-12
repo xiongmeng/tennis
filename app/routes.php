@@ -51,6 +51,7 @@ View::creator('format.header', function ($view) {
         foreach ($roles as $role) {
             $roleIds[] = $role->role_id;
         }
+
         $headers = Config::get('acl.headers');
         $allRolesHeaders = Config::get('acl.roles_headers');
         $acl = array();
@@ -61,7 +62,7 @@ View::creator('format.header', function ($view) {
         }
         $data = array('headers' => $headers, 'acl' => $acl);
     } else {
-        $data = array();
+        $data = array('headers' => array());
     }
     $view->with('data', $data);
 });
@@ -108,9 +109,10 @@ Route::get('/instant_order_mgr',  array('before' => 'auth',function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
 
-    $array = array('state'=>'draft','expired'=>'expired');
+    $queries['state'] = array_keys(
+        array_except(Config::get('fsm.instant_order.states'), array('draft', 'waste')));
 
-    $instants = $instantModel->search($queries, $array);
+    $instants = $instantModel->search($queries);
 
     $states = Config::get('state.data');
 
@@ -122,9 +124,9 @@ Route::get('/instant_order_buyer', array('before' => 'auth', function () {
     $queries = Input::all();
     $user = Auth::getUser();
     $userID = $user['user_id'];
-    $array['buyer'] = $userID;
+    $queries['buyer'] = $userID;
     $instantModel = new InstantOrder();
-    $instants = $instantModel->search($queries, $array);
+    $instants = $instantModel->search($queries);
     $states = Config::get('state.data');
 
     return View::make('layout')->nest('content', 'instantOrder.order_buyer',
@@ -133,14 +135,14 @@ Route::get('/instant_order_buyer', array('before' => 'auth', function () {
 
 Route::get('/instant_order_on_sale', array('before' => 'auth', function () {
     $queries = Input::all();
-    $instantModel = new InstantOrder();
-    $array['expire_time'] = time();
-    $instants = $instantModel->search($queries, $array);
+    $queries['expire_time_start'] = time();
 
-    if (Auth::check()) {
-        $user = Auth::getUser();
-        $userID = $user['user_id'];
-    }
+    $instantModel = new InstantOrder();
+    $instants = $instantModel->search($queries);
+
+    $user = Auth::getUser();
+    $userID = $user['user_id'];
+
     $states = Config::get('state.data');
     return View::make('layout')->nest('content', 'instantOrder.order_on_sale',
         array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID));
@@ -149,12 +151,14 @@ Route::get('/instant_order_on_sale', array('before' => 'auth', function () {
 Route::get('/instant_order_seller', array('before' => 'auth', function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
-    if (Auth::check()) {
-        $user = Auth::getUser();
-        $userID = $user['user_id'];
-    }
-    $array['seller'] = $userID;
-    $instants = $instantModel->search($queries, $array);
+
+    $user = Auth::getUser();
+    $userID = $user['user_id'];
+
+    $queries['seller'] = $userID;
+    $queries['state'] = 'finish';
+
+    $instants = $instantModel->search($queries);
     $states = Config::get('state.data');
     return View::make('layout')->nest('content', 'instantOrder.order_seller',
         array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID));
@@ -179,10 +183,14 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
 
     $formattedInstants = array();
     foreach($instants as $instant){
-        $formattedInstants[$instant->event_date . '_' . $instant->start_hour] = $instant;
+        !isset($formattedInstants[$instant->event_date]) && $formattedInstants[$instant->event_date] = array();
+        $formattedInstants[$instant->event_date][$instant->start_hour] = $instant;
     }
 
-    $dates = array(date('Y-m-d 00:00:00'), date('Y-m-d 00:00:00', strtotime('+1 day')), date('Y-m-d 00:00:00', strtotime('+2 day')), date('Y-m-d 00:00:00', strtotime('+3 day')), date('Y-m-d 00:00:00', strtotime('+4 day')));
+    $dates = array();
+    for ($i = 0; $i < 7; $i++) {
+        $dates[] = date('Y-m-d 00:00:00', strtotime("+$i day"));
+    }
 
     $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
 
@@ -212,14 +220,6 @@ Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function ($curT
                 'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
             )
         ),
-        'account_free' => array(
-            'label' => '账户冻结明细',
-            'url' => '/billing_buyer/account_free',
-            'query' => array(
-                'purpose' => \Sports\Constant\Finance::PURPOSE_ACCOUNT,
-                'billing_type' => \Sports\Constant\Finance::ACCOUNT_FREEZE
-            )
-        ),
         'points_balance' => array(
             'label' => '积分明细',
             'url' => '/billing_buyer/points_balance',
@@ -247,24 +247,33 @@ Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function ($curT
         array('tabs' => $tabs, 'curTab' => $curTab, 'queries' => $queries, 'billingStagings' => $billingStagings));
 }));
 
-Route::get('/billing_seller', array('before' => 'auth', function () {
+Route::get('/billing_mgr/{curTab?}', array('before' => 'auth', function ($curTab) {
+    $tabs = array(
+        'account_balance' => array(
+            'label' => '账户收支明细',
+            'url' => '/billing_mgr/account_balance',
+            'query' => array(
+                'purpose' => \Sports\Constant\Finance::PURPOSE_ACCOUNT,
+                'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
+            )
+        ),
+        'points_balance' => array(
+            'label' => '积分明细',
+            'url' => '/billing_mgr/points_balance',
+            'query' => array(
+                'purpose' => \Sports\Constant\Finance::PURPOSE_POINTS,
+                'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
+            )
+        ),
+    );
+
     $queries = Input::all();
 
-    !isset($queries['purpose']) && $queries['purpose'] = \Sports\Constant\Finance::PURPOSE_ACCOUNT;
-
-    $defaultQueries = array();
-    $user = Auth::getUser();
-    if ($user instanceof User) {
-        $defaultQueries['user_id'] = $user->user_id;
-    }
+    $queries = array_merge($queries, $tabs[$curTab]['query']);
 
     $billingStagingModel = new BillingStaging();
-    $billingStagings = $billingStagingModel->search(array_merge($queries, $defaultQueries));
+    $billingStagings = $billingStagingModel->search($queries, 20);
 
-    return View::make('layout')->nest('content', 'user.billing_seller',
-        array('queries' => $queries, 'billingStagings' => $billingStagings));
+    return View::make('layout')->nest('content', 'user.billing_mgr',
+        array('tabs' => $tabs, 'curTab' => $curTab, 'queries' => $queries, 'billingStagings' => $billingStagings));
 }));
-
-Route::get('/test', function () {
-    return View::make('layout', array('content' => 'hello world'));
-});

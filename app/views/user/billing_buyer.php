@@ -7,13 +7,13 @@
                 <?php echo Form::open(array('method' => 'GET', 'class' => 'form-inline')) ?>
                 <?php echo Form::model($queries) ?>
                 <div class="form-group">
-                    <?php echo Form::input('text', 'billing_created_time_start', '',
-                        array('class' => 'form-control', 'placeholder' => '创建开始时间', 'data-datepicker' => 'datepicker'))?>
+                    <?php echo Form::input('text', 'billing_created_time_start', null,
+                        array('class' => 'form-control datepicker', 'placeholder' => '创建开始时间', 'data-datepicker' => 'datepicker'))?>
                 </div>
                 -
                 <div class="form-group">
-                    <?php echo Form::input('text', 'billing_created_time_end', '',
-                        array('class' => 'form-control', 'placeholder' => '创建结束时间', 'data-datepicker' => 'datepicker'))?>
+                    <?php echo Form::input('text', 'billing_created_time_end', null,
+                        array('class' => 'form-control datepicker', 'placeholder' => '创建结束时间', 'data-datepicker' => 'datepicker'))?>
                 </div>
                 <div class="form-group">
                     <?php echo Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
@@ -94,5 +94,12 @@
 </div>
 
 <script type="text/javascript">
-    //    $('.datepicker').datepicker();
+    $(document).ready(function(){
+        $('.datepicker').datetimepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            startView: 2,
+            minView: 2
+        });
+    });
 </script>

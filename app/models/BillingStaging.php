@@ -45,7 +45,10 @@ class BillingStaging extends Eloquent {
                     $builder->where('relation_id', '=', $aQuery['relation_id']);
             }
             if(!empty($aQuery['user_name'])){
-                $builder->where('user_name', 'like', '%' . $aQuery['nickname'] . '%');
+                $builder->where('user_name', 'like', '%' . $aQuery['user_name'] . '%');
+            }
+            if(!empty($aQuery['hall_name'])){
+                $builder->where('hall_name', 'like', '%' . $aQuery['hall_name'] . '%');
             }
             if(!empty($aQuery['telephone'])){
                 $builder->where('telephone', 'like', '%' . $aQuery['telephone'] . '%');

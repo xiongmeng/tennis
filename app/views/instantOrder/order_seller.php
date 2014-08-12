@@ -1,23 +1,29 @@
-<!--=== Breadcrumbs ===-->
-<div class="breadcrumbs margin-bottom-40">
-    <div class="container">
-        <h1 class="pull-left">我的订单</h1>
-
-    </div>
-</div><!--/breadcrumbs-->
-<!--=== End Breadcrumbs ===-->
-
-<!--=== Content ===-->
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-
-
-            <?php echo Form::model($queries, array('method' => 'GET')) ?>
-            <?php echo Form::label('日期：') ?><?php echo Form::input('text', 'seller') ?>
-            <?php echo Form::submit('查询') ?>
-            <?php echo Form::close() ?><br/>
-            <!--Basic Table Option (Spacing)-->
+            <?= Form::open(array('method' => 'GET', 'class' => 'form-inline')) ?>
+            <?= Form::model($queries) ?>
+            <div class="form-group">
+                <?= Form::input('text', 'id', null,
+                    array('class' => 'form-control', 'placeholder' => '订单号'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::input('text', 'event_date_start', null,
+                    array('class' => 'form-control datepicker', 'placeholder' => '活动开始时间'))?>
+            </div>
+            -
+            <div class="form-group">
+                <?= Form::input('text', 'event_date_end', null,
+                    array('class' => 'form-control datepicker', 'placeholder' => '活动结束时间'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::input('text', 'hall_name', null,
+                    array('class' => 'form-control', 'placeholder' => '场馆名称'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
+            </div>
+            <?= Form::close() ?><br/>
             <div class="panel panel-green margin-bottom-40">
                 <div class="panel-heading">
                     <h3 class="panel-title"><i class="icon-li"></i></h3>
@@ -32,9 +38,7 @@
                             <th>场地类型</th>
                             <th>活动时间</th>
                             <th>时段</th>
-                            <th>价格</th>
                             <th>状态</th>
-
                         </tr>
                         </thead>
                         <tbody>
@@ -47,10 +51,7 @@
                                 <td><?php echo $instant->court_tags; ?></td>
                                 <td><?php echo substr($instant->event_date, 0, 10); ?></td>
                                 <td><?php echo $instant->start_hour . '-' . $instant->end_hour; ?></td>
-                                <td><?php echo $instant->quote_price; ?></td>
                                 <td><?php echo $states[$instant->state]['label']; ?></td>
-
-
                             </tr>
 
                         <?php } ?>
@@ -60,21 +61,22 @@
                     </table>
                 </div>
             </div>
-            <!--End Basic Table-->
-
-            <!--Pegination Centered-->
 
             <div class="text-center">
                 <?php echo $instants->appends($queries)->links(); ?>
-
-                </ul>
             </div>
-
-            <!--End Pegination Centered-->
 
         </div>
     </div>
 </div>
 
-
-<!--=== End Content ===-->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.datepicker').datetimepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            startView: 2,
+            minView: 2
+        });
+    });
+</script>

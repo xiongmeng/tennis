@@ -1,25 +1,36 @@
-<!--=== Breadcrumbs ===-->
-<div class="breadcrumbs margin-bottom-40">
-    <div class="container">
-        <h1 class="pull-left">订单</h1>
-
-    </div>
-</div><!--/breadcrumbs-->
-<!--=== End Breadcrumbs ===-->
 
 <!--=== Content ===-->
 <div class="container">
     <div class="row">
         <div class="col-md-12">
 
-
-            <?php echo Form::model($queries, array('method' => 'GET')) ?>
-            <?php echo Form::label('订单号：') ?><?php echo Form::input('text', 'id') ?>
-            <?php echo Form::label('场馆ID：') ?><?php echo Form::input('text', 'hall_id') ?>
-            <?php echo Form::label('买家：') ?><?php echo Form::input('text', 'buyer') ?>
-            <?php echo Form::label('卖家：') ?><?php echo Form::input('text', 'seller') ?>
-            <?php echo Form::submit('查询') ?>
-            <?php echo Form::close() ?><br/>
+            <?= Form::open(array('method' => 'GET', 'class' => 'form-inline')) ?>
+            <?= Form::model($queries) ?>
+            <div class="form-group">
+                <?= Form::input('text', 'id', null,
+                    array('class' => 'form-control', 'placeholder' => '订单号'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::input('text', 'event_date_start', null,
+                    array('class' => 'form-control datepicker', 'placeholder' => '活动开始时间'))?>
+            </div>
+            -
+            <div class="form-group">
+                <?= Form::input('text', 'event_date_end', null,
+                    array('class' => 'form-control datepicker', 'placeholder' => '活动结束时间'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::input('text', 'hall_name', null,
+                    array('class' => 'form-control', 'placeholder' => '场馆名称'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::input('text', 'buyer_name', null,
+                    array('class' => 'form-control', 'placeholder' => '买家名称'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
+            </div>
+            <?= Form::close() ?><br/>
             <!--Basic Table Option (Spacing)-->
             <div class="panel panel-green margin-bottom-40">
                 <div class="panel-heading">
@@ -31,11 +42,12 @@
                         <thead>
                         <tr>
                             <th>订单号</th>
-                            <th>场馆ID</th>
+                            <th>场馆</th>
                             <th>场地类型</th>
                             <th>活动时间</th>
                             <th>时段</th>
                             <th>售价</th>
+                            <th>成本价</th>
                             <th>卖家</th>
                             <th>买家</th>
                             <th>状态</th>
@@ -48,11 +60,12 @@
 
                                 <tr>
                                     <td><?php echo $instant->id; ?></td>
-                                    <td><?php echo $instant->hall_id; ?></td>
+                                    <td><?php echo $instant->hall_name; ?></td>
                                     <td><?php echo $instant->court_tags; ?></td>
                                     <td><?php echo substr($instant->event_date, 0, 10); ?></td>
                                     <td><?php echo $instant->start_hour . '-' . $instant->end_hour; ?></td>
                                     <td><?php echo $instant->quote_price; ?></td>
+                                    <td><?php echo $instant->cost_price; ?></td>
                                     <td><?php echo $instant->seller; ?></td>
                                     <td><?php echo $instant->buyer_name; ?></td>
                                     <td><?php echo $states[$instant->state]['label']; ?></td>
@@ -97,5 +110,15 @@
     </div>
 </div>
 
-
 <!--=== End Content ===-->
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.datepicker').datetimepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            startView: 2,
+            minView: 2
+        });
+    });
+</script>

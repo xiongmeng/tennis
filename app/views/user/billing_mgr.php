@@ -4,23 +4,41 @@
     <div class="row">
         <div class="panel">
             <div class="col-md-12 panel-heading">
-                <?php echo Form::open(array('method' => 'GET', 'class' => 'form-inline')) ?>
-                <?php echo Form::model($queries) ?>
+                <?= Form::open(array('method' => 'GET', 'class' => 'form-inline')) ?>
+                <?= Form::model($queries) ?>
                 <div class="form-group">
-                    <?php echo Form::input('text', 'billing_created_time_start', '',
-                        array('class' => 'form-control', 'placeholder' => '创建开始时间', 'data-datepicker' => 'datepicker'))?>
+                    <?= Form::input('text', 'billing_created_time_start', null,
+                        array('class' => 'form-control datepicker', 'placeholder' => '创建开始时间'))?>
                 </div>
                 -
                 <div class="form-group">
-                    <?php echo Form::input('text', 'billing_created_time_end', '',
-                        array('class' => 'form-control', 'placeholder' => '创建结束时间', 'data-datepicker' => 'datepicker'))?>
+                    <?= Form::input('text', 'billing_created_time_end', null,
+                        array('class' => 'form-control datepicker', 'placeholder' => '创建结束时间'))?>
                 </div>
                 <div class="form-group">
-                    <?php echo Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
+                    <?= Form::input('text', 'user_name', null,
+                        array('class' => 'form-control', 'placeholder' => '用户、场馆昵称'))?>
+                </div>
+                <div class="form-group">
+                    <?= Form::input('text', 'hall_name', null,
+                        array('class' => 'form-control', 'placeholder' => '场馆名称'))?>
+                </div>
+                <div class="form-group">
+                    <?= Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
                 </div>
                 <?php echo Form::close() ?>
             </div>
             <div class="col-md-12 panel-body">
+                <div class="tab-v1">
+                    <ul class="nav nav-tabs">
+                        <?php foreach ($tabs as $tabKey => $tab) { ?>
+                            <li class="<?php if ($tabKey == $curTab) { ?>active<?php } ?>">
+                                <a href="<?php echo $tab['url'] ?>"><?php echo $tab['label'] ?></a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+
                 <!--Basic Table Option (Spacing)-->
                 <div class="panel panel-green margin-bottom-40">
                     <div class="panel-body">
@@ -28,6 +46,7 @@
                             <thead>
                             <tr>
                                 <th>变更id</th>
+                                <th>用户名</th>
                                 <th>变更时间</th>
                                 <th>详情</th>
                                 <th>金额</th>
@@ -39,6 +58,7 @@
                                     ?>
                                     <tr>
                                         <td><?php echo $billingStaging->id ?></td>
+                                        <td><?= $billingStaging->user_name ?></td>
                                         <td><?php echo date('Y-m-d H:i', $billingStaging->billing_created_time) ?></td>
                                         <td>
                                             <?php if (isset(FinanceConstant::$relationTypeOptions[$billingStaging->relation_type])) { ?>
@@ -84,5 +104,12 @@
 </div>
 
 <script type="text/javascript">
-    //    $('.datepicker').datepicker();
+    $(document).ready(function(){
+        $('.datepicker').datetimepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            startView: 2,
+            minView: 2
+        });
+    });
 </script>

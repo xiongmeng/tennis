@@ -1,22 +1,30 @@
-<!--=== Breadcrumbs ===-->
-<div class="breadcrumbs margin-bottom-40">
-    <div class="container">
-        <h1 class="pull-left">我的订单</h1>
-
-    </div>
-</div>
-<!--=== End Breadcrumbs ===-->
-
 <!--=== Content ===-->
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-
-
-            <?php echo Form::model($queries, array('method' => 'GET')) ?>
-            <?php echo Form::label('日期：') ?><?php echo Form::input('text', 'seller') ?>
-            <?php echo Form::submit('查询') ?>
-            <?php echo Form::close() ?><br/>
+            <?= Form::open(array('method' => 'GET', 'class' => 'form-inline')) ?>
+            <?= Form::model($queries) ?>
+            <div class="form-group">
+                <?= Form::input('text', 'id', null,
+                    array('class' => 'form-control', 'placeholder' => '订单号'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::input('text', 'event_date_start', null,
+                    array('class' => 'form-control datepicker', 'placeholder' => '活动开始时间'))?>
+            </div>
+            -
+            <div class="form-group">
+                <?= Form::input('text', 'event_date_end', null,
+                    array('class' => 'form-control datepicker', 'placeholder' => '活动结束时间'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::input('text', 'hall_name', null,
+                    array('class' => 'form-control', 'placeholder' => '场馆名称'))?>
+            </div>
+            <div class="form-group">
+                <?= Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
+            </div>
+            <?= Form::close() ?><br/>
             <!--Basic Table Option (Spacing)-->
             <div class="panel panel-green margin-bottom-40">
                 <div class="panel-heading">
@@ -59,31 +67,28 @@
                                                 href="fsm-operate/<?php echo $instant->id; ?>/confirm"><i
                                                     class="icon-check"></i>确认打球</a></button>
                                     <?php } ?>
-
                             </tr>
-
                         <?php } ?>
-
-
                         </tbody>
                     </table>
                 </div>
             </div>
-            <!--End Basic Table-->
-
-            <!--Pegination Centered-->
 
             <div class="text-center">
                 <?php echo $instants->appends($queries)->links(); ?>
-
-                </ul>
             </div>
-
-            <!--End Pegination Centered-->
 
         </div>
     </div>
 </div>
 
-
-<!--=== End Content ===-->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.datepicker').datetimepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            startView: 2,
+            minView: 2
+        });
+    });
+</script>

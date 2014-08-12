@@ -9,3 +9,5 @@ Thumbs.db
 /.idea
 _ide_*.php
 *.txt
+/node_modules
+/bower_components
