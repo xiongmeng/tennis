@@ -71,19 +71,19 @@
                                     <td><?php echo $states[$instant->state]['label']; ?></td>
 
                                     <td><?php if ($fsm->can('cancel')) { ?>
-                                            <button class="btn btn-danger btn-xs"><a
+                                            <a class="btn btn-danger btn-xs"
                                                     href="fsm-operate/<?php echo $instant->id; ?>/cancel"><i
-                                                        class="icon-trash"></i> 取消</a></button>
+                                                        class="icon-trash"></i> 取消</a>
                                         <?php } ?>
                                         <?php if ($fsm->can('online')) { ?>
-                                            <button class="btn btn-warning btn-xs"><a
+                                            <a class="btn btn-warning btn-xs"
                                                     href="fsm-operate/<?php echo $instant->id; ?>/online"><i
-                                                        class="icon-ok"></i>上架</a></button>
+                                                        class="icon-ok"></i>上架</a>
                                         <?php } ?>
                                         <?php if ($fsm->can('terminate')) { ?>
-                                            <button class="btn btn-warning btn-xs"><a
+                                            <a class="btn btn-warning btn-xs"
                                                     href="fsm-operate/<?php echo $instant->id; ?>/terminate"><i
-                                                        class="icon-pencil"></i>终止</a></button>
+                                                        class="icon-pencil"></i>终止</a>
                                             <!--<button class="btn btn-success btn-xs"><i class="icon-ok"></i> Submit</button>-->
                                             <!--<button class="btn btn-info btn-xs"><i class="icon-share"></i> Share</button></td>-->
                                         <?php } ?>

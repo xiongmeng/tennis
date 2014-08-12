@@ -58,14 +58,14 @@
                                 <td><?php echo $instant->quote_price; ?></td>
                                 <td><?php echo $states[$instant->state]['label']; ?></td>
                                 <td><?php if ($fsm->can('pay_success')) { ?>
-                                        <button class="btn btn-success btn-xs"><a
+                                        <a class="btn btn-success btn-xs"
                                                 href="fsm-operate/<?php echo $instant->id; ?>/pay_success"><i
-                                                    class="icon-ok"></i>去支付</a></button>
+                                                    class="icon-ok"></i>去支付</a>
                                     <?php } ?>
                                     <?php if ($fsm->can('confirm')) { ?>
-                                        <button class="btn btn-info btn-xs"><a
+                                        <a class="btn btn-info btn-xs"
                                                 href="fsm-operate/<?php echo $instant->id; ?>/confirm"><i
-                                                    class="icon-check"></i>确认打球</a></button>
+                                                    class="icon-check"></i>确认打球</a>
                                     <?php } ?>
                             </tr>
                         <?php } ?>
