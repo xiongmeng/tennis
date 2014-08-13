@@ -31,7 +31,7 @@ return array(
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
                 'properties' => array(),
             ),
-            'canceled' => array( //已取消
+            'canceled' => array( //已取消-这个状态没有用，在购买后点取消会重回上架状态
                 'type' => Finite\State\StateInterface::TYPE_FINAL,
                 'properties' => array(),
             ),
@@ -56,7 +56,7 @@ return array(
             'pay_expire' => array('from' => array('paying'), 'to' => 'on_sale'),
             'pay_success' => array('from' => array('paying'), 'to' => 'payed'), //buyer
             'event_start' => array('from' => array('payed'), 'to' => 'playing'),
-            'cancel' => array('from' => array('payed'), 'to' => 'canceled'), //mgr
+            'cancel' => array('from' => array('payed'), 'to' => 'on_sale'), //mgr
             'event_end' => array('from' => array('playing'), 'to' => 'confirming'),
             'terminate' => array('from' => array('playing', 'confirming'), 'to' => 'terminated'), //mgr
             'confirm' => array('from' => array('confirming'), 'to' => 'finish'),
@@ -94,19 +94,23 @@ return array(
                             $instantOrderFinance->execute();
                         }
                 ),
-                array( //已支付->取消
+                array( //已支付->上架
                     'from' => 'payed',
-                    'to' => 'canceled',
+                    'to' => 'on_sale',
                     'do' => function (InstantOrder $instant, \Finite\Event\TransitionEvent $e) {
                             //解冻会员金额
                             $instantOrderFinance = new InstantOrderFinance($instant);
                             $instantOrderFinance->cancel();
+
+                            //清除买家标志
+                            $instant->buyer = $instant->buyer_name = null;
+                            $instant->save();
                         }
                 ),
             ),
             'after' => array(
                 array( //草稿->待售（上架）
-                    'from' => 'draft',
+//                    'from' => 'draft',
                     'to' => 'on_sale',
                     'do' => function (InstantOrder $instant, \Finite\Event\TransitionEvent $e) {
                             //记录expire_time=活动开始时间及卖家ID
@@ -219,7 +223,7 @@ return array(
                         }
                 ),
                 array( //待确认->终止
-                    'from' => 'draft',
+                    'from' => 'confirming',
                     'to' => 'terminated',
                     'do' => function (InstantOrder $instant, \Finite\Event\TransitionEvent $e) {
                             //删除过期时间
