@@ -39,7 +39,7 @@ return array(
         ),
         'canceled' => array(
             'label' => '已取消',
-            'hall_label' => '已取消',
+            'hall_label' => '&nbsp',
             'hall_class' => 'btn disabled btn-u-default btn-block btn-lg',
         ),
         'expired' =>array(
