@@ -56,7 +56,7 @@
                                         <?php $instant = $formattedInstants[$date][$startHour];
                                         $fsm->resetObject($instant);?>
                                         <?php if ($fsm->can('buy')) { ?>
-                                            <a class="btn btn-primary btn-block btn-lg" href="fsm-operate/<?= $instant->id; ?>/buy">
+                                            <a class="btn btn-primary btn-block btn-lg" href="fsm_buy/<?= $instant->id; ?>">
                                                 购买
                                             </a>
                                         <?php } else { ?>
