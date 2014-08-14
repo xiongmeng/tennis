@@ -5,7 +5,7 @@ return array(
         '2' => array(
             'label' => '即时订场',
             'name' => 'instant',
-            'url' => '/instant_order_on_sale',
+            'url' => '/hall_on_sale',
             'children' => array()
         ),
         '4' => array(

@@ -54,8 +54,30 @@ class InstantOrder extends Eloquent implements \Finite\StatefulInterface {
                     : $builder->where('state', '=', $aQuery['state']);
             }
 
-        })
+        })->orderBy('event_date', 'desc')
             ->paginate($iPageSize);
+    }
+
+    public function searchHallPriceAggregate($aQuery, $iPageSize =20){
+        return InstantOrder::where(function(\Illuminate\Database\Eloquent\Builder $builder) use ($aQuery){
+            if(!empty($aQuery['event_date_start'])){
+                $builder->where('event_date', '>=', $aQuery['event_date_start']);
+            }
+            if(!empty($aQuery['event_date'])){
+                $builder->where('event_date', '=', $aQuery['event_date']);
+            }
+            if(!empty($aQuery['start_hour'])){
+                $builder->where('start_hour', '=', $aQuery['start_hour']);
+            }
+            if(!empty($aQuery['hall_name'])){
+                $builder->where('hall_name', 'like', '%' . $aQuery['hall_name'] . '%');
+            }
+            if(!empty($aQuery['state'])){
+                is_array($aQuery['state']) ? $builder->getQuery()->whereIn('state', $aQuery['state'])
+                    : $builder->where('state', '=', $aQuery['state']);
+            }
+        })->groupBy(array('hall_id', 'quote_price'))->orderBy('quote_price', 'asc')
+            ->paginate($iPageSize, array('hall_id','quote_price', DB::raw('COUNT(1) AS count')));
     }
 
 

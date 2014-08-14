@@ -26,4 +26,16 @@ class Hall extends Eloquent {
     public function InstantOrders(){
         return $this->hasMany('InstantOrder', 'hall_id');
     }
+
+    public function HallImages(){
+        return $this->hasMany('HallImage', 'hall_id');
+    }
+
+    /**
+     * 封皮头像
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function Envelope(){
+        return $this->hasOne('HallImage', 'hall_id', 'image');
+    }
 }
