@@ -27,11 +27,11 @@
             <div class="col-md-3 col-sm-6">
                 <div class="pricing hover-effect">
                     <div class="pricing-head" >
-                        <h4><i class="icon-jpy"></i><?php echo strstr($instant->quote_price,'.',TRUE); ?></i>
+                        <h4><i class="icon-jpy"></i><?php echo $instant->quote_price;//strstr($instant->quote_price,'.',TRUE); ?></i>
                         <span><?php echo substr($instant->event_date , 0 , 10).'     '.weekday(strtotime($instant->event_date)); ?></span>
                             <span><?php echo $instant->hall_name.' '.$instant->court_tags; ?></span>
                             <span><?php echo $instant->start_hour.':00-'.$instant->end_hour.':00'; ?></span></h4>
-                        <a class="btn-u btn-u-large" href="fsm-operate/<?php echo $instant->id;?>/buy"<i class="icon-shopping-cart">购买</i></a>
+                        <a class="btn-u btn-u-large" href="fsm_buy/<?php echo $instant->id;?>"<i class="icon-shopping-cart">购买</i></a>
                     </div>
 
                 </div>

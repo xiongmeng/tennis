@@ -24,7 +24,7 @@
             </div>
         </div></p>
             <div class="da-img">
-				<iframe src="/assets/img/up.png" width="530" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+				<iframe src="/assets/img/top.png" width="530" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
             </div>
         </div>
         <div class="da-slide">
