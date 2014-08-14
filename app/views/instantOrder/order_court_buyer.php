@@ -4,7 +4,7 @@
         <div class="tab-v1 col-xs-12 col-md-12">
             <ul class="nav nav-tabs">
                 <li role="presentation" class="<?php if ($hall->id == $hallID) { ?>active<?php } ?>"><a
-                        href="\order_court_manage?hall_id=<?php echo $hall->id ?>&court_id=">
+                        href="\order_court_buyer?hall_id=<?php echo $hall->id ?>&court_id=">
                         <h6><?php echo $hall->name; ?></h6></a></li>
             </ul>
         </div>
@@ -15,7 +15,7 @@
             <ul class="nav nav-pills nav-stacked" role="tablist">
                 <?php foreach ($courts as $court) { ?>
                     <li role="presentation" class="<?php if ($court->id == $courtID) { ?>active<?php } ?>"><a
-                            href="order_court_manage?hall_id=<?php echo $court->hall_id; ?>&court_id=<?php echo $court->id ?>"
+                            href="order_court_buyer?hall_id=<?php echo $court->hall_id; ?>&court_id=<?php echo $court->id ?>"
                         <h4><?php echo $court->number ?>号场</h4></a></li>
 
                 <?php } ?>

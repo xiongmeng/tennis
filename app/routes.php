@@ -266,8 +266,10 @@ Route::get('/order_court_buyer', array('before' => 'auth', function () {
 
     $hall = Hall::findOrFail($hallID);
 
+    $courtID = Input::get('court_id');
     $courts = Court::where('hall_id', '=', $hallID)->get();
-    $courtID = $courts[0]->id;
+    empty($courtID) && $courtID = $courts[0]->id;
+
 
     $instants = InstantOrder::orderBy('start_hour', 'asc')->where('hall_id', '=', $hallID)
         ->where('court_id', '=', $courtID)->where('event_date', '>=', date('Y-m-d'))->get();
@@ -295,7 +297,6 @@ Route::get('/order_court_buyer', array('before' => 'auth', function () {
 Route::get('/fsm-operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
     $instantOrder = InstantOrder::findOrFail($id);
     $fsm = new InstantOrderFsm($instantOrder);
-    $fsm->apply($operate);
     $fsm->apply($operate);
     $url = URL::previous();
     return $redirect = Redirect::to($url);
