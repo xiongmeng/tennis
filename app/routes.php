@@ -138,8 +138,8 @@ Route::get('/hall_on_sale', array('before' => 'auth', function () {
 
     $curDate = date('Y-m-d');
     $queries['event_date_start'] = $curDate;
-    !isset($queries['event_date']) && $queries['event_date'] = $curDate;
-    !isset($queries['start_hour']) && $queries['start_hour'] = date('H', strtotime('+1 hour'));
+//    !isset($queries['event_date']) && $queries['event_date'] = $curDate;
+//    !isset($queries['start_hour']) && $queries['start_hour'] = date('H', strtotime('+1 hour'));
 
 //    $queries['state'] = array_keys(
 //        array_except(Config::get('fsm.instant_order.states'), array('draft', 'waste', 'canceled','expired','terminated')));
