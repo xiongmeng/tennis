@@ -9,7 +9,7 @@ return array(
             ),
         'waste' => array(
             'label' => '过时',
-            'hall_label' => '过时',
+            'hall_label' => '&nbsp',
             'hall_class' => 'btn disabled btn-u-default btn-block btn-lg',
         ),
         'on_sale' => array(
@@ -19,42 +19,42 @@ return array(
         ),
         'paying' => array(
             'label' => '等待支付',
-            'hall_label' => '等待支付',
-            'hall_class' => 'btn btn-warning btn-block btn-lg',
+            'hall_label' => '&nbsp',
+            'hall_class' => 'btn disabled btn-u-default btn-block btn-lg',
         ),
         'payed' =>array(
             'label' =>'已购买',
-            'hall_label' => '已购买',
+            'hall_label' => '已售',
             'hall_class' => 'btn btn-warning btn-block btn-lg',
         ),
         'playing' => array(
             'label' => '打球中',
-            'hall_label' => '打球中',
+            'hall_label' => '已售',
             'hall_class' => 'btn btn-warning btn-block btn-lg',
         ),
         'confirming' => array(
             'label' => '等待确认',
-            'hall_label' => '等待确认',
+            'hall_label' => '已售',
             'hall_class' => 'btn btn-warning btn-block btn-lg',
         ),
         'canceled' => array(
             'label' => '已取消',
-            'hall_label' => '已取消',
+            'hall_label' => '&nbsp',
             'hall_class' => 'btn disabled btn-u-default btn-block btn-lg',
         ),
         'expired' =>array(
             'label' => '过期未售',
-            'hall_label' => '过期未售',
+            'hall_label' => '&nbsp',
             'hall_class' => 'btn disabled btn-u-default btn-block btn-lg',
         ),
         'terminated' => array(
             'label' => '终止',
-            'hall_label' => '终止',
+            'hall_label' => '&nbsp',
             'hall_class' => 'btn disabled btn-u-default btn-block btn-lg',
         ),
         'finish' => array(
             'label' => '完成',
-            'hall_label' => '完成',
+            'hall_label' => '已售',
             'hall_class' => 'btn btn-warning btn-block btn-lg',
         ),
     )

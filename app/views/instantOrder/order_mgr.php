@@ -48,6 +48,7 @@
                             <th>时段</th>
                             <th>售价</th>
                             <th>成本价</th>
+                            <th>过期时间</th>
                             <th>卖家</th>
                             <th>买家</th>
                             <th>状态</th>
@@ -66,6 +67,7 @@
                                     <td><?php echo $instant->start_hour . '-' . $instant->end_hour; ?></td>
                                     <td><?php echo $instant->quote_price; ?></td>
                                     <td><?php echo $instant->cost_price; ?></td>
+                                    <td><?= !empty($instant->expire_time) ? date('m-d H:i', $instant->expire_time) : ''?>
                                     <td><?php echo $instant->seller; ?></td>
                                     <td><?php echo $instant->buyer_name; ?></td>
                                     <td><?php echo $states[$instant->state]['label']; ?></td>
