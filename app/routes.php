@@ -211,7 +211,7 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
     empty($activeDate) && $activeDate = date('Y-m-d');
 
     $instants = InstantOrder::orderBy('start_hour', 'asc')
-        ->where('hall_id', '=', $hallID)->where('event_date', '=', date('Y-m-d'))->get();
+        ->where('hall_id', '=', $hallID)->where('event_date', '=', $activeDate)->get();
 
     $formattedInstants = array();
     foreach($instants as $instant){
@@ -250,7 +250,7 @@ Route::get('/order_court_buyer', array('before' => 'auth', function () {
     empty($activeDate) && $activeDate = date('Y-m-d');
 
     $instants = InstantOrder::orderBy('start_hour', 'asc')
-        ->where('hall_id', '=', $hallID)->where('event_date', '=', date('Y-m-d'))->get();
+        ->where('hall_id', '=', $hallID)->where('event_date', '=', $activeDate)->get();
 
     $formattedInstants = array();
     foreach($instants as $instant){

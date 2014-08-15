@@ -104,7 +104,7 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function(){
+    seajs.use('datetimePicker', function(){
         $('.datepicker').datetimepicker({
             format: 'yyyy-mm-dd',
             language: 'zh-CN',

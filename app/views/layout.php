@@ -33,9 +33,30 @@
     <link rel="stylesheet" href="/assets/css/themes/headers/default.css" id="style_color-header-1">
 
     <!-- datePicker css-->
-    <link rel="stylesheet" href="/assets/plugins/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"></script>
+    <link rel="stylesheet" href="/assets/plugins/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
 
+    <script type="text/javascript" src="/assets/plugins/seajs/sea.js"></script>
+    <script type="text/javascript" src="/assets/js/seajs-config.js"></script>
     <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript">
+        seajs.config({
+            paths: {
+                plugin: '/assets/plugins',
+                module: '/assets/js/module'
+//                'module_common': '<{$UI_resources_site}>/js/module_common',
+//                lib: '<{$UI_resources_site}>/js/lib'
+            },
+            base: '/assets/js/module/',
+            charset: 'utf-8',
+            alias: {
+//                ueditor: '/js/lib/ueditor/1.2.6/ueditor_cmd.js'
+            },
+            map: [
+                [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201408151643']
+            ]
+        });
+    </script>
 </head>
 
 <body>
@@ -55,32 +76,7 @@
 <?php echo $copyright; ?>
 
 <!-- JS Global Compulsory -->
-<script type="text/javascript" src="/assets/plugins/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/assets/plugins/hover-dropdown.min.js"></script>
-<script type="text/javascript" src="/assets/plugins/back-to-top.js"></script>
-<!-- JS Implementing Plugins -->
-<script type="text/javascript" src="/assets/plugins/flexslider/jquery.flexslider-min.js"></script>
-<script type="text/javascript" src="/assets/plugins/parallax-slider/js/modernizr.js"></script>
-<script type="text/javascript" src="/assets/plugins/parallax-slider/js/jquery.cslider.js"></script>
-<!-- JS Page Level -->
-<script type="text/javascript" src="/assets/js/app.js"></script>
-<script type="text/javascript" src="/assets/js/pages/index.js"></script>
-<!-- datePicker -->
-<script type="text/javascript" src="/assets/plugins/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="/assets/plugins/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-
-<script type="text/javascript">
-    jQuery(document).ready(function () {
-        App.init();
-        App.initSliders();
-        Index.initParallaxSlider();
-    });
-</script>
-<!--[if lt IE 9]>
-<script src="/assets/plugins/respond.js"></script>
-<![endif]-->
-
 
 </body>
 </html>	

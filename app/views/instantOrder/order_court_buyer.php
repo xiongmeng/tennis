@@ -80,7 +80,7 @@
                                             </a>
                                         <?php } else { ?>
                                             <a class="btn btn-default btn-block btn-lg disabled">
-                                                &nbsp;
+                                                &nbsp;<?= $states[$instant->state]['label']?>
                                             </a>
                                         <?php } ?>
 
