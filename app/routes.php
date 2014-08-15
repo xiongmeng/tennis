@@ -178,36 +178,6 @@ Route::get('/hall_on_sale', array('before' => 'auth', function () {
             'halls' =>$halls, 'dates' => $dates, 'hours' => $hours));
 }));
 
-//Route::get('/instant_order_on_sale', array('before' => 'auth', function () {
-//    $queries = Input::all();
-//
-//    $queries['event_date_start'] = date('Y-m-d');
-//
-//
-//    $hallIdCounts = InstantOrder::where('event_date', '>' , date('Y-m-d'))
-//        ->groupBy('hall_id')->orderBy('count', 'desc')->get(array('hall_id','hall_name', DB::raw('COUNT(hall_id) AS count')));
-//    $hallIdsCount = array();
-//    foreach($hallIdCounts as $hallIdCount){
-//        $hallIdsCount[$hallIdCount['hall_id']] = $hallIdCount;
-//    }
-//
-//    $dates = array();
-//    for ($i = 0; $i < 7; $i++) {
-//        $dates[] = date('m-d', strtotime("+$i day"));
-//    }
-//
-//    $instantModel = new InstantOrder();
-//    $instants = $instantModel->search($queries);
-//
-//    $user = Auth::getUser();
-//    $userID = $user['user_id'];
-//
-//    $states = Config::get('state.data');
-//    return View::make('layout')->nest('content', 'instantOrder.order_on_sale',
-//        array('instants' => $instants, 'queries' => $queries, 'states' => $states,
-//            'userID' => $userID, 'halls' => $hallIdCounts, 'dates' => $dates));
-//}));
-
 Route::get('/instant_order_seller', array('before' => 'auth', function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
@@ -233,35 +203,41 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
         $hallID = $halls[0]->id;
     }
 
+    $courtID = Input::get('court_id');
     $courts = Court::where('hall_id', '=', $hallID)->get();
-    if (!$courtID && count($courts) > 0) {
-        $courtID = $courts[0]->id;
-    }
+    empty($courtID) && $courtID = $courts[0]->id;
 
-    $instants = InstantOrder::orderBy('start_hour', 'asc')->where('hall_id', '=', $hallID)
-        ->where('court_id', '=', $courtID)->where('event_date', '>=', date('Y-m-d'))->get();
+    $activeDate = Input::get('date');
+    empty($activeDate) && $activeDate = date('Y-m-d');
+
+    $instants = InstantOrder::orderBy('start_hour', 'asc')
+        ->where('hall_id', '=', $hallID)->where('event_date', '=', date('Y-m-d'))->get();
 
     $formattedInstants = array();
-    foreach ($instants as $instant) {
-        !isset($formattedInstants[$instant->event_date]) && $formattedInstants[$instant->event_date] = array();
-        $formattedInstants[$instant->event_date][$instant->start_hour] = $instant;
+    foreach($instants as $instant){
+        !isset($formattedInstants[$instant->court_id]) && $formattedInstants[$instant->court_id] = array();
+        $formattedInstants[$instant->court_id][$instant->start_hour] = $instant;
     }
 
     $dates = array();
-    for ($i = 0; $i < 7; $i++) {
-        $dates[] = date('Y-m-d 00:00:00', strtotime("+$i day"));
-    }
-
     $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
+
+    for ($i = 0; $i < 7; $i++) {
+        $time = strtotime("+$i day");
+        $dates[date('Y-m-d', $time)] = $time;
+    }
 
     $states = Config::get('state.data');
     return View::make('layout')->nest('content', 'instantOrder.order_court_manage', array('instants' => $instants,
-        'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates, 'hallID' => $hallID,
-        'courtID' => $courtID, 'weekdayOption' => $weekdayOption, 'formattedInstants' => $formattedInstants));
+        'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates, 'hallID'=>$hallID,
+        'courtID' => $courtID, 'weekdayOption' => $weekdayOption, 'formattedInstants' => $formattedInstants,
+        'activeDate' => $activeDate
+    ));
 
 }));
 
 Route::get('/order_court_buyer', array('before' => 'auth', function () {
+
     $hallID = Input::get('hall_id');
 
     $hall = Hall::findOrFail($hallID);
@@ -270,27 +246,32 @@ Route::get('/order_court_buyer', array('before' => 'auth', function () {
     $courts = Court::where('hall_id', '=', $hallID)->get();
     empty($courtID) && $courtID = $courts[0]->id;
 
+    $activeDate = Input::get('date');
+    empty($activeDate) && $activeDate = date('Y-m-d');
 
-    $instants = InstantOrder::orderBy('start_hour', 'asc')->where('hall_id', '=', $hallID)
-        ->where('court_id', '=', $courtID)->where('event_date', '>=', date('Y-m-d'))->get();
+    $instants = InstantOrder::orderBy('start_hour', 'asc')
+        ->where('hall_id', '=', $hallID)->where('event_date', '=', date('Y-m-d'))->get();
 
     $formattedInstants = array();
     foreach($instants as $instant){
-        !isset($formattedInstants[$instant->event_date]) && $formattedInstants[$instant->event_date] = array();
-        $formattedInstants[$instant->event_date][$instant->start_hour] = $instant;
+        !isset($formattedInstants[$instant->court_id]) && $formattedInstants[$instant->court_id] = array();
+        $formattedInstants[$instant->court_id][$instant->start_hour] = $instant;
     }
 
     $dates = array();
-    for ($i = 0; $i < 7; $i++) {
-        $dates[] = date('Y-m-d 00:00:00', strtotime("+$i day"));
-    }
-
     $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
+
+    for ($i = 0; $i < 7; $i++) {
+        $time = strtotime("+$i day");
+        $dates[date('Y-m-d', $time)] = $time;
+    }
 
     $states = Config::get('state.data');
     return View::make('layout')->nest('content', 'instantOrder.order_court_buyer', array('instants' => $instants,
-        'states' => $states, 'courts' => $courts, 'hall' => $hall, 'dates' => $dates, 'hallID'=>$hallID,
-        'courtID'=>$courtID, 'weekdayOption' => $weekdayOption, 'formattedInstants' => $formattedInstants));
+        'states' => $states, 'courts' => $courts, 'halls' => array($hall), 'dates' => $dates, 'hallID'=>$hallID,
+        'courtID' => $courtID, 'weekdayOption' => $weekdayOption, 'formattedInstants' => $formattedInstants,
+        'activeDate' => $activeDate
+    ));
 
 }));
 
