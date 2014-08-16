@@ -1,18 +1,3 @@
-<style>
-    .table thead > tr > th,
-    .table tbody > tr > th,
-    .table tfoot > tr > th,
-    .table thead > tr > td,
-    .table tbody > tr > td,
-    .table tfoot > tr > td {
-        padding: 0;
-        width: 9%;
-        line-height: 1.428571429;
-        vertical-align: top;
-        border-top: 1px solid #dddddd;
-    }
-</style>
-
 <!--=== Content ===-->
 <div class="container ">
     <div class="row margin-bottom-20">
@@ -42,7 +27,7 @@
         </div>
 
         <div class="col-md-10 table-responsive">
-            <table class="table table-hover table-condensed">
+            <table class="table table-court">
                 <thead>
                 <tr>
                     <th></th>

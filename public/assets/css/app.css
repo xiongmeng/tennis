@@ -895,3 +895,16 @@ i.style-switcher-btn-option:hover {
 .style-switcher li.theme-light {
    background: #ecf0f1;
 }
+
+.table-court thead > tr > th,
+.table-court tbody > tr > th,
+.table-court tfoot > tr > th,
+.table-court thead > tr > td,
+.table-court tbody > tr > td,
+.table-court tfoot > tr > td {
+    padding: 0;
+    width: 9%;
+    line-height: 1.428571429;
+    vertical-align: top;
+    border: 1px solid #dddddd;
+}
