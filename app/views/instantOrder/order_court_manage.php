@@ -9,7 +9,7 @@
         width: 9%;
         line-height: 1.428571429;
         vertical-align: top;
-        border-top: 1px solid #dddddd;
+        border: 1px solid #dddddd;
     }
 </style>
 
