@@ -1,5 +1,8 @@
 {
-    "repositories": [{"type": "vcs","url": "https://github.com/xiongmeng/libs"}],
+    "repositories": [
+        {"type": "vcs","url": "https://github.com/xiongmeng/libs"},
+        {"type": "vcs","url": "https://github.com/huanghua581/laravel-wechat-sdk"}
+        ],
 	"name": "laravel/laravel",
 	"description": "The Laravel Framework.",
 	"keywords": ["framework", "laravel"],
