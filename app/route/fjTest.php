@@ -129,7 +129,11 @@ Route::group(array('prefix' => 'fj'), function () {
     }
 ));
 });
+Route::get('/weixin_in',function(){
+    return Input::get('echostr');
+    }
 
+);
 Route::resource('weixin_access','WeiXinController');
 
 
