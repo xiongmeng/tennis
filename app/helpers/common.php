@@ -3,6 +3,11 @@ function rest_success($data){
     return array('code' => 1000 , 'data' => $data);
 }
 
+function weekday_option(){
+    return array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
+};
+
+
 function url_wrapper($url)
 {
     // 获取到微信请求里包含的几项内容

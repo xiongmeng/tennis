@@ -27,57 +27,51 @@
         </div>
 
         <div class="col-md-10 table-responsive" id="table_court">
+            <!-- ko if: statistics.total()<=0 -->
+            <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
+            <!-- /ko -->
+            <!-- ko if: statistics.total()>0 -->
+            <div class="btn-group" id="stickUp">
+                <a class="btn btn-primary btn-lg" data-bind="click: submitSelected">提交</a>
+                <a class="btn btn-danger btn-lg" data-bind="click: cancelSelected">取消选取</a>
+            </div>
+
             <table class="table table-court">
                 <thead>
                 <tr>
                     <th></th>
-                    <?php foreach ($courts as $court) { ?>
-                        <th>
-                            <a class="btn btn-primary btn-lg btn-block"><?= $court->number ?>号场</a>
-                        </th>
-                    <?php } ?>
+                    <!-- ko foreach:courts-->
+                    <th>
+                        <a class="btn btn-primary btn-lg btn-block" data-bind="text: number()+'号场'"></a>
+                    </th>
+                    <!-- /ko-->
                 </tr>
                 </thead>
                 <tbody>
-                <?php if (!$instants || $instants->count() <= 0) { ?>
-                    <tr>
-                        <td></td>
-                        <td colspan="<?= count($dates) ?>" style="text-align: center">
-                            <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
-                        </td>
-                    </tr>
-                <?php } else { ?>
-                    <?php $fsm = new InstantOrderFsm(); ?>
-                    <?php for ($startHour = $instants->first()->start_hour; $startHour < $instants->last()->start_hour; $startHour++) { ?>
-                        <tr>
-                            <td>
-                                <a class="btn btn-primary btn-block btn-lg"><?= sprintf('%d-%d', $startHour, $startHour + 1); ?></a>
-                            </td>
-                            <?php foreach ($courts as $court) { ?>
-                                <td>
-                                    <?php if (isset($formattedInstants[$court->id]) && isset($formattedInstants[$court->id][$startHour])) { ?>
-                                        <?php $instant = $formattedInstants[$court->id][$startHour];
-                                        $fsm->resetObject($instant);?>
-                                        <a class="<?= $states[$instant->state]['hall_class'] ?>"
-                                            <?php if ($fsm->can('online')) { ?>
-                                                href="fsm-operate/<?= $instant->id; ?>/online"
-                                            <?php } elseif ($fsm->can('offline')) { ?>
-                                                href="fsm-operate/<?= $instant->id; ?>/offline"
-                                            <?php } else { ?>
-                                            <?php } ?>
-                                            >
-                                            <?= $states[$instant->state]['hall_label'] ?>
-                                        </a>
-                                    <?php } else { ?>
 
-                                    <?php } ?>
-                                </td>
-                            <?php } ?>
-                        </tr>
-                    <?php } ?>
-                <?php } ?>
+                <!-- ko foreach: instantOrdersByHours -->
+                <tr>
+                    <td>
+                        <a class="btn btn-primary btn-block btn-lg" data-bind="text: start() + '-' + end()"></a>
+                    </td>
+                    <!-- ko foreach: instantOrders -->
+                    <td>
+                        <a data-bind="attr:{class: $root.states[state()].hall_class}, css: {active: select},
+                            html: $root.states[state()].hall_label, click: $root.select" data-content="It's so simple to create a tooltop for my website!" ></a>
+                    </td>
+                    <!-- /ko -->
+                </tr>
+                <!-- /ko -->
                 </tbody>
             </table>
+            <!-- /ko -->
         </div>
     </div>
 </div>
+
+<script>
+    seajs.use('court/manage', function(courtManage){
+        courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>, {'submitUrl':'/hall/instantOrder/batchOperate'});
+        $("#stickUp").pin();
+    });
+</script>

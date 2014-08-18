@@ -3,12 +3,16 @@ define(function(require){
     var mapping = require('knockout_mapping');
     require('rest');
 
+    var option = {
+        'submitUrl' : ''
+    };
+
     var ListModel = function(mappingModel){
         var self = mappingModel;
         self.selected = ko.observableArray();
         self.currentState = ko.observable('');
 
-        self.select = function(instantOrder){
+        self.select = function(instantOrder, event){
             if(instantOrder.select()){
                 instantOrder.select(false);
                 self.selected.remove(instantOrder);
@@ -17,8 +21,15 @@ define(function(require){
                     self.currentState(instantOrder.state());
                     instantOrder.select(true);
                     self.selected.push(instantOrder);
+
+                    $(event.currentTarget).toolbar({
+                        content: '#user-toolbar-options',
+                        position: 'bottom'
+                    });
                 }
             }
+
+            console.log(arguments);
         };
 
         self.cancelSelected = function(){
@@ -35,7 +46,7 @@ define(function(require){
                 selectedIds.push(instantOrder.id());
             });
             var stateOperateMaps = {draft: 'online', on_sale: 'offline'};
-            var defer = $.restPost('/xm/hall/instantOrder/batchOperate/' + stateOperateMaps[self.currentState()],
+            var defer = $.restPost(option.submitUrl + '/' + stateOperateMaps[self.currentState()],
                 {'instant_order_ids' : selectedIds.join(',')});
 
             defer.done(function(res, data){
@@ -46,18 +57,21 @@ define(function(require){
         return self;
     };
 
-    function init(dom){
-        var list;
-        var defer = $.restGet('/xm/instantOrder/view/8935/2014-08-18/');
+    function init(dom, worktableData, cfg){
+        $.extend(option, cfg);
 
-        defer.done(function(res, data){
-            if(!list){
-                list = new ListModel(mapping.fromJS(data));
-                ko.applyBindings(list, dom);
-            }else{
-                mapping.fromJS(data, list);
-            }
-        });
+        var list = new ListModel(mapping.fromJS(worktableData));
+        ko.applyBindings(list, dom);
+
+//        var defer = $.restGet('/xm/instantOrder/view/8935/2014-08-18/');
+//
+//        defer.done(function(res, data){
+//            if(!list){
+//                list = new ListModel(mapping.fromJS(data));
+//            }else{
+//                mapping.fromJS(data, list);
+//            }
+//        });
     }
 
     return {

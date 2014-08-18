@@ -196,45 +196,52 @@ Route::get('/instant_order_seller', array('before' => 'auth', function () {
 
 Route::get('/order_court_manage', array('before' => 'auth', function () {
     $user = Auth::getUser();
+
     $hallID = Input::get('hall_id');
-    $courtID = Input::get('court_id');
     $halls = $user->Halls;
     if (!$hallID && count($halls) > 0) {
         $hallID = $halls[0]->id;
     }
 
-    $courtID = Input::get('court_id');
-    $courts = Court::where('hall_id', '=', $hallID)->get();
-    empty($courtID) && $courtID = $courts[0]->id;
-
     $activeDate = Input::get('date');
     empty($activeDate) && $activeDate = date('Y-m-d');
 
-    $instants = InstantOrder::orderBy('start_hour', 'asc')
-        ->where('hall_id', '=', $hallID)->where('event_date', '=', $activeDate)->get();
-
-    $formattedInstants = array();
-    foreach($instants as $instant){
-        !isset($formattedInstants[$instant->court_id]) && $formattedInstants[$instant->court_id] = array();
-        $formattedInstants[$instant->court_id][$instant->start_hour] = $instant;
-    }
-
     $dates = array();
-    $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
-
     for ($i = 0; $i < 7; $i++) {
         $time = strtotime("+$i day");
         $dates[date('Y-m-d', $time)] = $time;
     }
 
-    $states = Config::get('state.data');
-    return View::make('layout')->nest('content', 'instantOrder.order_court_manage', array('instants' => $instants,
-        'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates, 'hallID'=>$hallID,
-        'courtID' => $courtID, 'weekdayOption' => $weekdayOption, 'formattedInstants' => $formattedInstants,
-        'activeDate' => $activeDate
-    ));
+    $worktableService = new InstantOrderWorktable();
+    $workTableData = $worktableService->loadWorktableByHallAndDate($hallID, $activeDate);
 
+    return View::make('layout')->nest('content', 'instantOrder.order_court_manage', array(
+        'halls' => $halls, 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
+        'activeDate' => $activeDate, 'worktableData' => $workTableData
+    ));
 }));
+
+Route::post('/hall/instantOrder/batchOperate/{operate?}', function($operate){
+    $instantOrderIdString = Input::get('instant_order_ids');
+    $instantOrderIds = explode(',', $instantOrderIdString);
+
+    $res = array('failed' => array(), 'total' => count($instantOrderIds), 'success' => 0, 'original' => $instantOrderIdString);
+
+    $fsm = new InstantOrderFsm();
+    foreach($instantOrderIds as $instantOrderId){
+        try{
+            $instantOrder = InstantOrder::findOrFail($instantOrderId);
+            $fsm->resetObject($instantOrder);
+            $fsm->apply($operate);
+
+            $res['success'] ++ ;
+        }catch (\Exception $e){
+            $res['failed'][$instantOrderId] = $e->getTraceAsString();
+        }
+    }
+
+    return rest_success($res);
+});
 
 Route::get('/order_court_buyer', array('before' => 'auth', function () {
 

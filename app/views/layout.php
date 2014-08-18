@@ -77,6 +77,9 @@
 
 <!-- JS Global Compulsory -->
 <script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/assets/plugins/stickUp/stickUp.js"></script>
+<!--<script type="text/javascript" src="/assets/plugins/stickUp/stickUp.js"></script>-->
+
+<script type="text/javascript" src="/assets/plugins/toolbar/jquery.toolbar.js"></script>
+<script type="text/javascript" src="/assets/plugins/pin/jquery.pin.js"></script>
 </body>
 </html>	
