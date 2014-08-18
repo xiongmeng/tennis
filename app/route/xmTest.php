@@ -197,7 +197,7 @@ Route::group(array('prefix' => 'xm'), function(){
         }
 
         $states = Config::get('state.data');
-        return View::make('layout')->nest('content', 'instantOrder.order_court_manage', array('instants' => $instants,
+        return View::make('layout')->nest('content', 'instantOrder.order_court_manage_knock_out', array('instants' => $instants,
             'states' => $states, 'courts' => $courts, 'halls' => $halls, 'dates' => $dates, 'hallID'=>$hallID,
             'courtID' => $courtID, 'weekdayOption' => $weekdayOption, 'formattedInstants' => $formattedInstants,
             'activeDate' => $activeDate
