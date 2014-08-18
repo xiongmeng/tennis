@@ -123,15 +123,22 @@ Route::group(array('prefix' => 'fj'), function () {
 
 
     }));
-
-Route::get('/test',array('before'=> 'weixin|auth',function(){
+    Route::get('/test',array('before'=> 'weixin|auth',function(){
 
         $user = Auth::getUser();
-
     }
 ));
-
-Route::resource('/weixin_access', 'WeixinController');
-
 });
+Route::get('/weixin_in',function(){
+        $reply = Input::get('echostr');
+        if($reply){
+    echo $reply;}
+        else{echo 123;}
+
+    }
+
+);
+Route::resource('weixin_access','WeiXinController');
+
+
 
