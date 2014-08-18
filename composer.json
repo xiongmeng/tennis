@@ -21,7 +21,10 @@
 			"app/tests/TestCase.php",
             "app/libraries",
             "app/services"
-		]
+		],
+        "files": [
+            "app/helpers/common.php"
+        ]
 	},
 	"scripts": {
 		"post-install-cmd": [

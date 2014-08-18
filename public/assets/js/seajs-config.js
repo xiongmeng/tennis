@@ -7,8 +7,9 @@ seajs.config({
 //        'knockout_mapping': 'lib/knockout/plugins/mapping_debug.js',
 //        fancybox: 'lib/fancybox/fancybox_cmd.js',
 //        'seajs-debug': 'lib/seajs/sea-debug.js'
-//        rest: 'lib/rest/rest_cmd.js',
+        rest: 'plugin/rest/rest_cmd.js',
         knockout: 'plugin/knockout/knockout.cmd.js',
+        knockout_mapping: 'plugin/knockout/plugins/mapping_debug.js',
         datetimePicker: 'plugin/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.cmd.js'
     },
     charset: 'utf-8',

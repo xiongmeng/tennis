@@ -26,7 +26,7 @@
             </ul>
         </div>
 
-        <div class="col-md-10 table-responsive">
+        <div class="col-md-10 table-responsive" id="table_court">
             <table class="table table-court">
                 <thead>
                 <tr>
