@@ -154,6 +154,7 @@ Route::group(array('prefix' => 'xm'), function(){
                 if(isset($formattedInstants[$start]) && isset($formattedInstants[$start][$court->id])){
                     $order = $formattedInstants[$start][$court->id];
                     $order['state_text'] = $states[$order->state];
+                    $order['select'] = false;
                 }
 
                 $hour['instantOrders'][] = $order;
@@ -204,4 +205,28 @@ Route::group(array('prefix' => 'xm'), function(){
         ));
 
     }));
+
+    Route::post('/hall/instantOrder/batchOperate/{operate?}', function($operate){
+        $instantOrderIdString = Input::get('instant_order_ids');
+        $instantOrderIds = explode(',', $instantOrderIdString);
+
+        $res = array('failed' => array(), 'total' => count($instantOrderIds), 'success' => 0, 'original' => $instantOrderIdString);
+
+        $fsm = new InstantOrderFsm();
+        foreach($instantOrderIds as $instantOrderId){
+            try{
+                $instantOrder = InstantOrder::findOrFail($instantOrderId);
+                $fsm->resetObject($instantOrder);
+                $fsm->apply($operate);
+
+                $res['success'] ++ ;
+            }catch (\Exception $e){
+                $res['failed'][$instantOrderId] = $e->getTraceAsString();
+            }
+        }
+
+        return rest_success($res);
+    });
+
+    Route::get('controller', 'WeiXinController@test');
 });

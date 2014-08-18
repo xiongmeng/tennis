@@ -27,8 +27,14 @@
         </div>
 
         <div class="col-md-10 table-responsive" id="table_court">
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" id="toolbar" data-bind="visible: selected().length > 0">
+                    <li><a class="btn btn-primary" data-bind="click: submitSelected">提交</a></li>
+                    <li><a class="btn btn-danger" data-bind="click: cancelSelected">取消</a> </li>
+                </ul>
+            </div>
             <!-- ko if: instantOrdersByHours().length<=0 -->
-                <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
+            <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
             <!-- /ko -->
 
             <!-- ko if: instantOrdersByHours().length>0 -->
@@ -37,9 +43,9 @@
                 <tr>
                     <th></th>
                     <!-- ko foreach:courts-->
-                        <th>
-                            <a class="btn btn-primary btn-lg btn-block" data-bind="text: number()+'号场'"></a>
-                        </th>
+                    <th>
+                        <a class="btn btn-primary btn-lg btn-block" data-bind="text: number()+'号场'"></a>
+                    </th>
                     <!-- /ko-->
                 </tr>
                 </thead>
@@ -52,7 +58,7 @@
                     </td>
                     <!-- ko foreach: instantOrders -->
                     <td>
-                        <a data-bind="css: state_text.hall_class, html: state_text.hall_label"></a>
+                        <a data-bind="attr:{class: state_text.hall_class}, css: {active: select}, html: state_text.hall_label, click: $root.select"></a>
                     </td>
                     <!-- /ko -->
                 </tr>
@@ -67,5 +73,7 @@
 <script>
     seajs.use('court/manage', function(courtManage){
         courtManage.init($('#table_court')[0]);
+
+        $('#toolbar').stickUp();
     });
 </script>

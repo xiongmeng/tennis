@@ -3,34 +3,43 @@ define(function(require){
     var mapping = require('knockout_mapping');
     require('rest');
 
-    var InstantOrderModel = function(data){
-
-    };
-
     var ListModel = function(mappingModel){
         var self = mappingModel;
-        self.hallList = ko.observableArray();
+        self.selected = ko.observableArray();
+        self.currentState = ko.observable('');
 
-        self.loadInstantOrder = function(url, query){
-            $.restGet(url, query, function(res, data){
-//                self.instantOrderList.destroyAll();
-//                $.each(instantOrders, function (i, data) {
-//                    self.instantOrders.push(new InstantOrderModel(data));
-//                });
-//                self.courts.destroyAll();
-//                $.each(data.courts, function(i, court){
-//                    self.courts.push(court);
-//                });
-//
-//                self.hours.destroyAll();
-//                $.each(data.hours, function(i, hour){
-//                    self.hours.push(hour);
-//                });
+        self.select = function(instantOrder){
+            if(instantOrder.select()){
+                instantOrder.select(false);
+                self.selected.remove(instantOrder);
+            }else{
+                if(self.currentState() == '' || self.currentState() == instantOrder.state()){
+                    self.currentState(instantOrder.state());
+                    instantOrder.select(true);
+                    self.selected.push(instantOrder);
+                }
+            }
+        };
 
-//                self.instantOrders(data.instantOrders);
+        self.cancelSelected = function(){
+            $.each(self.selected(), function(index, instantOrder){
+                instantOrder.select(false);
+            });
+            self.selected.removeAll();
+            self.currentState('');
+        };
 
-                var model = mapping.fromJS(data);
-                mapping.fromJS(data, self);
+        self.submitSelected = function(){
+            var selectedIds = [];
+            $.each(self.selected(), function(index, instantOrder){
+                selectedIds.push(instantOrder.id());
+            });
+            var stateOperateMaps = {draft: 'online', on_sale: 'offline'};
+            var defer = $.restPost('/xm/hall/instantOrder/batchOperate/' + stateOperateMaps[self.currentState()],
+                {'instant_order_ids' : selectedIds.join(',')});
+
+            defer.done(function(res, data){
+                window.location.reload();
             });
         };
 
@@ -49,22 +58,6 @@ define(function(require){
                 mapping.fromJS(data, list);
             }
         });
-
-        var old= {
-            key1 : 2
-        };
-
-        var new1 = {
-            key1 : 1,
-            key2 : '3'
-        };
-
-        var model = mapping.fromJS(old);
-        mapping.fromJS(new1, model);
-
-        var mappingModel = mapping.fromJS({});
-        var model1 = new ListModel(mappingModel);
-        mapping.fromJS(old, model1);
     }
 
     return {
