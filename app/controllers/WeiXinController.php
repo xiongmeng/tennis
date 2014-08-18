@@ -318,30 +318,30 @@ class WeiXinController extends \BaseController {
         if ($type === 'text') {//文本输入
             $content = strtolower($messages['content']);
 
-            if($content == 'jcbd'){
-                $isBond = $this->getUserID($appUserID);
-                if($isBond){
-                    if($isBond instanceof RelationUserApp){
-                        $isBond->app_user_id = null;
-                        $isBond->save();
-
-                        $reply = $messages->getXml4Txt("成功解除绑定");}
-                    else{
-                        $reply = $messages->getXml4Txt("抱歉,出错了");
-                    }
-                }
-                else{
-                    $reply = $messages->getXml4Txt("您还没有绑定网球通账号");
-                }
+//            if($content == 'jcbd'){
+//                $isBond = $this->getUserID($appUserID);
+//                if($isBond){
+//                    if($isBond instanceof RelationUserApp){
+//                        $isBond->app_user_id = null;
+//                        $isBond->save();
+//
+//                        $reply = $messages->getXml4Txt("成功解除绑定");}
+//                    else{
+//                        $reply = $messages->getXml4Txt("抱歉,出错了");
+//                    }
+//                }
+//                else{
+//                    $reply = $messages->getXml4Txt("您还没有绑定网球通账号");
+//                }
 
 
             }
 
-            else{
+//            else{
                 $reply = $messages->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
-            }
+//            }
             echo $reply;
-        }
+//        }
 
 	}
 
