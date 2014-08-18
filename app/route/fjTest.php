@@ -132,8 +132,11 @@ Route::group(array('prefix' => 'fj'), function () {
 Route::get('/weixin_in',function(){
         $reply = Input::get('echostr');
         if($reply){
-    echo $reply;}
-        else{echo 123;}
+            echo $reply;exit;
+        }
+        else{
+            echo 123;
+        }
 
     }
 
