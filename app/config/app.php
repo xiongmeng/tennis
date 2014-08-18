@@ -124,8 +124,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'FinanceServiceProvider',
-        //'Cooper\Wechat\WechatServiceProvider',
-
+        'Cooper\Wechat\WechatServiceProvider',
 	),
 
 	/*
