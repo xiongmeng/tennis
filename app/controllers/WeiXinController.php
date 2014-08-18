@@ -338,15 +338,9 @@ class WeiXinController extends \BaseController {
             }
 
 //            else{
-//                $reply = $messages->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
+               $reply = $messages->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
 //            }
-        $reply = '<xml>
-<ToUserName><![CDATA[o1_T_jhDGF6vfI2mnjOj-dYIhbmY]]></ToUserName>
-<FromUserName><![CDATA[gh_03175fbc0274]]></FromUserName>
-<CreateTime>12345678</CreateTime>
-<MsgType><![CDATA[text]]></MsgType>
-<Content><![CDATA[你好]]></Content>
-</xml>';
+
             echo $reply;
 //        }
 
