@@ -39,7 +39,7 @@ define(function(require){
 
     function init(dom){
         var list;
-        var defer = $.restGet('http://homestead.app:8000/xm/instantOrder/view/8935/2014-08-18/');
+        var defer = $.restGet('/xm/instantOrder/view/8935/2014-08-18/');
 
         defer.done(function(res, data){
             if(!list){
