@@ -9,8 +9,9 @@
 		"barryvdh/laravel-ide-helper": "1.*",
         "tennis/libs": "dev-master",
         "yohang/finite": "1.*",
-        "doctrine/dbal": "2.4.*"
-	},
+        "doctrine/dbal": "2.4.*",
+        "cooper/wechat": "dev-master"
+    },
 	"autoload": {
 		"classmap": [
 			"app/commands",
