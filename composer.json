@@ -27,7 +27,8 @@
             "app/services"
 		],
         "files": [
-            "app/helpers/common.php"
+            "app/helpers/common.php",
+            "app/helpers/constant.php"
         ]
 	},
 	"scripts": {

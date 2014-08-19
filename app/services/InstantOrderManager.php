@@ -3,7 +3,7 @@ use Sports\Finance\Operate\OperateObject;
 use Sports\Constant\Finance as FinanceConstant;
 use Sports\Finance\Operate\ActionObject;
 
-class InstantOrderWorktable {
+class InstantOrderManager {
     /**
      * 加载制定场馆制定日期的工作台信息
      * @param $hallId

@@ -10,6 +10,7 @@ seajs.config({
         rest: 'plugin/rest/rest_cmd.js',
         knockout: 'plugin/knockout/knockout.cmd.js',
         knockout_mapping: 'plugin/knockout/plugins/mapping_debug.js',
+        knockout_switch_case: 'plugin/knockout/plugins/knockout-switch-case.min.js',
         datetimePicker: 'plugin/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.cmd.js'
     },
     charset: 'utf-8',

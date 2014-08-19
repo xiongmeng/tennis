@@ -904,7 +904,57 @@ i.style-switcher-btn-option:hover {
 .table-court tfoot > tr > td {
     padding: 0;
     width: 9%;
-    line-height: 1.428571429;
+    line-height: 1.33;
     vertical-align: top;
     border: 1px solid #dddddd;
+}
+
+.table-court .court,
+.table-court .hour,
+.table-court .instant-order{
+    text-align: center;
+    display: block;
+    width: 100%;
+    vertical-align: middle;
+    margin-bottom: 0;
+    padding: 10px 16px;
+    line-height: 1.33;
+    font-size: 18px;
+    cursor: not-allowed;
+}
+
+.table-court .court,
+.table-court .hour{
+    background-color: #999999;
+}
+
+.table-court .instant-order{
+    background-color: #eeeeee;
+}
+
+.table-court .on_sale{
+    background-color: #428bca;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.table-court .draft{
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+
+.table-court .on_sale:hover{
+    background-color: #3276b1;
+}
+
+.table-court .draft:hover{
+    background-color: #ffeeee;
+}
+
+.table-court .active{
+    background-color: #660066;
+}
+
+.table-court .active:hover{
+    background-color: #660066;
 }

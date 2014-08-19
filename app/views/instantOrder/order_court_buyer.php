@@ -1,5 +1,5 @@
 <!--=== Content ===-->
-<div class="container ">
+<div class="container " xmlns="http://www.w3.org/1999/html">
     <div class="row margin-bottom-20">
         <div class="tab-v1 col-xs-12 col-md-12">
             <ul class="nav nav-tabs">
@@ -26,63 +26,59 @@
             </ul>
         </div>
 
-        <div class="col-md-10 table-responsive">
-            <table class="table table-court">
+        <div class="col-md-10 table-responsive" id="table_court">
+            <!-- ko if: statistics.total()<=0 -->
+            <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
+            <!-- /ko -->
+            <!-- ko if: statistics.total()>0 -->
+            <div class="btn-group" id="stickUp">
+                <a class="btn btn-primary btn-lg" data-bind="click: submitSelected">提交</a>
+                <a class="btn btn-danger btn-lg" data-bind="click: cancelSelected">取消选取</a>
+            </div>
+
+            <table class="table-court">
                 <thead>
                 <tr>
                     <th></th>
-                    <?php foreach ($courts as $court) { ?>
-                        <th>
-                            <a class="btn btn-primary btn-lg btn-block"><?=$court->number?>号场</a>
-                        </th>
-                    <?php } ?>
+                    <!-- ko foreach:courts-->
+                    <th>
+                        <span class="court" data-bind="text: number()+'号场'"></span>
+                    </th>
+                    <!-- /ko-->
                 </tr>
                 </thead>
                 <tbody>
-                <?php if (!$instants || $instants->count() <= 0) { ?>
-                    <tr>
-                        <td></td>
-                        <td colspan="<?= count($dates) ?>" style="text-align: center">
-                            <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
-                        </td>
-                    </tr>
-                <?php } else { ?>
-                    <?php $fsm = new InstantOrderFsm(); ?>
-                    <?php for ($startHour = $instants->first()->start_hour; $startHour < $instants->last()->start_hour; $startHour++) { ?>
-                        <tr>
-                            <td>
-                                <a class="btn btn-primary btn-block btn-lg"><?= sprintf('%-02d-%-02d', $startHour, $startHour+1); ?></a>
-                            </td>
-                            <?php foreach ($courts as $court) { ?>
-                                <td>
-                                    <?php if (isset($formattedInstants[$court->id]) && isset($formattedInstants[$court->id][$startHour])) { ?>
-                                        <?php $instant = $formattedInstants[$court->id][$startHour];
-                                        $fsm->resetObject($instant);?>
-                                        <?php if ($fsm->can('buy')) { ?>
-                                            <a class="btn btn-primary btn-block btn-lg"
-                                               href="fsm_buy/<?= $instant->id; ?>">
-                                                <?= intval($instant->quote_price) ?>￥
-                                            </a>
-                                        <?php } else { ?>
-                                            <a class="btn btn-default btn-block btn-lg disabled">
-                                                &nbsp;
-                                            </a>
-                                        <?php } ?>
 
-                                    <?php } else { ?>
+                <!-- ko foreach: instantOrdersByHours -->
+                <tr>
+                    <td>
+                        <span class="hour" data-bind="text: start() + '-' + end()"></span>
+                    </td>
+                    <!-- ko foreach: instantOrders -->
+                    <td>
+                        <!-- ko switch: state() -->
+                            <!-- ko case: 'on_sale' -->
+                            <span class="instant-order on_sale" data-bind="click: $root.select, css: {active: select}, text: quote_price() + '￥'"></span>
+                            <!-- /ko -->
 
-                                    <?php } ?>
-                                </td>
-                            <?php } ?>
-                        </tr>
-                    <?php } ?>
-                <?php } ?>
+                            <!-- ko case: '$default' -->
+                            <span class="instant-order disabled"></span>
+                            <!-- /ko -->
+                        <!-- /ko -->
+                    </td>
+                    <!-- /ko -->
+                </tr>
+                <!-- /ko -->
                 </tbody>
             </table>
+            <!-- /ko -->
         </div>
     </div>
 </div>
 
-
-
-
+<script>
+    seajs.use('court/manage', function(courtManage){
+        courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>, {'submitUrl':'/instantOrder/batchBuy'});
+        $("#stickUp").pin();
+    });
+</script>

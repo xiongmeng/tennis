@@ -36,13 +36,13 @@
                 <a class="btn btn-danger btn-lg" data-bind="click: cancelSelected">取消选取</a>
             </div>
 
-            <table class="table table-court">
+            <table class="table-court">
                 <thead>
                 <tr>
                     <th></th>
                     <!-- ko foreach:courts-->
                     <th>
-                        <a class="btn btn-primary btn-lg btn-block" data-bind="text: number()+'号场'"></a>
+                        <span class="court" data-bind="text: number()+'号场'"></span>
                     </th>
                     <!-- /ko-->
                 </tr>
@@ -52,12 +52,11 @@
                 <!-- ko foreach: instantOrdersByHours -->
                 <tr>
                     <td>
-                        <a class="btn btn-primary btn-block btn-lg" data-bind="text: start() + '-' + end()"></a>
+                        <span class="hour" data-bind="text: start() + '-' + end()"></span>
                     </td>
                     <!-- ko foreach: instantOrders -->
                     <td>
-                        <a data-bind="attr:{class: $root.states[state()].hall_class}, css: {active: select},
-                            html: $root.states[state()].hall_label, click: $root.select" data-content="It's so simple to create a tooltop for my website!" ></a>
+                        <span data-bind="attr:{class: 'instant-order ' + state()}, css: {active: select}, html: $root.states[state()].hall_label, click: $root.select" ></span>
                     </td>
                     <!-- /ko -->
                 </tr>

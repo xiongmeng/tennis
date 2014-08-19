@@ -1,6 +1,7 @@
 define(function(require){
     var ko = require('knockout');
     var mapping = require('knockout_mapping');
+    require('knockout_switch_case');
     require('rest');
 
     var option = {
@@ -46,11 +47,15 @@ define(function(require){
                 selectedIds.push(instantOrder.id());
             });
             var stateOperateMaps = {draft: 'online', on_sale: 'offline'};
-            var defer = $.restPost(option.submitUrl + '/' + stateOperateMaps[self.currentState()],
-                {'instant_order_ids' : selectedIds.join(',')});
+            var defer = $.restPost(option.submitUrl,
+                {'operate' : stateOperateMaps[self.currentState()], 'instant_order_ids' : selectedIds.join(',')});
 
             defer.done(function(res, data){
-                window.location.reload();
+                if(data.status == 'no_money' || data.status == 'pay_success'){
+                    window.open(data['advice_forward_url']);
+                }else{
+                    window.location.reload();
+                }
             });
         };
 

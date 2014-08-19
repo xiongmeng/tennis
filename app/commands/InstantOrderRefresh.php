@@ -54,7 +54,7 @@ class InstantOrderRefresh extends Command
         });
 
 
-        $instant = 7;
+        $instant = WORKTABLE_SUPPORT_DAYS_LENGTH;
         $dates = array(date('Y-m-d'));
         for ($i = 1; $i < $instant; $i++) {
             $dates[] = date('Y-m-d', strtotime("+$i day"));
