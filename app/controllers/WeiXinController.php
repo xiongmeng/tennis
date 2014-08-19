@@ -297,13 +297,13 @@ class WeiXinController extends \BaseController
                     $res = array(0 =>array(
                             'title'=>'即时订场','desc' => '即时订场',
                             'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=".$appUserID
+                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=".$appUserID.'&app_id=2'
                         ),
                         1=>array(
                             'title' => '即时订场',
                             'desc' => '即时订场',
                             'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=".$appUserID
+                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=".$appUserID.'&app_id=2'
                         )
                     );
 
