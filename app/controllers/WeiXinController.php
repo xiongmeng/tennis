@@ -292,12 +292,19 @@ class WeiXinController extends \BaseController
                 *活动资讯
                 */
                 if ($key == 'Instant_Order') {
-                    $res['title'] = array('name' => '即时订场',
-                        'PicUrl' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                        'Url' => "http://" . $currentdomain . "/hall_on_sale_test"
-
+                    $res = array(0 =>
+                        array(
+                            'title'=>'即时订场','name' => '即时订场',
+                            'PicUrl' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                            'Url' => "http://" . $currentdomain . "/hall_on_sale_test"
+                        ),
+                        1=>array(
+                            'title' => '即时订场',
+                            'name' => '即时订场',
+                            'PicUrl' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                            'Url' => "http://" . $currentdomain . "/hall_on_sale_test"
+                        )
                     );
-                    $res['item'] = array(0 => array('name' => '即时订场', 'PicUrl' => "http://" . $currentdomain . "/assets/img/logo.jpg", 'Url' => "http://" . $currentdomain . "/hall_on_sale_test"));
                     $reply = $server->getXml4RichMsgByArray($res);
                     echo $reply;
                 }
