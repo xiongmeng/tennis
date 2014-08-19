@@ -292,18 +292,18 @@ class WeiXinController extends \BaseController
                 *活动资讯
                 */
                 if ($key == 'Instant_Order') {
-                    $rec =array(0=>array('name'=>1),1=>array('name'=>1));
+
 
                     $res = array(0 =>array(
                             'title'=>'即时订场','desc' => '即时订场',
                             'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                            'url' => "http://" . $currentdomain . "/hall_on_sale_test"
+                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=".$appUserID
                         ),
                         1=>array(
                             'title' => '即时订场',
                             'desc' => '即时订场',
                             'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                            'url' => "http://" . $currentdomain . "/hall_on_sale_test"
+                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=".$appUserID
                         )
                     );
 
