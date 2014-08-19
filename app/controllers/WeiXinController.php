@@ -203,35 +203,42 @@ class WeiXinController extends \BaseController
                  *
                  *入会/绑定
                  */
-//                if ($key == 'Add_Bond') {
-//                    //$temp = $weixin->getusermesg($openID);
-//                    // $nickname = $temp['nickname'];
-//                    $userid = $weixin->getuserid($appUserID);
-//                    if ($userid == 0) {
-//
-//                        //标题
-//                        $res['title'] = array('name' => '注册/绑定',
-//                            'PicUrl' => "http://" . $currentdomain . '/Images/weixinImage/TopPic/logo.jpg',
-//                            'Url' => "http://" . $currentdomain . "/user_welcome.html"
-//                        );
-//
-//                        //内容
-//                        $res['item'] = array(0 => array('name' => "注册网球通会员", 'PicUrl' => "http://" . $currentdomain . "/Images/weixinImage/ListPic/register.png", 'Url' => "http://" . $currentdomain . "/user_weixinRegister.html?app_user_id=" . $appUserID),
-//                            1 => array('name' => "网球通会员绑定", 'PicUrl' => "http://" . $currentdomain . "/Images/weixinImage/ListPic/bond.png", 'Url' => "http://" . $currentdomain . "/user_weixinbond.html?app_user_id=" . $appUserID)
-//                        );
-//
-//                        $res['content'] = "注册/绑定";
-//
-//                        if ($res) {
-//                            $reply = $weixin->makeNews($res);
-//                        } else {
-//                            $reply = $weixin->makeText('抱歉，出错了呦');
-//                        }
-//                    } else {
-//                        $reply = $weixin->makeText("您已经成功绑定网球通账号，如需解除绑定请回复字母JCBD。");
-//                    }
-//                    $weixin->reply($reply);
-//                }
+                if ($key == 'Add_Bond') {
+
+                    $user = $this->getUser($appUserID);
+                    if (!$user) {
+
+                        $res = array(
+                            0 => array(
+                                'title' => '注册/绑定',
+                                'desc' => '注册/绑定',
+                                'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                                'url' => "http://" . $currentdomain . "/test"
+                            ),
+                            1 => array(
+                                'title' => '注册暂未开通',
+                                'desc' => '注册暂未开通',
+                                'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                                'url' => "http://" . $currentdomain . "/test"
+                            ),
+                            2 => array(
+                                'title' => '网球通会员绑定',
+                                'desc' => '网球通会员绑定',
+                                'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                                'url' => "http://" . $currentdomain . "/bond?app_user_id=" . $appUserID . '&app_id=2'
+                            )
+
+                        );
+                        if ($res) {
+                            $reply = $server->getXml4RichMsgByArray($res);
+                        } else {
+                            $reply = $server->getXml4Txt('抱歉，出错了呦');
+                        }
+                    } else {
+                        $reply = $server->getXml4Txt("您已经成功绑定网球通账号，如需解除绑定请回复字母JCBD。");
+                    }
+                    echo $reply;
+                }
 //
 //
 //                /**
@@ -294,16 +301,18 @@ class WeiXinController extends \BaseController
                 if ($key == 'Instant_Order') {
 
 
-                    $res = array(0 =>array(
-                            'title'=>'即时订场','desc' => '即时订场',
-                            'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=".$appUserID.'&app_id=2'
-                        ),
-                        1=>array(
+                    $res = array(
+                        0 => array(
                             'title' => '即时订场',
                             'desc' => '即时订场',
                             'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=".$appUserID.'&app_id=2'
+                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=" . $appUserID . '&app_id=2'
+                        ),
+                        1 => array(
+                            'title' => '即时订场',
+                            'desc' => '即时订场',
+                            'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=" . $appUserID . '&app_id=2'
                         )
                     );
 
@@ -319,11 +328,11 @@ class WeiXinController extends \BaseController
             $content = strtolower($message['content']);
 
             if ($content == 'jcbd') {
-                $isBond = $this->getUserID($appUserID);
+                $isBond = $this->getUser($appUserID);
                 if ($isBond) {
                     if ($isBond instanceof RelationUserApp) {
-                        $isBond->app_user_id = null;
-                        $isBond->save();
+                        $isBond->delete();
+
 
                         $reply = $server->getXml4Txt("成功解除绑定");
                     }
@@ -344,7 +353,7 @@ class WeiXinController extends \BaseController
      *
      * @return userID
      */
-    public function getUserID($appUserID)
+    public function getUser($appUserID)
     {
         try {
             $app = RelationUserApp::where('app_user_id', '=', $appUserID)->first();
@@ -355,6 +364,7 @@ class WeiXinController extends \BaseController
         return $app;
 
     }
+
     /**
      * save Log to SQL
      *
@@ -362,11 +372,11 @@ class WeiXinController extends \BaseController
      */
     public function log($message)
     {
-        $aLocation  = new WXLog;
+        $aLocation = new WXLog;
         $aLocation->openid = $message['from'];
         $aLocation->creattime = $message['time'];
         $aLocation->event = $message['event'];
-        $aLocation->msgtype =$message['type'];
+        $aLocation->msgtype = $message['type'];
 
         $aLocation->save();
 
@@ -379,12 +389,12 @@ class WeiXinController extends \BaseController
      */
     public function saveLocation($message)
     {
-        $aLocation  = new WXLocation;
+        $aLocation = new WXLocation;
         $aLocation->openid = $message['from'];
         $aLocation->lat = $message['la'];
         $aLocation->lon = $message['lo'];
         $aLocation->event = $message['event'];
-        $aLocation->msgtype =$message['type'];
+        $aLocation->msgtype = $message['type'];
         $aLocation->save();
 
     }

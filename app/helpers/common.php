@@ -16,11 +16,12 @@ function url_wrapper($url)
     {
         $param = strstr($url,"?");
         if($param){
-            $url = $url.'&app_user_id='.$AppUserID;
+
+            $url = $url.'&app_user_id='.$AppUserID.'&app_id=2';
 
         }
         else{
-            $url = $url.'?app_user_id='.$AppUserID;
+            $url = $url.'?app_user_id='.$AppUserID.'&app_id=2';
         }
 
     }

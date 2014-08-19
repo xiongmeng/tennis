@@ -58,7 +58,8 @@
                         <div class="col-md-3">
                             <h1><?= intval($hallPriceAggregate->quote_price) ?>￥</h1>
                             <a class="btn btn-primary btn-block" target="_blank"
-                               href="/order_court_buyer?hall_id=<?= $hallPriceAggregate->hall_id ?>">
+
+                               href="<?= url_wrapper("/order_court_buyer?hall_id=".$hallPriceAggregate->hall_id) ?>"
                                 <span><?= $hallPriceAggregate->count ?>个时段</span>
                                 <i class="icon-long-arrow-right"></i>
                             </a>

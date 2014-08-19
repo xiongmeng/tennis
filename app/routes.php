@@ -243,7 +243,7 @@ Route::post('/hall/instantOrder/batchOperate/{operate?}', function($operate){
     return rest_success($res);
 });
 
-Route::get('/order_court_buyer', array('before' => 'auth', function () {
+Route::get('/order_court_buyer', array('before' => 'weixin|auth', function () {
 
     $hallID = Input::get('hall_id');
 
