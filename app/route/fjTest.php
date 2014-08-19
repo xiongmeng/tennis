@@ -196,7 +196,7 @@ Route::get('/bond',function(){
                 $app->app_user_id = $queries['app_user_id'];
                 $app->save();
             }
-            return View::make('layout')->nest('content','bond_success.php',array(''));
+            return View::make('layout')->nest('content','bond_success',array(''));
         }
         else{
             echo '绑定失败，用户名密码错误';
