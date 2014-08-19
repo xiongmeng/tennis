@@ -129,19 +129,52 @@ Route::group(array('prefix' => 'fj'), function () {
     }
 ));
 });
-Route::get('/weixin_in',function(){
-        $reply = Input::get('echostr');
-        if($reply){
-            echo $reply;exit;
-        }
-        else{
-            echo 123;
-        }
-
-    }
-
-);
 Route::any('weixin_access','WeiXinController@index');
 
+
+Route::get('/hall_on_sale_test', array('before' => 'weixin|auth', function () {
+    $queries = Input::all();
+
+    $curDate = date('Y-m-d');
+    $queries['event_date_start'] = $curDate;
+//    !isset($queries['event_date']) && $queries['event_date'] = $curDate;
+//    !isset($queries['start_hour']) && $queries['start_hour'] = date('H', strtotime('+1 hour'));
+
+//    $queries['state'] = array_keys(
+//        array_except(Config::get('fsm.instant_order.states'), array('draft', 'waste', 'canceled','expired','terminated')));
+
+    $queries['state'] = array('on_sale');
+
+    $instantOrder = new InstantOrder();
+    $hallPriceAggregates = $instantOrder->searchHallPriceAggregate($queries, 8);
+    $hallIds = array();
+    foreach($hallPriceAggregates as $hallPriceAggregate){
+        $hallIds[$hallPriceAggregate->hall_id] = $hallPriceAggregate->hall_id;
+    }
+
+    $halls = array();
+    if(count($hallIds) > 0){
+        $hallDbResults = Hall::with('HallImages', 'Envelope')->whereIn('id', $hallIds)->get();
+        foreach($hallDbResults as $hallDbResult){
+            $halls[$hallDbResult->id] = $hallDbResult;
+        }
+    }
+
+    $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
+    $dates = array('不限');
+    for ($i = 0; $i < 7; $i++) {
+        $time = strtotime("+$i day");
+        $dates[date('Y-m-d', $time)] = sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]);
+    }
+
+    $hours = array('不限');
+    for($i=8; $i<23; $i++){
+        $hours[$i] = sprintf('%s时 - %s时', $i, $i +1);
+    }
+
+    return View::make('layout')->nest('content', 'instantOrder.hall_on_sale',
+        array('queries' => $queries, 'hallPriceAggregates' => $hallPriceAggregates,
+            'halls' =>$halls, 'dates' => $dates, 'hours' => $hours));
+}));
 
 
