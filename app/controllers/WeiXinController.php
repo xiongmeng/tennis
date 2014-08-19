@@ -1,21 +1,28 @@
 <?php
 
-class WeiXinController extends \BaseController {
+class WeiXinController extends \BaseController
+{
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        //生成自定义菜单
+        $menu = Config::get('/packages/cooper/wechat/menu.WeChatMenu');
+        $client = new \Cooper\Wechat\WeChatClient();
+        $client->setMenu($menu[0]);
+
+        //获取微信消息
         $messages = new \Cooper\Wechat\WeChatServer();
         $message = $messages->getMessage();
         $appUserID = $message['from'];
         $type = $message['type'];
-        $currentdomain = $_SERVER['HTTP_HOST'];//获取当前域名
-        $reg_url = "http://".$currentdomain."/user_weixinRegister.html?app_user_id=".$appUserID;
-        $bond_url ="http://".$currentdomain."/user_weixinbond.html?app_user_id=".$appUserID;
+        $currentdomain = $_SERVER['HTTP_HOST']; //获取当前域名
+        $reg_url = "http://" . $currentdomain . "/user_weixinRegister.html?app_user_id=" . $appUserID;
+        $bond_url = "http://" . $currentdomain . "/user_weixinbond.html?app_user_id=" . $appUserID;
 
 
         /**
@@ -316,36 +323,29 @@ class WeiXinController extends \BaseController {
 //                }
 //            }
 //        }
-        if ($type === 'text') {//文本输入
+        if ($type === 'text') { //文本输入
             $content = strtolower($message['content']);
 
-//            if($content == 'jcbd'){
-//                $isBond = $this->getUserID($appUserID);
-//                if($isBond){
-//                    if($isBond instanceof RelationUserApp){
-//                        $isBond->app_user_id = null;
-//                        $isBond->save();
-//
-//                        $reply = $messages->getXml4Txt("成功解除绑定");}
-//                    else{
-//                        $reply = $messages->getXml4Txt("抱歉,出错了");
-//                    }
-//                }
-//                else{
-//                    $reply = $messages->getXml4Txt("您还没有绑定网球通账号");
-//                }
+            if ($content == 'jcbd') {
+                $isBond = $this->getUserID($appUserID);
+                if ($isBond) {
+                    if ($isBond instanceof RelationUserApp) {
+                        $isBond->app_user_id = null;
+                        $isBond->save();
 
-
+                        $reply = $messages->getXml4Txt("成功解除绑定");
+                    }
+                } else {
+                    $reply = $messages->getXml4Txt("您还没有绑定网球通账号");
+                }
+            } else {
+                $reply = $messages->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
             }
 
-//            else{
-               $reply = $messages->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
-//            }
-
             echo $reply;
-//        }
+        }
 
-	}
+    }
 
     /**
      * return userID by appUserID
@@ -354,10 +354,10 @@ class WeiXinController extends \BaseController {
      */
     public function getUserID($appUserID)
     {
-        try{
-            $app = RelationUserApp::where('app_user_id','=',$appUserID)->first();
+        try {
+            $app = RelationUserApp::where('app_user_id', '=', $appUserID)->first();
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return false;
         }
         return $app;
@@ -365,73 +365,73 @@ class WeiXinController extends \BaseController {
     }
 
     /**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        //
+    }
 
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        //
+    }
 
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        //
+    }
 
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        //
+    }
 
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
 
 
 }
