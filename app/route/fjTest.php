@@ -141,7 +141,7 @@ Route::get('/weixin_in',function(){
     }
 
 );
-Route::post('weixin_access','WeiXinController@index');
+Route::any('weixin_access','WeiXinController@index');
 
 
 

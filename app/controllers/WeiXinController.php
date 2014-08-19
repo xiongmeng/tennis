@@ -10,8 +10,9 @@ class WeiXinController extends \BaseController {
 	public function index()
 	{
         $messages = new \Cooper\Wechat\WeChatServer();
-        $appUserID = $messages['from'];
-        $type = $messages['type'];
+        $message = $messages->getMessage();
+        $appUserID = $message['from'];
+        $type = $message['type'];
         $currentdomain = $_SERVER['HTTP_HOST'];//获取当前域名
         $reg_url = "http://".$currentdomain."/user_weixinRegister.html?app_user_id=".$appUserID;
         $bond_url ="http://".$currentdomain."/user_weixinbond.html?app_user_id=".$appUserID;
@@ -316,7 +317,7 @@ class WeiXinController extends \BaseController {
 //            }
 //        }
         if ($type === 'text') {//文本输入
-            $content = strtolower($messages['content']);
+            $content = strtolower($message['content']);
 
 //            if($content == 'jcbd'){
 //                $isBond = $this->getUserID($appUserID);
