@@ -82,6 +82,28 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="dialog-go-to-pay" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" aria-describedby="hello">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">余额不够啦</h4>
+            </div>
+            <div class="modal-body">
+                <p>总共需要花费<mark data-bind="text: needPay"></mark>元</p>
+                <p>您当前可用余额<mark data-bind="text: balance"><mark>元</p>
+                <p>您还需要支付<mark data-bind="text: needRecharge"></mark>元</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">关闭</a>
+                <a data-bind="attr:{href: adviseForwardUrl}" class="btn btn-primary" target="_blank">去支付</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     seajs.use('court/manage', function(courtManage){
         courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>);

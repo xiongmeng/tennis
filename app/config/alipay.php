@@ -53,7 +53,9 @@ $aAlipay['transport'] = 'http';
 
 return array(
     'aAlipay'=>array(
-
+        'key' => $_ENV['Alipay_KEY'],
+        'partner'=>$_ENV['Alipay_PARNTER'],
+        'seller_email'=>$_ENV['Alipay_SELLER_EMAIL'],
         'notify_url' => 'http://homestead.app:8000/alipay_notify',
         'return_url' => 'http://homestead.app:8000/alipay_return',
         'show_url' => 'http://homestead.app:8000/',

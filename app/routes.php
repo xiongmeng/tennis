@@ -343,106 +343,30 @@ Route::post('/instantOrder/batchBuy', array('before' => 'auth',function(){
     $instantOrderIdString = Input::get('instant_order_ids');
     $instantOrderIds = explode(',', $instantOrderIdString);
 
-    $result = array();
-
     DB::beginTransaction();
     try{
-        $instants = InstantOrder::whereIn('id', $instantOrderIds)->get();
-
-        if(count($instants) != count($instantOrderIds)){
-            throw new Exception(sprintf('选取了不存在的场地：选择(%d)，实际(%d)', count($instantOrderIds), count($instants)));
-        }
-
-        $fsm = new InstantOrderFsm();
-
-        //跳转到--正在支付中
-        foreach($instants as $instant){
-            $fsm->resetObject($instant);
-            $fsm->apply('buy');
-        }
-
-        //获取总共需要支付的钱数
-        $needPay = 0;
-        foreach($instants as $instant){
-            $needPay += $instant->quote_price;
-        }
-
-        //获取用户当前余额
-        $user = Auth::getUser();
-        $account = Finance::getUserAccount($user->user_id, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
-
-        //如果可用余额不够 进支付宝，否则轮询支付
-        if($account->getAvailableAmount() < $needPay){
-            $result['advise_forward_url'] = sprintf('/recharge/alipay/%s/%s/%s',
-                $needPay, RECHARGE_CALLBACK_PAY_INSTANT_ORDER, implode(',', $instantOrderIds));
-
-            $result['status'] = 'no_money';
-        }else{
-            foreach($instants as $instant){
-                $fsm->resetObject($instant);
-                $fsm->apply('pay_success');
-            }
-
-            $result['advise_forward_url'] = '/instant_order_buyer';
-
-            $result['status'] = 'pay_success';
-        }
+        $manager = new InstantOrderManager();
+        $result = $manager->batchBuy($instantOrderIds);
         DB::commit();
+        return rest_success($result);
     }catch (Exception $e){
         DB::rollBack();
         throw $e;
-    };
-
-    return rest_success($result);
+    }
 }));
 
 Route::post('/instantOrder/batchPay', array('before' => 'auth',function(){
     $instantOrderIdString = Input::get('instant_order_ids');
     $instantOrderIds = explode(',', $instantOrderIdString);
 
-    $result = array();
-
     DB::beginTransaction();
     try{
-        $instants = InstantOrder::whereIn('id', $instantOrderIds)->get();
-
-        if(count($instants) != count($instantOrderIds)){
-            throw new Exception(sprintf('选取了不存在的场地：选择(%d)，实际(%d)', count($instantOrderIds), count($instants)));
-        }
-
-        $fsm = new InstantOrderFsm();
-
-        //获取总共需要支付的钱数
-        $needPay = 0;
-        foreach($instants as $instant){
-            $needPay += $instant->quote_price;
-        }
-
-        //获取用户当前余额
-        $user = Auth::getUser();
-        $account = Finance::getUserAccount($user->user_id, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
-
-        //如果可用余额不够 进支付宝，否则轮询支付
-        if($account->getAvailableAmount() < $needPay){
-            $result['advise_forward_url'] = sprintf('/recharge/alipay/%s/%s/%s',
-                $needPay, RECHARGE_CALLBACK_PAY_INSTANT_ORDER, implode(',', $instantOrderIds));
-
-            $result['status'] = 'no_money';
-        }else{
-            foreach($instants as $instant){
-                $fsm->resetObject($instant);
-                $fsm->apply('pay_success');
-            }
-
-            $result['advise_forward_url'] = '/instant_order_buyer';
-
-            $result['status'] = 'pay_success';
-        }
+        $manager = new InstantOrderManager();
+        $result = $manager->batchPay($instantOrderIds);
         DB::commit();
+        return rest_success($result);
     }catch (Exception $e){
         DB::rollBack();
         throw $e;
-    };
-
-    return rest_success($result);
+    }
 }));

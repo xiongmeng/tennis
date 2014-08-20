@@ -68,8 +68,15 @@ define(function(require){
             var defer = $.restPost(submitUrlMaps[self.currentState()], {'instant_order_ids' : selectedIds.join(',')});
 
             defer.done(function(res, data){
-                if(data.status == 'no_money' || data.status == 'pay_success'){
-                    window.open(data['advice_forward_url']);
+
+                if(data.status == 'no_money'){
+                    $modalDom = $('#dialog-go-to-pay');
+                    $model = mapping.fromJS(data);
+                    ko.applyBindings($model, $modalDom[0]);
+                    $modalDom.modal();
+
+                }else if(data.status == 'pay_success'){
+
                 }
             });
         };
