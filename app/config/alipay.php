@@ -53,9 +53,11 @@ $aAlipay['transport'] = 'http';
 
 return array(
     'aAlipay'=>array(
-
-        'notify_url' => 'http://homestead.app:8000/alipay_notify',
-        'return_url' => 'http://homestead.app:8000/alipay_return',
+        'key' => $_ENV['Alipay_KEY'],
+        'partner'=>$_ENV['Alipay_PARNTER'],
+        'seller_email'=>$_ENV['Alipay_SELLER_EMAIL'],
+        'notify_url' => 'http://' . Request::getHttpHost() . '/alipay_notify',
+        'return_url' => 'http://' . Request::getHttpHost() . '/alipay_return',
         'show_url' => 'http://homestead.app:8000/',
         'mainname' => 'http://homestead.app:8000/',
         'sign_type' => 'MD5',

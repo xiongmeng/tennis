@@ -17,7 +17,7 @@
             <ul class="nav nav-pills nav-stacked" role="tablist">
                 <?php foreach ($dates as $date => $time) { ?>
                     <li class="<?php if ($date == $activeDate) { ?>active<?php } ?>">
-                        <a href="/order_court_buyer?hall_id=<?= $hallID ?>&date=<?= $date ?>">
+                        <a href="/order_court_buyer/<?= $hallID ?>?date=<?= $date ?>">
                             <h4><?=date('m-d', $time)?>&nbsp;<?= $weekdayOption[date('w', $time)]; ?></h4>
                         </a>
                     </li>
@@ -32,7 +32,7 @@
             <!-- /ko -->
             <!-- ko if: statistics.total()>0 -->
             <div class="btn-group" id="stickUp">
-                <a class="btn btn-primary btn-lg" data-bind="click: submitSelected">提交</a>
+                <a class="btn btn-primary btn-lg" data-bind="click: buyerSubmitSelected">提交</a>
                 <a class="btn btn-danger btn-lg" data-bind="click: cancelSelected">取消选取</a>
             </div>
 
@@ -42,7 +42,7 @@
                     <th></th>
                     <!-- ko foreach:courts-->
                     <th>
-                        <span class="court" data-bind="text: number()+'号场'"></span>
+                        <span class="court disabled" data-bind="text: number()+'号场'"></span>
                     </th>
                     <!-- /ko-->
                 </tr>
@@ -52,17 +52,23 @@
                 <!-- ko foreach: instantOrdersByHours -->
                 <tr>
                     <td>
-                        <span class="hour" data-bind="text: start() + '-' + end()"></span>
+                        <span class="hour disabled" data-bind="text: start() + '-' + end()"></span>
                     </td>
                     <!-- ko foreach: instantOrders -->
                     <td>
-                        <!-- ko switch: state() -->
+                        <!-- ko switch: state -->
                             <!-- ko case: 'on_sale' -->
-                            <span class="instant-order on_sale" data-bind="click: $root.select, css: {active: select}, text: quote_price() + '￥'"></span>
+                            <span class="instant-order buy" data-bind="click: $root.select, css: {active: select}, text: quote_price() + '￥'"></span>
                             <!-- /ko -->
 
-                            <!-- ko case: '$default' -->
-                            <span class="instant-order disabled"></span>
+                            <!-- ko case: 'paying' -->
+                                <!-- ko if: $root.loginUserId()==buyer() -->
+                                <span class="instant-order paying" data-bind="click: $root.select,
+                                    css: {active: select}, text: quote_price() + '￥'"></span>
+                                <!-- /ko -->
+                            <!-- /ko -->
+
+                            <!-- ko case: $default -->
                             <!-- /ko -->
                         <!-- /ko -->
                     </td>
@@ -76,9 +82,31 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="dialog-go-to-pay" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" aria-describedby="hello">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">余额不够啦</h4>
+            </div>
+            <div class="modal-body">
+                <p>总共需要花费<mark data-bind="text: needPay"></mark>元</p>
+                <p>您当前可用余额<mark data-bind="text: balance"><mark>元</p>
+                <p>您还需要支付<mark data-bind="text: needRecharge"></mark>元</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">关闭</a>
+                <a data-bind="attr:{href: adviseForwardUrl}" class="btn btn-primary" target="_blank">去支付</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     seajs.use('court/manage', function(courtManage){
-        courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>, {'submitUrl':'/instantOrder/batchBuy'});
+        courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>);
         $("#stickUp").pin();
     });
 </script>

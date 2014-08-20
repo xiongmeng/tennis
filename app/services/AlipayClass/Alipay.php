@@ -58,8 +58,8 @@ class Alipay{
             'service'=>'create_direct_pay_by_user',//接口名称，不需要修改
             'payment_type'=>'1',//交易类型，不需要修改
             /* 获取配置文件(alipay_config.php)中的 */
-            'partner'=>$_ENV['Alipay_PARNTER'],
-            'seller_email'=>$_ENV['Alipay_SELLER_EMAIL'],
+            'partner'=>$aAlipay['partner'],
+            'seller_email'=>$aAlipay['seller_email'],
             'return_url'=>$aAlipay['return_url'],
             'notify_url'=>$aAlipay['notify_url'],
             '_input_charset'=>$aAlipay['input_charset'],

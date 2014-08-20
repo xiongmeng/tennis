@@ -19,6 +19,9 @@ Route::get('/recharge/alipay/{money?}/{actionType?}/{actionToken}',
             return sprintf('充值额度必须为大于零的数字（%s）', $money);
         }
 
+        $isDeBug = Config::get('app.debug');
+        $isDeBug && $money = 0.01;
+
         //执行支付宝支付
         $sHtmlText = Alipay::Payment($money, sprintf("%08d", $iRechargeID), null, null, "付款", "付款");
         return $sHtmlText;
@@ -32,11 +35,13 @@ Route::get('/alipay_notify', array('before' => 'auth', function () {
     $sTradeStatus = Input::get('trade_status'); //交易状态
     $sBuyer = Input::get('buyer_email');
     $notify = new Alipay;
-    $bBes = $notify->notifyVerify(0x1003, intval($sTradeNo), $iMoney, $sPayNo, $sBuyer);
+    $isDeBug = Config::get('app.debug');
+
+    $bBes = $notify->notifyVerify(0x1003, intval($sTradeNo), $isDeBug ? 1000 : $iMoney, $sPayNo, $sBuyer);
     if ($bBes) {
-        return Redirect::to('instant_order_buyer');
+        return 'success';
     } else {
-        echo 'fail';
+        return 'fail';
     }
 }));
 
@@ -48,16 +53,35 @@ Route::get('/alipay_return', array('before' => 'auth', function () {
     $sTradeStatus = Input::get('trade_status'); //交易状态
     $sBuyer = Input::get('buyer_email');
     $notify = new Alipay;
-    $bBes = $notify->returnVerify(0x1003, intval($sTradeNo), $iMoney, $sPayNo, $sBuyer);
+
+    $isDeBug = Config::get('app.debug');
+
+    $bBes = $notify->returnVerify(0x1003, intval($sTradeNo), $isDeBug ? 1000 : $iMoney, $sPayNo, $sBuyer);
     if ($bBes) {
         $rechargeId = intval($sTradeNo);
-        $aRecharge = Recharge::where('id', '=', $rechargeId)->get();
-        $instantOrderID = $aRecharge[0]->callback_action_id;
-        $instantOrder = InstantOrder::findOrFail($instantOrderID);
-        $fsm = new InstantOrderFsm($instantOrder);
-        $fsm->apply('pay_success');
-        return Redirect::to('instant_order_buyer');
+        $recharge = Recharge::findOrFail($rechargeId);
+        if($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER){
+            $instantOrderString = $recharge->callback_action_token;
+            $instantOrderIds = explode(',', $instantOrderString);
+
+            DB::beginTransaction();
+            try{
+                $manager = new InstantOrderManager();
+                $result = $manager->batchPay($instantOrderIds);
+                DB::commit();
+
+                if($result['status'] == 'pay_success'){
+                    return Redirect::to('instant_order_buyer');
+                }else{
+                    return '支付失败';
+                }
+            }catch (Exception $e){
+                DB::rollBack();
+                throw $e;
+            }
+        }
+        return '充值成功';
     } else {
-        echo 'fail';
+        return 'fail';
     }
 }));
