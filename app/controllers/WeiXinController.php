@@ -296,7 +296,7 @@ class WeiXinController extends \BaseController
 //
 //                }
                 /*
-                *活动资讯
+                *即时订场
                 */
                 if ($key == 'Instant_Order') {
 
@@ -306,13 +306,13 @@ class WeiXinController extends \BaseController
                             'title' => '即时订场',
                             'desc' => '即时订场',
                             'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=" . $appUserID . '&app_id=2'
+                            'url' => "http://" . $currentdomain . "/hall_on_sale?app_user_id=" . $appUserID . '&app_id=2'
                         ),
                         1 => array(
                             'title' => '即时订场',
                             'desc' => '即时订场',
                             'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                            'url' => "http://" . $currentdomain . "/hall_on_sale_test?app_user_id=" . $appUserID . '&app_id=2'
+                            'url' => "http://" . $currentdomain . "/hall_on_sale?app_user_id=" . $appUserID . '&app_id=2'
                         )
                     );
 

@@ -123,13 +123,13 @@ Route::group(array('prefix' => 'fj'), function () {
 
 
     }));
-    Route::get('/test',array('before'=> 'weixin|auth',function(){
+    Route::get('/test', array('before' => 'weixin|auth', function () {
 
         $user = Auth::getUser();
     }
-));
+    ));
 });
-Route::any('weixin_access','WeiXinController@index');
+Route::any('weixin_access', 'WeiXinController@index');
 
 
 Route::get('/hall_on_sale_test', array('before' => 'weixin|auth', function () {
@@ -148,14 +148,14 @@ Route::get('/hall_on_sale_test', array('before' => 'weixin|auth', function () {
     $instantOrder = new InstantOrder();
     $hallPriceAggregates = $instantOrder->searchHallPriceAggregate($queries, 8);
     $hallIds = array();
-    foreach($hallPriceAggregates as $hallPriceAggregate){
+    foreach ($hallPriceAggregates as $hallPriceAggregate) {
         $hallIds[$hallPriceAggregate->hall_id] = $hallPriceAggregate->hall_id;
     }
 
     $halls = array();
-    if(count($hallIds) > 0){
+    if (count($hallIds) > 0) {
         $hallDbResults = Hall::with('HallImages', 'Envelope')->whereIn('id', $hallIds)->get();
-        foreach($hallDbResults as $hallDbResult){
+        foreach ($hallDbResults as $hallDbResult) {
             $halls[$hallDbResult->id] = $hallDbResult;
         }
     }
@@ -168,20 +168,20 @@ Route::get('/hall_on_sale_test', array('before' => 'weixin|auth', function () {
     }
 
     $hours = array('不限');
-    for($i=8; $i<23; $i++){
-        $hours[$i] = sprintf('%s时 - %s时', $i, $i +1);
+    for ($i = 8; $i < 23; $i++) {
+        $hours[$i] = sprintf('%s时 - %s时', $i, $i + 1);
     }
 
     return View::make('layout')->nest('content', 'instantOrder.hall_on_sale',
         array('queries' => $queries, 'hallPriceAggregates' => $hallPriceAggregates,
-            'halls' =>$halls, 'dates' => $dates, 'hours' => $hours));
+            'halls' => $halls, 'dates' => $dates, 'hours' => $hours));
 }));
 
 
-Route::get('/bond',function(){
+Route::get('/bond', function () {
     $queries = Input::all();
 
-    if(isset($queries['nickname']) && isset($queries['password'])){
+    if (isset($queries['nickname']) && isset($queries['password'])) {
         $queries = Input::all();
         $nickname = $queries['nickname'];
         $password = $queries['password'];
@@ -190,20 +190,28 @@ Route::get('/bond',function(){
         if ($isNickLog | $isTeleLog) {
             if (Auth::check()) {
                 $user = Auth::getUser();
-                $app = new RelationUserApp;
-                $app->user_id = $user->user_id;
-                $app->app_id = $queries['app_id'];
-                $app->app_user_id = $queries['app_user_id'];
-                $app->save();
+                $userID = Auth::user()->user_id;
+                $app = RelationUserApp::where('user_id', '=', $userID)->first();
+                if (!$app) {
+                    $app = new RelationUserApp;
+                    $app->user_id = $userID;
+                    $app->app_id = $queries['app_id'];
+                    $app->app_user_id = $queries['app_user_id'];
+                    $app->save();
+                }
+                else{
+                    if($app instanceof RelationUserApp){
+                        $app->app_user_id = $queries['app_user_id'];
+                        $app->save();
+                    }
+                }
             }
-            return View::make('layout')->nest('content','bond_success',array(''));
-        }
-        else{
+            return View::make('layout')->nest('content', 'bond_success', array(''));
+        } else {
             echo '绑定失败，用户名密码错误';
         }
-        }
-    else{
-        return View::make('layout')->nest('content','bond',array('queries'=>$queries));
+    } else {
+        return View::make('layout')->nest('content', 'bond', array('queries' => $queries));
     }
 });
 

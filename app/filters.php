@@ -92,11 +92,11 @@ Route::filter('weixin', function () {
     $appUserID = Input::get('app_user_id');
     $appID = Input::get('app_id');
     if ($appUserID && $appID ) {
-        $app = RelationUserApp::where('app_user_id','=',$appUserID)->first();
+        $app = RelationUserApp::find($appUserID);
         $user = User::find($app['user_id']);
 
         if ($user instanceof User) {
-            Auth::setUser($user);
+            Auth::login($user);
         }
     }
 
