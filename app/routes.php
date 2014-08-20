@@ -240,7 +240,7 @@ Route::post('/hall/instantOrder/batchOperate', array('before' => 'auth',function
     return rest_success($res);
 }));
 
-Route::get('/order_court_buyer/{hallID?}', array('before' => 'weixin auth', function ($hallID) {
+Route::get('/order_court_buyer/{hallID?}', array('before' => 'auth', function ($hallID) {
     $hall = Hall::findOrFail($hallID);
 
     $activeDate = Input::get('date');

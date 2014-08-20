@@ -32,11 +32,28 @@ App::after(function ($request, $response) {
 */
 
 Route::filter('auth', function () {
-    if (Auth::guest()) {
-        if (Request::ajax()) {
-            return Response::make('Unauthorized', 401);
+
+    if (Input::get('app_user_id') && Input::get('app_id')) {
+        $appUserID = Input::get('app_user_id');
+        $appID = Input::get('app_id');
+        $app = RelationUserApp::find($appUserID);
+        if (!$app) {
+            Auth::logout();
+            return Redirect::to(url_wrapper('bond'));
         } else {
-            return Redirect::guest('login');
+            $user = User::find($app['user_id']);
+            if ($user instanceof User) {
+                Auth::login($user);
+            }
+        }
+    }
+    else{
+        if (Auth::guest()) {
+            if (Request::ajax()) {
+                return Response::make('Unauthorized', 401);
+            } else {
+                return Redirect::guest('login');
+            }
         }
     }
 });
@@ -91,8 +108,9 @@ Route::filter('weixin', function () {
 
     $appUserID = Input::get('app_user_id');
     $appID = Input::get('app_id');
-    if ($appUserID && $appID ) {
+    if ($appUserID && $appID) {
         $app = RelationUserApp::find($appUserID);
+
         $user = User::find($app['user_id']);
 
         if ($user instanceof User) {
