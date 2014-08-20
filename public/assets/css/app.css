@@ -896,6 +896,28 @@ i.style-switcher-btn-option:hover {
    background: #ecf0f1;
 }
 
+/*Modal的漆黑背景改成透明。受不了屏幕整体忽明忽暗的效果！*/
+.modal-backdrop,.modal-backdrop.fade.in {
+    filter:alpha(opacity=50);
+    -moz-opacity:0.5;
+    -khtml-opacity: 0.5;
+    opacity: 0.5;}
+
+/*貌似不起作用！*/
+.modal.fade {
+    transition: opacity .3s ease-in-out;
+}
+
+/*调整Modal位置，原设置有些偏上*/
+.modal,.modal.fade.in {
+    top: 25%; /* was 10% */
+}
+
+/**
+    工作台样式
+**/
+
+
 .table-court thead > tr > th,
 .table-court tbody > tr > th,
 .table-court tfoot > tr > th,
@@ -904,9 +926,10 @@ i.style-switcher-btn-option:hover {
 .table-court tfoot > tr > td {
     padding: 0;
     width: 9%;
-    line-height: 1.33;
+    line-height: 1.88;
     vertical-align: top;
     border: 1px solid #dddddd;
+    white-space:nowrap;
 }
 
 .table-court .court,
@@ -924,33 +947,35 @@ i.style-switcher-btn-option:hover {
 
 .table-court .court,
 .table-court .hour{
-    background-color: #999999;
+    background-color: #eeeeee;
+    color: #333333;
 }
 
 .table-court .instant-order{
-    background-color: #eeeeee;
+    background-color: #999999;
 }
 
-.table-court .on_sale{
+.table-court .offline{
     background-color: #428bca;
     color: #FFFFFF;
     cursor: pointer;
 }
-
-.table-court .draft{
-    background-color: #FFFFFF;
-    cursor: pointer;
-}
-
-.table-court .on_sale:hover{
+.table-court .offline:hover{
     background-color: #3276b1;
 }
 
-.table-court .draft:hover{
+.table-court .online{
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+.table-court .online:hover{
     background-color: #ffeeee;
 }
 
-
+.table-court .living{
+    color: #ffffff;
+    background-color: #f0ad4e;
+}
 
 .table-court .buy{
     background-color: #428bca;

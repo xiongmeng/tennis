@@ -1,4 +1,10 @@
 <!--=== Content ===-->
+<style>
+    .worktable-toolbar{
+        padding: 5px;
+    }
+</style>
+
 <div class="container ">
     <div class="row margin-bottom-20">
         <div class="tab-v1 col-xs-12 col-md-12">
@@ -25,13 +31,12 @@
                 <?php } ?>
             </ul>
         </div>
-
         <div class="col-md-10 table-responsive" id="table_court">
             <!-- ko if: statistics.total()<=0 -->
             <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
             <!-- /ko -->
             <!-- ko if: statistics.total()>0 -->
-            <div class="btn-group" id="stickUp">
+            <div class="worktable-toolbar" id="stickUp">
                 <a class="btn btn-primary btn-lg" data-bind="click: submitSelected">提交</a>
                 <a class="btn btn-danger btn-lg" data-bind="click: cancelSelected">取消选取</a>
             </div>
@@ -56,7 +61,27 @@
                     </td>
                     <!-- ko foreach: instantOrders -->
                     <td>
-                        <span data-bind="attr:{class: 'instant-order ' + state()}, css: {active: select}, html: $root.states[state()].hall_label, click: $root.select" ></span>
+                    <!-- ko switch: true -->
+                        <!-- ko case: state()=='draft' -->
+                        <span class="instant-order online" data-bind="click: $root.select, css: {active: select}">&nbsp;</span>
+                        <!-- /ko -->
+
+                        <!-- ko case: state()=='on_sale' -->
+                        <span class="instant-order offline" data-bind="click: $root.select, css: {active: select}">待售</span>
+                        <!-- /ko -->
+
+                        <!-- ko case: state()=='waste' || state()=='expired' -->
+                        <span class="instant-order waste">&nbsp;</span>
+                        <!-- /ko -->
+
+                        <!-- ko case: state()=='paying' -->
+                        <span class="instant-order living">支付中</span>
+                        <!-- /ko -->
+
+                        <!-- ko case: $else -->
+                        <span class="instant-order living">已售</span>
+                        <!-- /ko -->
+                    <!-- /ko -->
                     </td>
                     <!-- /ko -->
                 </tr>
