@@ -17,7 +17,7 @@
             <ul class="nav nav-pills nav-stacked" role="tablist">
                 <?php foreach ($dates as $date => $time) { ?>
                     <li class="<?php if ($date == $activeDate) { ?>active<?php } ?>">
-                        <a href="/order_court_buyer?hall_id=<?= $hallID ?>&date=<?= $date ?>">
+                        <a href="/order_court_buyer/<?= $hallID ?>?date=<?= $date ?>">
                             <h4><?=date('m-d', $time)?>&nbsp;<?= $weekdayOption[date('w', $time)]; ?></h4>
                         </a>
                     </li>
