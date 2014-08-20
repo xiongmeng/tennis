@@ -277,7 +277,7 @@ class WeiXinController extends \BaseController
                                 'title' => '账户明细',
                                 'desc' => '账户明细',
                                 'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
-                                'url' => "http://" . $currentdomain . "/billing_buyer?app_user_id=" . $appUserID . '&app_id=2'
+                                'url' => "http://" . $currentdomain . "/billing_buyer/account_balance?app_user_id=" . $appUserID . '&app_id=2'
                             ),
                         );
 
