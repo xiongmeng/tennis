@@ -128,59 +128,26 @@ Route::group(array('prefix' => 'xm'), function(){
 
 
     Route::get('instantOrder/view/{hall?}/{date?}', function($hall, $date){
-        $worktableService = new InstantOrderWorktable();
+        $worktableService = new InstantOrderManager();
         return rest_success($worktableService->loadWorktableByHallAndDate($hall, $date));
     });
 
-    Route::get('/order_court_manage', array('before' => 'auth', function () {
-        $user = Auth::getUser();
+    Route::get('mysql-connection', function(){
+        $dbConfig = \Config::get('database.connections.mysql');
+        $dbConfig['driver'] = 'Mysqli';
+        $dbConfig['options'] = array('buffer_results' => true);
 
-        $hallID = Input::get('hall_id');
-        $halls = $user->Halls;
-        if (!$hallID && count($halls) > 0) {
-            $hallID = $halls[0]->id;
+//        $finance = new \Sports\Finance\FinanceService(new \Zend\Db\Adapter\Adapter($dbConfig));
+//        $account = $finance->getUserAccount(889082, 1);
+
+        $pdoFinance = new \Sports\Finance\FinanceService(new \Zend\Db\Adapter\Adapter(new \Zend\Db\Adapter\Driver\Pdo\Pdo(DB::connection()->getPdo())));
+        $pdoAccount = $pdoFinance->getUserAccount(889082, 1);
+
+        $mysqlConnection = DB::connection()->getPdo();
+        if($mysqlConnection instanceof \Doctrine\DBAL\Driver\Mysqli\MysqliConnection){
+            $resourceHandle = $mysqlConnection->getWrappedResourceHandle();
+            $i = 1;
         }
-
-        $activeDate = Input::get('date');
-        empty($activeDate) && $activeDate = date('Y-m-d');
-
-        $dates = array();
-        for ($i = 0; $i < 7; $i++) {
-            $time = strtotime("+$i day");
-            $dates[date('Y-m-d', $time)] = $time;
-        }
-
-        $worktableService = new InstantOrderWorktable();
-        $workTableData = $worktableService->loadWorktableByHallAndDate($hallID, $activeDate);
-
-        return View::make('layout')->nest('content', 'instantOrder.order_court_manage_knock_out', array(
-            'halls' => $halls, 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
-            'activeDate' => $activeDate, 'worktableData' => $workTableData
-        ));
-
-    }));
-
-    Route::post('/hall/instantOrder/batchOperate/{operate?}', function($operate){
-        $instantOrderIdString = Input::get('instant_order_ids');
-        $instantOrderIds = explode(',', $instantOrderIdString);
-
-        $res = array('failed' => array(), 'total' => count($instantOrderIds), 'success' => 0, 'original' => $instantOrderIdString);
-
-        $fsm = new InstantOrderFsm();
-        foreach($instantOrderIds as $instantOrderId){
-            try{
-                $instantOrder = InstantOrder::findOrFail($instantOrderId);
-                $fsm->resetObject($instantOrder);
-                $fsm->apply($operate);
-
-                $res['success'] ++ ;
-            }catch (\Exception $e){
-                $res['failed'][$instantOrderId] = $e->getTraceAsString();
-            }
-        }
-
-        return rest_success($res);
+        $mysqlConnection->lastInsertId();
     });
-
-    Route::get('controller', 'WeiXinController@test');
 });

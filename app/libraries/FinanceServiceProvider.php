@@ -1,4 +1,7 @@
 <?php
+use Sports\Finance\FinanceService;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Adapter\Driver\Pdo\Pdo;
 
 class FinanceServiceProvider extends Illuminate\Support\ServiceProvider {
 
@@ -13,7 +16,7 @@ class FinanceServiceProvider extends Illuminate\Support\ServiceProvider {
             $dbConfig['driver'] = 'Mysqli';
             $dbConfig['options'] = array('buffer_results' => true);
 
-            return new \Sports\Finance\FinanceService(new \Zend\Db\Adapter\Adapter($dbConfig));
+            return new FinanceService(new Adapter(new Pdo(DB::connection()->getPdo())), false);
         });
 
     }

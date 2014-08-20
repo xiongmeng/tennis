@@ -13,6 +13,7 @@
 
 require_once 'route/xmTest.php';
 require_once 'route/fjTest.php';
+require_once 'route/finance.php';
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -138,11 +139,6 @@ Route::get('/hall_on_sale', array('before' => 'weixin|auth', function () {
 
     $curDate = date('Y-m-d');
     $queries['event_date_start'] = $curDate;
-//    !isset($queries['event_date']) && $queries['event_date'] = $curDate;
-//    !isset($queries['start_hour']) && $queries['start_hour'] = date('H', strtotime('+1 hour'));
-
-//    $queries['state'] = array_keys(
-//        array_except(Config::get('fsm.instant_order.states'), array('draft', 'waste', 'canceled','expired','terminated')));
 
     $queries['state'] = array('on_sale');
 
@@ -163,7 +159,7 @@ Route::get('/hall_on_sale', array('before' => 'weixin|auth', function () {
 
     $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
     $dates = array('不限');
-    for ($i = 0; $i < 7; $i++) {
+    for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
         $time = strtotime("+$i day");
         $dates[date('Y-m-d', $time)] = sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]);
     }
@@ -207,12 +203,12 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
     empty($activeDate) && $activeDate = date('Y-m-d');
 
     $dates = array();
-    for ($i = 0; $i < 7; $i++) {
+    for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
         $time = strtotime("+$i day");
         $dates[date('Y-m-d', $time)] = $time;
     }
 
-    $worktableService = new InstantOrderWorktable();
+    $worktableService = new InstantOrderManager();
     $workTableData = $worktableService->loadWorktableByHallAndDate($hallID, $activeDate);
 
     return View::make('layout')->nest('content', 'instantOrder.order_court_manage', array(
@@ -221,63 +217,47 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
     ));
 }));
 
-Route::post('/hall/instantOrder/batchOperate/{operate?}', function($operate){
+Route::post('/hall/instantOrder/batchOperate', array('before' => 'auth',function(){
+    $operate = Input::get('operate');
     $instantOrderIdString = Input::get('instant_order_ids');
     $instantOrderIds = explode(',', $instantOrderIdString);
 
     $res = array('failed' => array(), 'total' => count($instantOrderIds), 'success' => 0, 'original' => $instantOrderIdString);
 
+    $instants = InstantOrder::whereIn('id', $instantOrderIds)->get();
     $fsm = new InstantOrderFsm();
-    foreach($instantOrderIds as $instantOrderId){
+    foreach($instants as $instant){
         try{
-            $instantOrder = InstantOrder::findOrFail($instantOrderId);
-            $fsm->resetObject($instantOrder);
+            $fsm->resetObject($instant);
             $fsm->apply($operate);
 
             $res['success'] ++ ;
         }catch (\Exception $e){
-            $res['failed'][$instantOrderId] = $e->getTraceAsString();
+            $res['failed'][$instant->id] = $e->getTraceAsString();
         }
     }
 
     return rest_success($res);
-});
+}));
 
-Route::get('/order_court_buyer', array('before' => 'weixin|auth', function () {
-
-    $hallID = Input::get('hall_id');
-
+Route::get('/order_court_buyer/{hallID?}', array('before' => 'weixin auth', function ($hallID) {
     $hall = Hall::findOrFail($hallID);
-
-    $courtID = Input::get('court_id');
-    $courts = Court::where('hall_id', '=', $hallID)->get();
-    empty($courtID) && $courtID = $courts[0]->id;
 
     $activeDate = Input::get('date');
     empty($activeDate) && $activeDate = date('Y-m-d');
 
-    $instants = InstantOrder::orderBy('start_hour', 'asc')
-        ->where('hall_id', '=', $hallID)->where('event_date', '=', $activeDate)->get();
-
-    $formattedInstants = array();
-    foreach($instants as $instant){
-        !isset($formattedInstants[$instant->court_id]) && $formattedInstants[$instant->court_id] = array();
-        $formattedInstants[$instant->court_id][$instant->start_hour] = $instant;
-    }
-
     $dates = array();
-    $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
-
-    for ($i = 0; $i < 7; $i++) {
+    for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
         $time = strtotime("+$i day");
         $dates[date('Y-m-d', $time)] = $time;
     }
 
-    $states = Config::get('state.data');
-    return View::make('layout')->nest('content', 'instantOrder.order_court_buyer', array('instants' => $instants,
-        'states' => $states, 'courts' => $courts, 'halls' => array($hall), 'dates' => $dates, 'hallID'=>$hallID,
-        'courtID' => $courtID, 'weekdayOption' => $weekdayOption, 'formattedInstants' => $formattedInstants,
-        'activeDate' => $activeDate
+    $worktableService = new InstantOrderManager();
+    $workTableData = $worktableService->loadWorktableByHallAndDate($hallID, $activeDate);
+
+    return View::make('layout')->nest('content', 'instantOrder.order_court_buyer', array(
+        'halls' => array($hall), 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
+        'activeDate' => $activeDate, 'worktableData' => $workTableData
     ));
 
 }));
@@ -382,8 +362,6 @@ Route::get('/fsm_buy/{id?}', array('before' => 'auth', function ($id) {
             $aRecharge->save();
             $iRechargeID = $aRecharge->id;
         }
-//        $iRechargeID = DB::table('gt_recharge')->insertGetId(array('user_id'=>$user['user_id'],'money'=>$iAmount,
-//                'type'=>1,'stat'=>1,'createtime'=>time())
 
         //执行支付宝支付
         if (!empty ($iRechargeID) && !empty ($iAmount) && is_numeric($iAmount)) {
@@ -394,40 +372,60 @@ Route::get('/fsm_buy/{id?}', array('before' => 'auth', function ($id) {
     return Redirect::to('instant_order_buyer');
 }));
 
-Route::get('/alipay_notify', array('before' => 'auth', function () {
-    $aParams = $aError = array();
-    $sTradeNo = Input::get('out_trade_no'); //获取支付宝传递过来的订单号
-    $iMoney = Input::get('total_fee'); //获取支付宝传递过来的总价格
-    $sPayNo = Input::get('trade_no'); //支付宝交易号
-    $sTradeStatus = Input::get('trade_status'); //交易状态
-    $sBuyer = Input::get('buyer_email');
-    $notify = new Alipay;
-    $bBes = $notify->notifyVerify(0x1003, intval($sTradeNo), $iMoney, $sPayNo, $sBuyer);
-    if ($bBes) {
-        return Redirect::to('instant_order_buyer');
-    } else {
-        echo 'fail';
-    }
-}));
+Route::post('/instantOrder/batchBuy', array('before' => 'auth',function(){
+    $instantOrderIdString = Input::get('instant_order_ids');
+    $instantOrderIds = explode(',', $instantOrderIdString);
 
-Route::get('/alipay_return', array('before' => 'auth', function () {
-    $aParams = $aError = array();
-    $sTradeNo = Input::get('out_trade_no'); //获取支付宝传递过来的订单号
-    $iMoney = Input::get('total_fee'); //获取支付宝传递过来的总价格
-    $sPayNo = Input::get('trade_no'); //支付宝交易号
-    $sTradeStatus = Input::get('trade_status'); //交易状态
-    $sBuyer = Input::get('buyer_email');
-    $notify = new Alipay;
-    $bBes = $notify->returnVerify(0x1003, intval($sTradeNo), $iMoney, $sPayNo, $sBuyer);
-    if ($bBes) {
-        $rechargeId = intval($sTradeNo);
-        $aRecharge = Recharge::where('id', '=', $rechargeId)->get();
-        $instantOrderID = $aRecharge[0]->callback_action_id;
-        $instantOrder = InstantOrder::findOrFail($instantOrderID);
-        $fsm = new InstantOrderFsm($instantOrder);
-        $fsm->apply('pay_success');
-        return Redirect::to('instant_order_buyer');
-    } else {
-        echo 'fail';
-    }
+    $result = array();
+
+    DB::beginTransaction();
+    try{
+        $instants = InstantOrder::whereIn('id', $instantOrderIds)->get();
+
+        if(count($instants) != count($instantOrderIds)){
+            throw new Exception(sprintf('选取了不存在的场地：选择(%d)，实际(%d)', count($instantOrderIds), count($instants)));
+        }
+
+        $fsm = new InstantOrderFsm();
+
+        //跳转到--正在支付中
+        foreach($instants as $instant){
+            $fsm->resetObject($instant);
+            $fsm->apply('buy');
+        }
+
+        //获取总共需要支付的钱数
+        $needPay = 0;
+        foreach($instants as $instant){
+            $needPay += $instant->quote_price;
+        }
+
+        //获取用户当前余额
+        $user = Auth::getUser();
+        $account = Finance::getUserAccount($user->user_id, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
+
+        //如果可用余额不够 进支付宝，否则轮询支付
+        if($account->getAvailableAmount() < $needPay){
+            $result['advise_forward_url'] = sprintf('/recharge/alipay/%s/%s/%s',
+                $needPay, RECHARGE_CALLBACK_PAY_INSTANT_ORDER, implode(',', $instantOrderIds));
+
+            $result['status'] = 'no_money';
+        }else{
+            foreach($instants as $instant){
+                $fsm->resetObject($instant);
+                $fsm->apply('pay_success');
+            }
+
+            $result['advise_forward_url'] = '/instant_order_buyer';
+
+            $result['status'] = 'pay_success';
+            throw new Exception(11);
+        }
+        DB::commit();
+    }catch (Exception $e){
+        DB::rollBack();
+        throw $e;
+    };
+
+    return rest_success($result);
 }));
