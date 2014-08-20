@@ -23,8 +23,8 @@ class WeiXinController extends \BaseController
         $appUserID = $message['from'];
         $type = $message['type'];
         $currentdomain = $_SERVER['HTTP_HOST']; //获取当前域名
-        $reg_url = "http://" . $currentdomain . "/user_weixinRegister.html?app_user_id=" . $appUserID;
-        $bond_url = "http://" . $currentdomain . "/user_weixinbond.html?app_user_id=" . $appUserID;
+        $reg_url = "http://" . $currentdomain . "/register?app_user_id=" . $appUserID. '&app_id=2';
+        $bond_url = "http://" . $currentdomain . "/bond?app_user_id=" . $appUserID . '&app_id=2';
 
 
         /**
@@ -241,41 +241,52 @@ class WeiXinController extends \BaseController
                 }
 //
 //
-//                /**
-//                 *
-//                 *会员服务
-//                 */
-//                if ($key == 'Member_Sever') {
-//                    //$UserSQL = "select * from `gt_user_tiny` where `weixin_openid`='$openID'";
-//
-//                    $User = db::instance()->select_one($UserSQL);
-//
-//
-//                    if (empty($User)) {
-//                        $reply = $weixin->makeText("您还没有绑定您的网球通账号哦！\n如果你还不是网球通的会员，请选择<a href='$reg_url'>【注册网球通会员】</a>\n如果您已经是我们的会员 请选择<a href='$bond_url'>【网球通会员绑定】</a>");
-//                        $weixin->reply($reply);
-//                    } else {
-//
-//                        //标题
-//                        $res['title'] = array('name' => '会员服务',
-//                            'PicUrl' => "http://" . $currentdomain . '/Images/weixinImage/TopPic/logo.jpg',
-//                            'Url' => $currentdomain . "/user_welcome.html"
-//                        );
-//                        //内容
-//                        $userid = $User['user_id'];
-//                        $res['item'] = array(0 => array('name' => "我的订单", 'PicUrl' => "http://" . $currentdomain . "/Images/weixinImage/ListPic/ibill.png", 'Url' => "http://" . $currentdomain . "/order_page_weixinmyorder.html?userid=" . $userid),
-//                            1 => array('name' => "我的余额", 'PicUrl' => "http://" . $currentdomain . "/Images/weixinImage/ListPic/ibalance.png", 'Url' => "http://" . $currentdomain . "/user_weixinuserwallet.html?userid=" . $userid)
-//                        );
-//                        $res['content'] = "会员服务";
-//
-//                        if ($res['item']) {
-//                            $reply = $weixin->makeNews($res);
-//                        } else {
-//                            $reply = $weixin->makeText('抱歉，出错了呦');
-//                        }
-//                        $weixin->reply($reply);
-//                    }
-//                }
+                /**
+                 *
+                 *会员服务
+                 */
+                if ($key == 'Member_Sever') {
+                    $user = $this->getUser($appUserID);
+
+
+                    if (!$user) {
+                        $reply = $server->getXml4Txt("您还没有绑定您的网球通账号哦！\n如果你还不是网球通的会员，请选择<a href='$reg_url'>【*注册网球通会员*】</a>\n如果您已经是我们的会员 请选择<a href='$bond_url'>【网球通会员绑定】</a>");
+                        echo $reply;
+                    } else {
+
+                        $res = array(
+                            0 => array(
+                                'title' => '会员服务',
+                                'desc' => '会员服务',
+                                'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                                'url' => "http://" . $currentdomain . "/welcome"
+                            ),
+                            1 => array(
+                                'title' => '即时订单',
+                                'desc' => '即时订单',
+                                'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                                'url' => "http://" . $currentdomain . "/instant_order_buyer?app_user_id=" . $appUserID . '&app_id=2'
+                            ),
+                            2 => array(
+                                'title' => '预约订单',
+                                'desc' => '*预约订单*',
+                                'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                                'url' => "http://" . $currentdomain . "/#?app_user_id=" . $appUserID . '&app_id=2'
+                            ),
+                            3 => array(
+                                'title' => '账户明细',
+                                'desc' => '账户明细',
+                                'pic' => "http://" . $currentdomain . "/assets/img/logo.jpg",
+                                'url' => "http://" . $currentdomain . "/billing_buyer?app_user_id=" . $appUserID . '&app_id=2'
+                            ),
+                        );
+
+
+                            $reply = $server->getXml4RichMsgByArray($res);
+                        }
+                        echo $reply;
+
+                }
                 /*
                 *搜索场馆
                 */
@@ -377,7 +388,6 @@ class WeiXinController extends \BaseController
         $aLocation->creattime = $message['time'];
         $aLocation->event = $message['event'];
         $aLocation->msgtype = $message['type'];
-
         $aLocation->save();
 
     }
