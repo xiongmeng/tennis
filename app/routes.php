@@ -133,7 +133,7 @@ Route::get('/instant_order_buyer', array('before' => 'auth', function () {
         array('instants' => $instants, 'states' => $states, 'userID' => $userID, 'queries' => $queries));
 }));
 
-Route::get('/hall_on_sale', array('before' => 'auth', function () {
+Route::get('/hall_on_sale', array('before' => 'weixin|auth', function () {
     $queries = Input::all();
 
     $curDate = date('Y-m-d');
