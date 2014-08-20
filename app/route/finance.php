@@ -3,11 +3,10 @@ Route::get('/recharge/alipay/{money?}/{actionType?}/{actionToken}',
     array('before' => 'auth', function ($money, $actionType, $actionToken) {
         $user = Auth::getUser();
 
-        $isDeBug = Config::get('app.debug');
         //添加一条充值记录
         $aRecharge = new Recharge();
         $aRecharge->user_id = $user->user_id;
-        $aRecharge->money = $isDeBug ? '0.01' : $money;
+        $aRecharge->money = $money;
         $aRecharge->type = 1; //支付方式
         $aRecharge->stat = 1; //初始化
         $aRecharge->createtime = time();
@@ -19,6 +18,9 @@ Route::get('/recharge/alipay/{money?}/{actionType?}/{actionToken}',
         if (!is_numeric($money) || $money < 0) {
             return sprintf('充值额度必须为大于零的数字（%s）', $money);
         }
+
+        $isDeBug = Config::get('app.debug');
+        $isDeBug && $money = 0.01;
 
         //执行支付宝支付
         $sHtmlText = Alipay::Payment($money, sprintf("%08d", $iRechargeID), null, null, "付款", "付款");
