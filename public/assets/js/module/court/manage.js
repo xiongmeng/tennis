@@ -51,10 +51,25 @@ define(function(require){
                 {'operate' : stateOperateMaps[self.currentState()], 'instant_order_ids' : selectedIds.join(',')});
 
             defer.done(function(res, data){
+                window.location.reload();
+            });
+        };
+
+        self.buyerSubmitSelected = function(){
+            var selectedIds = [];
+            $.each(self.selected(), function(index, instantOrder){
+                selectedIds.push(instantOrder.id());
+            });
+
+            var submitUrlMaps = {
+                on_sale : '/instantOrder/batchBuy',
+                paying : '/instantOrder/batchPay'
+            };
+            var defer = $.restPost(submitUrlMaps[self.currentState()], {'instant_order_ids' : selectedIds.join(',')});
+
+            defer.done(function(res, data){
                 if(data.status == 'no_money' || data.status == 'pay_success'){
                     window.open(data['advice_forward_url']);
-                }else{
-                    window.location.reload();
                 }
             });
         };

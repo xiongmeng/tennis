@@ -32,7 +32,7 @@
             <!-- /ko -->
             <!-- ko if: statistics.total()>0 -->
             <div class="btn-group" id="stickUp">
-                <a class="btn btn-primary btn-lg" data-bind="click: submitSelected">提交</a>
+                <a class="btn btn-primary btn-lg" data-bind="click: buyerSubmitSelected">提交</a>
                 <a class="btn btn-danger btn-lg" data-bind="click: cancelSelected">取消选取</a>
             </div>
 
@@ -42,7 +42,7 @@
                     <th></th>
                     <!-- ko foreach:courts-->
                     <th>
-                        <span class="court" data-bind="text: number()+'号场'"></span>
+                        <span class="court disabled" data-bind="text: number()+'号场'"></span>
                     </th>
                     <!-- /ko-->
                 </tr>
@@ -52,17 +52,23 @@
                 <!-- ko foreach: instantOrdersByHours -->
                 <tr>
                     <td>
-                        <span class="hour" data-bind="text: start() + '-' + end()"></span>
+                        <span class="hour disabled" data-bind="text: start() + '-' + end()"></span>
                     </td>
                     <!-- ko foreach: instantOrders -->
                     <td>
-                        <!-- ko switch: state() -->
+                        <!-- ko switch: state -->
                             <!-- ko case: 'on_sale' -->
-                            <span class="instant-order on_sale" data-bind="click: $root.select, css: {active: select}, text: quote_price() + '￥'"></span>
+                            <span class="instant-order buy" data-bind="click: $root.select, css: {active: select}, text: quote_price() + '￥'"></span>
                             <!-- /ko -->
 
-                            <!-- ko case: '$default' -->
-                            <span class="instant-order disabled"></span>
+                            <!-- ko case: 'paying' -->
+                                <!-- ko if: $root.loginUserId()==buyer() -->
+                                <span class="instant-order paying" data-bind="click: $root.select,
+                                    css: {active: select}, text: quote_price() + '￥'"></span>
+                                <!-- /ko -->
+                            <!-- /ko -->
+
+                            <!-- ko case: $default -->
                             <!-- /ko -->
                         <!-- /ko -->
                     </td>
@@ -78,7 +84,7 @@
 
 <script>
     seajs.use('court/manage', function(courtManage){
-        courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>, {'submitUrl':'/instantOrder/batchBuy'});
+        courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>);
         $("#stickUp").pin();
     });
 </script>

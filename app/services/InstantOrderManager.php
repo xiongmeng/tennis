@@ -51,8 +51,9 @@ class InstantOrderManager {
             }
         }
 
-        return array('hours' =>$hours, 'courts' => $courts, 'states' => $states,
-            'statistics' => $statistics, 'instantOrdersByHours' => $instantOrdersByHours);
+        $loginUser = Auth::getUser();
+        $loginUserId = $loginUser ? $loginUser->user_id : '';
+        return array('hours' =>$hours, 'courts' => $courts, 'states' => $states, 'statistics' => $statistics,
+            'instantOrdersByHours' => $instantOrdersByHours, 'loginUserId' => $loginUserId);
     }
-
 }

@@ -920,7 +920,6 @@ i.style-switcher-btn-option:hover {
     padding: 10px 16px;
     line-height: 1.33;
     font-size: 18px;
-    cursor: not-allowed;
 }
 
 .table-court .court,
@@ -949,6 +948,28 @@ i.style-switcher-btn-option:hover {
 
 .table-court .draft:hover{
     background-color: #ffeeee;
+}
+
+
+
+.table-court .buy{
+    background-color: #428bca;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.table-court .buy:hover{
+    background-color: #3276b1;
+}
+
+.table-court .paying{
+    color: #ffffff;
+    background-color: #f0ad4e;
+    cursor: pointer;
+}
+
+.table-court .paying:hover{
+    background-color: #ed9c28;
 }
 
 .table-court .active{
