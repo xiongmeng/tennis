@@ -36,7 +36,6 @@
                 <a class="btn btn-danger btn-lg" data-bind="click: batchPay, css:{disabled: currentState()!='paying'}">支付</a>
                 <a class="btn btn-danger btn-lg" data-bind="click: batchCancelBuy, css:{disabled: currentState()!='paying'}">取消预订</a>
             </div>
-
             <table class="table-court">
                 <thead>
                 <tr>
@@ -65,13 +64,16 @@
                             <!-- ko case: state() == 'paying' -->
                                 <!-- ko if: $root.loginUserId()==buyer() -->
                                 <span class="instant-order paying" data-bind="click: $root.select,
-                                    css: {active: select}, text: quote_price() + '￥'"></span>
+                                    css: {active: select}">
+                                    <span style="font-size: small">￥</span><span data-bind="text: quote_price"></span>
+                                    <em style="color: red" class="countDown" data-bind="attr: {'data-time': expire_time()+60}"></em>
+                                </span>
                                 <!-- /ko -->
                             <!-- /ko -->
 
                             <!-- ko case: state() == 'payed' -->
                                 <!-- ko if: $root.loginUserId()==buyer() -->
-                                        <span class="instant-order" style="background-color: #f0ad4e" data-bind="">待打球</span>
+                                <span class="instant-order" style="background-color: #f0ad4e" data-bind="">待打球</span>
                                 <!-- /ko -->
                             <!-- /ko -->
 
@@ -111,9 +113,13 @@
     </div>
 </div>
 
+<script type="text/javascript" src="/assets/plugins/kkcountdown/js/build/kkcountdown.js"></script>
+
 <script>
     seajs.use('court/manage', function(courtManage){
         courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>);
         $(".pinned").pin({'containerSelector' : '.pin-container', padding:{top: 5}});
+
+        $('.countDown').kkcountdown({callback:function(){window.location.reload()}});
     });
 </script>

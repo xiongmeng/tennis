@@ -69,7 +69,7 @@
                         <!-- /ko -->
 
                         <!-- ko case: state()=='paying' -->
-                        <span class="instant-order living">支付中</span>
+                        <span class="instant-order living"><span>支付中</span>(<em style="color: red" class="countDown" data-bind="attr: {'data-time': expire_time()+60}"></em>)</span>
                         <!-- /ko -->
 
                         <!-- ko case: $else -->
@@ -87,9 +87,13 @@
     </div>
 </div>
 
+<script type="text/javascript" src="/assets/plugins/kkcountdown/js/build/kkcountdown.js"></script>
+
 <script>
     seajs.use('court/manage', function(courtManage){
         courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>, {'submitUrl':'/hall/instantOrder/batchOperate'});
         $(".pinned").pin({'containerSelector' : '.pin-container', padding:{top: 5}});
+
+        $('.countDown').kkcountdown({callback:function(){window.location.reload()}});
     });
 </script>
