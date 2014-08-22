@@ -26,14 +26,15 @@
             </ul>
         </div>
 
-        <div class="col-md-10 table-responsive" id="table_court">
+        <div class="col-md-10 table-responsive pin-container" id="table_court">
             <!-- ko if: statistics.total()<=0 -->
             <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
             <!-- /ko -->
             <!-- ko if: statistics.total()>0 -->
-            <div class="btn-group" id="stickUp">
-                <a class="btn btn-primary btn-lg" data-bind="click: buyerSubmitSelected">提交</a>
-                <a class="btn btn-danger btn-lg" data-bind="click: cancelSelected">取消选取</a>
+            <div class="worktable-toolbar pinned row">
+                <a class="btn btn-danger btn-lg" data-bind="click: batchBuy, css:{disabled: currentState()!='on_sale'}">预订</a>
+                <a class="btn btn-danger btn-lg" data-bind="click: batchPay, css:{disabled: currentState()!='paying'}">支付</a>
+                <a class="btn btn-danger btn-lg" data-bind="click: batchCancelBuy, css:{disabled: currentState()!='paying'}">取消预订</a>
             </div>
 
             <table class="table-court">
@@ -56,15 +57,21 @@
                     </td>
                     <!-- ko foreach: instantOrders -->
                     <td>
-                        <!-- ko switch: state -->
-                            <!-- ko case: 'on_sale' -->
+                        <!-- ko switch: true -->
+                            <!-- ko case: state() == 'on_sale' -->
                             <span class="instant-order buy" data-bind="click: $root.select, css: {active: select}, text: quote_price() + '￥'"></span>
                             <!-- /ko -->
 
-                            <!-- ko case: 'paying' -->
+                            <!-- ko case: state() == 'paying' -->
                                 <!-- ko if: $root.loginUserId()==buyer() -->
                                 <span class="instant-order paying" data-bind="click: $root.select,
                                     css: {active: select}, text: quote_price() + '￥'"></span>
+                                <!-- /ko -->
+                            <!-- /ko -->
+
+                            <!-- ko case: state() == 'payed' -->
+                                <!-- ko if: $root.loginUserId()==buyer() -->
+                                        <span class="instant-order" style="background-color: #f0ad4e" data-bind="">待打球</span>
                                 <!-- /ko -->
                             <!-- /ko -->
 
@@ -107,6 +114,6 @@
 <script>
     seajs.use('court/manage', function(courtManage){
         courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>);
-        $("#stickUp").pin();
+        $(".pinned").pin({'containerSelector' : '.pin-container', padding:{top: 5}});
     });
 </script>

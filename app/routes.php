@@ -126,6 +126,8 @@ Route::get('/instant_order_buyer', array('before' => 'auth', function () {
     $user = Auth::getUser();
     $userID = $user['user_id'];
     $queries['buyer'] = $userID;
+    $queries['state'] = array_keys(
+        array_except(Config::get('fsm.instant_order.states'), array('paying')));
     $instantModel = new InstantOrder();
     $instants = $instantModel->search($queries);
     $states = Config::get('state.data');
@@ -217,29 +219,6 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
     ));
 }));
 
-Route::post('/hall/instantOrder/batchOperate', array('before' => 'auth',function(){
-    $operate = Input::get('operate');
-    $instantOrderIdString = Input::get('instant_order_ids');
-    $instantOrderIds = explode(',', $instantOrderIdString);
-
-    $res = array('failed' => array(), 'total' => count($instantOrderIds), 'success' => 0, 'original' => $instantOrderIdString);
-
-    $instants = InstantOrder::whereIn('id', $instantOrderIds)->get();
-    $fsm = new InstantOrderFsm();
-    foreach($instants as $instant){
-        try{
-            $fsm->resetObject($instant);
-            $fsm->apply($operate);
-
-            $res['success'] ++ ;
-        }catch (\Exception $e){
-            $res['failed'][$instant->id] = $e->getTraceAsString();
-        }
-    }
-
-    return rest_success($res);
-}));
-
 Route::get('/order_court_buyer/{hallID?}', array('before' => 'auth', function ($hallID) {
     $hall = Hall::findOrFail($hallID);
 
@@ -269,6 +248,29 @@ Route::get('/fsm-operate/{id?}/{operate?}', array('before' => 'auth', function (
     $url = URL::previous();
     return $redirect = Redirect::to($url);
 
+}));
+
+Route::post('/instantOrder/batchOperate', array('before' => 'auth',function(){
+    $operate = Input::get('operate');
+    $instantOrderIdString = Input::get('instant_order_ids');
+    $instantOrderIds = explode(',', $instantOrderIdString);
+
+    $res = array('failed' => array(), 'total' => count($instantOrderIds), 'success' => 0, 'original' => $instantOrderIdString);
+
+    $instants = InstantOrder::whereIn('id', $instantOrderIds)->get();
+    $fsm = new InstantOrderFsm();
+    foreach($instants as $instant){
+        try{
+            $fsm->resetObject($instant);
+            $fsm->apply($operate);
+
+            $res['success'] ++ ;
+        }catch (\Exception $e){
+            $res['failed'][$instant->id] = $e->getTraceAsString();
+        }
+    }
+
+    return rest_success($res);
 }));
 
 Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function ($curTab) {

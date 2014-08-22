@@ -55,6 +55,7 @@ return array(
             'expire' => array('from' => array('on_sale'), 'to' => 'expired'),
             'pay_expire' => array('from' => array('paying'), 'to' => 'on_sale'),
             'pay_success' => array('from' => array('paying'), 'to' => 'payed'), //buyer
+            'cancel_buy' => array('from' => array('paying'), 'to' => 'on_sale'),//buyer
             'event_start' => array('from' => array('payed'), 'to' => 'playing'),
             'cancel' => array('from' => array('payed'), 'to' => 'on_sale'), //mgr
             'event_end' => array('from' => array('playing'), 'to' => 'confirming'),

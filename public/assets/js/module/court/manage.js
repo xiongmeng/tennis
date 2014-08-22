@@ -3,6 +3,7 @@ define(function(require){
     var mapping = require('knockout_mapping');
     require('knockout_switch_case');
     require('rest');
+    require('bootbox');
 
     var option = {
         'submitUrl' : ''
@@ -13,72 +14,94 @@ define(function(require){
         self.selected = ko.observableArray();
         self.currentState = ko.observable('');
 
+        self.selected.subscribe(function(newSelected){
+            var length = newSelected.length;
+            if(length <= 0){
+                self.currentState('');
+            }else{
+                var lastInstantOrder = newSelected[length-1];
+                self.currentState(lastInstantOrder.state());
+            }
+        });
+
         self.select = function(instantOrder, event){
             if(instantOrder.select()){
                 instantOrder.select(false);
                 self.selected.remove(instantOrder);
             }else{
                 if(self.currentState() == '' || self.currentState() == instantOrder.state()){
-                    self.currentState(instantOrder.state());
                     instantOrder.select(true);
                     self.selected.push(instantOrder);
-
-                    $(event.currentTarget).toolbar({
-                        content: '#user-toolbar-options',
-                        position: 'bottom'
-                    });
                 }
             }
-
-            console.log(arguments);
         };
 
-        self.cancelSelected = function(){
-            $.each(self.selected(), function(index, instantOrder){
-                instantOrder.select(false);
-            });
-            self.selected.removeAll();
-            self.currentState('');
-        };
-
-        self.submitSelected = function(){
+        function doBatch(operate){
             var selectedIds = [];
             $.each(self.selected(), function(index, instantOrder){
                 selectedIds.push(instantOrder.id());
             });
-            var stateOperateMaps = {draft: 'online', on_sale: 'offline'};
-            var defer = $.restPost(option.submitUrl,
-                {'operate' : stateOperateMaps[self.currentState()], 'instant_order_ids' : selectedIds.join(',')});
+            var defer = $.restPost('/instantOrder/batchOperate',
+                {'operate' : operate, 'instant_order_ids' : selectedIds.join(',')});
 
             defer.done(function(res, data){
                 window.location.reload();
             });
+            defer.fail(function(){
+
+            });
+        }
+
+        self.batchOnline= function(){
+            doBatch('online');
+        };
+        self.batchOffline = function(){
+            doBatch('offline');
+        };
+        self.batchCancelBuy = function(){
+            doBatch('cancel_buy');
         };
 
-        self.buyerSubmitSelected = function(){
+        function doPay(url){
             var selectedIds = [];
+            var selectedMoney = 0;
+
             $.each(self.selected(), function(index, instantOrder){
                 selectedIds.push(instantOrder.id());
+                selectedMoney += parseInt(instantOrder.quote_price());
             });
 
-            var submitUrlMaps = {
-                on_sale : '/instantOrder/batchBuy',
-                paying : '/instantOrder/batchPay'
-            };
-            var defer = $.restPost(submitUrlMaps[self.currentState()], {'instant_order_ids' : selectedIds.join(',')});
-
-            defer.done(function(res, data){
-
-                if(data.status == 'no_money'){
-                    $modalDom = $('#dialog-go-to-pay');
-                    $model = mapping.fromJS(data);
-                    ko.applyBindings($model, $modalDom[0]);
-                    $modalDom.modal();
-
-                }else if(data.status == 'pay_success'){
-
+            var confirmText = "共选取<mark>" + selectedIds.length + "</mark>个时段，共计<mark>" + selectedMoney + "</mark>元";
+            bootbox.confirm(confirmText, function(result){
+                if(!result){
+                    return ;
                 }
+                var defer = $.restPost(url, {'instant_order_ids' : selectedIds.join(',')});
+
+                defer.done(function(res, data){
+
+                    if(data.status == 'no_money'){
+                        $modalDom = $('#dialog-go-to-pay');
+                        $model = mapping.fromJS(data);
+                        ko.applyBindings($model, $modalDom[0]);
+
+                        $modalDom.modal().on('hidden.bs.modal', function () {
+                            window.location.reload();
+                        });
+                    }else if(data.status == 'pay_success'){
+                        bootbox.alert('恭喜您，购买成功！您可以在已购买订单里面查看详情！').on('hidden.bs.modal', function () {
+                            window.location.reload();
+                        });
+                    }
+                });
             });
+        }
+
+        self.batchBuy = function(){
+            doPay('/instantOrder/batchBuy');
+        };
+        self.batchPay = function(){
+            doPay('/instantOrder/batchPay');
         };
 
         return self;

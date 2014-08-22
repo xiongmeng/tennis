@@ -1,10 +1,3 @@
-<!--=== Content ===-->
-<style>
-    .worktable-toolbar{
-        padding: 5px;
-    }
-</style>
-
 <div class="container ">
     <div class="row margin-bottom-20">
         <div class="tab-v1 col-xs-12 col-md-12">
@@ -20,25 +13,26 @@
 
     <div class="row">
         <div class="tab-v3 col-md-2">
-            <ul class="nav nav-pills nav-stacked" role="tablist">
+            <ul class="nav nav-pills nav-stacked">
                 <?php foreach ($dates as $date => $time) { ?>
                     <li class="<?php if ($date == $activeDate) { ?>active<?php } ?>">
                         <a href="/order_court_manage?hall_id=<?= $hallID ?>&date=<?= $date ?>">
-                            <h4><?= date('m-d', $time) ?>&nbsp;<?= $weekdayOption[date('w', $time)]; ?></h4>
+                            <?= date('m-d', $time) ?>&nbsp;<?= $weekdayOption[date('w', $time)]; ?>
                         </a>
                     </li>
 
                 <?php } ?>
             </ul>
         </div>
-        <div class="col-md-10 table-responsive" id="table_court">
+        <div class="table-responsive pin-container col-md-10" id="table_court">
             <!-- ko if: statistics.total()<=0 -->
             <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
             <!-- /ko -->
             <!-- ko if: statistics.total()>0 -->
-            <div class="worktable-toolbar" id="stickUp">
-                <a class="btn btn-primary btn-lg" data-bind="click: submitSelected">提交</a>
-                <a class="btn btn-danger btn-lg" data-bind="click: cancelSelected">取消选取</a>
+
+            <div class="worktable-toolbar pinned row">
+                <a class="btn btn-danger btn-lg" data-bind="click: batchOnline, css:{disabled: currentState()!='draft'}">上架</a>
+                <a class="btn btn-danger btn-lg" data-bind="click: batchOffline, css:{disabled: currentState()!='on_sale'}">下架</a>
             </div>
 
             <table class="table-court">
@@ -96,6 +90,6 @@
 <script>
     seajs.use('court/manage', function(courtManage){
         courtManage.init($('#table_court')[0], <?= json_encode($worktableData)?>, {'submitUrl':'/hall/instantOrder/batchOperate'});
-        $("#stickUp").pin();
+        $(".pinned").pin({'containerSelector' : '.pin-container', padding:{top: 5}});
     });
 </script>

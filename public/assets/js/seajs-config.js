@@ -11,7 +11,8 @@ seajs.config({
         knockout: 'plugin/knockout/knockout.cmd.js',
         knockout_mapping: 'plugin/knockout/plugins/mapping_debug.js',
         knockout_switch_case: 'plugin/knockout/plugins/knockout-switch-case.min.js',
-        datetimePicker: 'plugin/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.cmd.js'
+        datetimePicker: 'plugin/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.cmd.js',
+        bootbox:'plugin/bootbox/bootbox.min.js'
     },
     charset: 'utf-8',
     map: [

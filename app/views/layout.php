@@ -53,7 +53,7 @@
 //                ueditor: '/js/lib/ueditor/1.2.6/ueditor_cmd.js'
             },
             map: [
-                [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201408151643']
+                [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201408221157']
             ]
         });
     </script>

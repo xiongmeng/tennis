@@ -112,7 +112,7 @@ class InstantOrderManager
 
         //获取用户当前余额
         $user = Auth::getUser();
-        $account = Finance::getUserAccount($user->user_id, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
+        $account = Finance::ensureAccountExisted($user->user_id, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
         $result['balance'] = $account->getAvailableAmount();
 
         $result['needRecharge'] = $needPay - $result['balance'];

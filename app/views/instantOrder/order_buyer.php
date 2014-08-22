@@ -26,13 +26,8 @@
             </div>
             <?= Form::close() ?><br/>
             <!--Basic Table Option (Spacing)-->
-            <div class="panel panel-green margin-bottom-40">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><i class="icon-li"></i></h3>
-                </div>
-
-                <div class="panel-body">
-                    <table class="table">
+            <div class="margin-bottom-40 table-responsive">
+                    <table class="table table-bordered">
                         <thead>
                         <tr>
                             <th>订单号</th>
@@ -41,8 +36,6 @@
                             <th>活动时间</th>
                             <th>时段</th>
                             <th>价格</th>
-                            <th>状态</th>
-                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -56,22 +49,10 @@
                                 <td><?php echo substr($instant->event_date, 0, 10); ?></td>
                                 <td><?php echo $instant->start_hour . '-' . $instant->end_hour; ?></td>
                                 <td><?php echo $instant->quote_price; ?></td>
-                                <td><?php echo $states[$instant->state]['label']; ?></td>
-                                <td><?php if ($fsm->can('pay_success')) { ?>
-                                        <a class="btn btn-success btn-xs"
-                                                href="fsm-operate/<?php echo $instant->id; ?>/pay_success"><i
-                                                    class="icon-ok"></i>去支付</a>
-                                    <?php } ?>
-                                    <?php if ($fsm->can('confirm')) { ?>
-                                        <a class="btn btn-info btn-xs"
-                                                href="fsm-operate/<?php echo $instant->id; ?>/confirm"><i
-                                                    class="icon-check"></i>确认打球</a>
-                                    <?php } ?>
                             </tr>
                         <?php } ?>
                         </tbody>
                     </table>
-                </div>
             </div>
 
             <div class="text-center">
