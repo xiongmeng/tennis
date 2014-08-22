@@ -947,21 +947,23 @@ i.style-switcher-btn-option:hover {
 
 .table-court .court,
 .table-court .hour{
-    background-color: #eeeeee;
+    background-color: #FFFFFF;
     color: #333333;
 }
 
 .table-court .instant-order{
-    background-color: #999999;
+    background-color: #EEEEEE;
 }
 
+.table-court .buy,
 .table-court .offline{
-    background-color: #428bca;
-    color: #FFFFFF;
+    color: #ffffff;
+    background-color: #5cb85c;
     cursor: pointer;
 }
+.table-court .buy:hover,
 .table-court .offline:hover{
-    background-color: #3276b1;
+    background-color: #47a447;
 }
 
 .table-court .online{
@@ -977,16 +979,6 @@ i.style-switcher-btn-option:hover {
     background-color: #f0ad4e;
 }
 
-.table-court .buy{
-    background-color: #428bca;
-    color: #FFFFFF;
-    cursor: pointer;
-}
-
-.table-court .buy:hover{
-    background-color: #3276b1;
-}
-
 .table-court .paying{
     color: #ffffff;
     background-color: #f0ad4e;
@@ -998,9 +990,15 @@ i.style-switcher-btn-option:hover {
 }
 
 .table-court .active{
-    background-color: #660066;
+    background-color: #99CC99;
 }
 
 .table-court .active:hover{
-    background-color: #660066;
+    background-color: #99CC99;
+}
+
+.worktable-toolbar{
+    padding-left: 15px;
+    /*opacity: 0.9;*/
+    /*background-color: #e4e9f0;*/
 }
