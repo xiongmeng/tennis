@@ -134,7 +134,7 @@ return array(
                             if ($user instanceof User) {
                                 $instant->buyer = $user->user_id;
                                 $instant->buyer_name = $user->nickname;
-                                $expireTime = strtotime($instant->updated_at) + 120;
+                                $expireTime = strtotime($instant->updated_at) + 600;
                                 $instant->expire_time = $expireTime;
                                 $instant->save();
                             }
