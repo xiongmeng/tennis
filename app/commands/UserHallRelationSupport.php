@@ -11,6 +11,8 @@ class UserHallRelationSupport extends Command
 
     const OPTION_USER = 'user';
     const OPTION_HALL = 'hall';
+    const OPTION_USERNAME = 'username';
+    const OPTION_PASSWORD = 'password';
 
     /**
      * The console command name.
@@ -83,20 +85,26 @@ class UserHallRelationSupport extends Command
                     break;
                 }
 
-                Hall::whereIn('id' , $hallIds)->chunk(20, function($halls){
+                $username = $this->option(self::OPTION_USERNAME);
+                $password = $this->option(self::OPTION_PASSWORD);
+                empty($password) && $password = self::DEFAULT_PASSWORD;
+
+                Hall::whereIn('id' , $hallIds)->chunk(20, function($halls) use($username, $password){
                     foreach($halls as $hall){
                         DB::beginTransaction();
 
                         $hallId = $hall->id;
                         $this->info(sprintf('generate for hall (%s)', $hallId));
 
+                        empty($username) && $username = $hall->code . $hallId;
+
                         $createdUser = User::create(
-                            array('nickname' => $hall->code . $hallId, 'password' => Hash::make(self::DEFAULT_PASSWORD))
+                            array('nickname' => $username, 'password' => Hash::make($password))
                         );
 
                         if($createdUser instanceof User){
                             $this->info(sprintf('created user(%s) with name(%s), password(%s)',
-                                $createdUser->user_id, $createdUser->nickname, self::DEFAULT_PASSWORD));
+                                $createdUser->user_id, $createdUser->nickname, $password));
 
                             $createdUser->roles()->save(new Role(array('role_id' => 3)));
 
@@ -170,6 +178,8 @@ class UserHallRelationSupport extends Command
             array(self::OPTION_HALL, null,
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'the hall ids', null),
             array(self::OPTION_USER, null, InputOption::VALUE_OPTIONAL, 'the user id', null),
+            array(self::OPTION_USERNAME, null, InputOption::VALUE_OPTIONAL, 'only needed for username', null),
+            array(self::OPTION_PASSWORD, null, InputOption::VALUE_OPTIONAL, 'just needed for generate', null)
         );
     }
 
