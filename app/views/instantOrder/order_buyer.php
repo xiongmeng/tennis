@@ -42,7 +42,7 @@
                         <?php foreach ($instants as $instant) { ?>
                             <?php $fsm = new InstantOrderFsm($instant); ?>
 
-                            <tr>
+                            <tr class="<?php if($instant->state == 'payed'){?>danger<?php }?>">
                                 <td><?php echo $instant->id; ?></td>
                                 <td><?php echo $instant->hall_name; ?></td>
                                 <td><?php echo $instant->court_tags; ?></td>

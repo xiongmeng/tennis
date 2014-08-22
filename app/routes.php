@@ -184,7 +184,7 @@ Route::get('/instant_order_seller', array('before' => 'auth', function () {
     $userID = $user['user_id'];
 
     $queries['seller'] = $userID;
-    $queries['state'] = 'finish';
+    $queries['state'] = array('payed', 'playing', 'confirming', 'finish');
 
     $instants = $instantModel->search($queries);
     $states = Config::get('state.data');

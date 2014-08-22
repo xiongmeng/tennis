@@ -38,7 +38,6 @@
                             <th>场地类型</th>
                             <th>活动时间</th>
                             <th>时段</th>
-                            <th>状态</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -51,7 +50,6 @@
                                 <td><?php echo $instant->court_tags; ?></td>
                                 <td><?php echo substr($instant->event_date, 0, 10); ?></td>
                                 <td><?php echo $instant->start_hour . '-' . $instant->end_hour; ?></td>
-                                <td><?php echo $states[$instant->state]['label']; ?></td>
                             </tr>
 
                         <?php } ?>
