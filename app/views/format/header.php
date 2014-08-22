@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="javascript:void(0)">
                     <img id="logo-header" src="/assets/img/logo.png" alt="Logo">
                 </a>
             </div>
