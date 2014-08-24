@@ -12,7 +12,7 @@ seajs.config({
         knockout_mapping: 'plugin/knockout/plugins/mapping_debug.js',
         knockout_switch_case: 'plugin/knockout/plugins/knockout-switch-case.min.js',
         datetimePicker: 'plugin/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.cmd.js',
-//        kkcountdown:'plugin/kkcountdown/js/build/kkcountdown.js',
+        kkcountdown:'plugin/kkcountdown/js/build/kkcountdown.js',
         bootbox:'plugin/bootbox/bootbox.min.js'
     },
     charset: 'utf-8',

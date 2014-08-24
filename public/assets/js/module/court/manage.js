@@ -4,6 +4,7 @@ define(function(require){
     require('knockout_switch_case');
     require('rest');
     require('bootbox');
+    require('kkcountdown');
 
     var option = {
         'submitUrl' : ''

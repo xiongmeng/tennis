@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/assets/css/pages/page_search.css">
 
-<div class="container">
+<div class="container hall-on-sale">
     <div class="row margin-bottom-20 bg-light">
         <div class="col-md-12">
             <?= Form::open(array('method' => 'GET', 'class' => 'navbar-form')) ?>
@@ -23,54 +23,59 @@
             <?php echo Form::close() ?>
         </div>
     </div>
-    <div class="row">
-        <?php if ($hallPriceAggregates->count() <= 0) { ?>
-            <div class="alert alert-warning"><strong>未找到有合适场地的场馆！</strong></div>
-        <?php } else { ?>
-            <?php foreach ($hallPriceAggregates as $hallPriceAggregate) { ?>
-                <?php
-                $hall = $halls[$hallPriceAggregate->hall_id];
-                $hallImage = null;
-                if ($hall instanceof Hall) {
-                    if ($hall->Envelope) {
-                        $hallImage = $hall;
-                    } else if ($hall->HallImages->count() > 0) {
-                        $hallImage = $hall->HallImages->first();
-                    }
+    <?php if ($hallPriceAggregates->count() <= 0) { ?>
+        <div class="alert alert-warning"><strong>未找到有合适场地的场馆！</strong></div>
+    <?php } else { ?>
+        <?php foreach ($hallPriceAggregates as $hallPriceAggregate) { ?>
+            <?php
+            $hall = $halls[$hallPriceAggregate->hall_id];
+            $hallImage = null;
+            if ($hall instanceof Hall) {
+                if ($hall->Envelope) {
+                    $hallImage = $hall;
+                } else if ($hall->HallImages->count() > 0) {
+                    $hallImage = $hall->HallImages->first();
                 }
-                ?>
-                <div class="col-md-6 col-xs-12 well">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <a href="/" class="thumbnail">
-                                <!--                            <img style="width: 178px;height: 147px"-->
-                                <img style="height: 120px"
-                                     src="<?= ($hallImage instanceof HallImage) ? 'http://wangqiuer.com' . $hallImage->path : 'http://wangqiuer.com/uploadfiles/court/201205/8920_e4b32c3b0eb0f699f8fc4217ddae403e.jpg' ?>">
-                            </a>
-                        </div>
-                        <div class="col-md-5">
-                            <h4><?= $hall->name ?></h4>
+            }
+            ?>
+            <div class="row col-md-11 hall">
 
-                            <p>地址：<?= $hall->city ?></p>
+                <div class="col-md-2 col-xs-4 head-img">
+                    <a href="/" class="thumbnail">
+                        <img
+                            src="<?= ($hallImage instanceof HallImage) ? 'http://wangqiuer.com' . $hallImage->path : 'http://wangqiuer.com/uploadfiles/court/201205/8920_e4b32c3b0eb0f699f8fc4217ddae403e.jpg' ?>">
+                    </a>
+                </div>
+                <div class="col-md-6 col-xs-8 description">
+                    <p class="name"><?= $hall->name ?></p>
 
-                            <p>电话：<?= $hall->telephone ?></p>
-                        </div>
-                        <div class="col-md-3">
-                            <h1><?= intval($hallPriceAggregate->quote_price) ?>￥</h1>
-                            <a class="btn btn-primary btn-block" target="_blank"
+                    <p><span class="title">地址：</span><?= $hall->city ?></p>
 
-                               href="<?= url_wrapper("/order_court_buyer/" . $hallPriceAggregate->hall_id) ?>"
-                                <span><?= $hallPriceAggregate->count ?>个时段</span>
-                                <i class="icon-long-arrow-right"></i>
-                            </a>
-                        </div>
+                    <p><span class="title">电话：</span><?= $hall->telephone ?></p>
+                </div>
+                <div class="row col-md-4">
+                    <div class="col-md-12 col-xs-5 price">
+<!--                        <p class="price">-->
+                            <span class="symbol">￥</span>
+                            <span class="money">
+                                <?= intval($hallPriceAggregate->quote_price) ?>
+                            </span>
+<!--                        </p>-->
+                    </div>
+                    <div class="col-md-12 col-xs-1">&nbsp;</div>
+                    <div class="col-md-12 col-xs-7 go">
+                        <a class="btn btn-primary btn-lg" target="_blank"
+
+                           href="<?= url_wrapper("/order_court_buyer/" . $hallPriceAggregate->hall_id) ?>">
+                            <span>快去看看</span>
+                        </a>
                     </div>
                 </div>
-            <?php } ?>
+            </div>
         <?php } ?>
-    </div>
+    <?php } ?>
 
-    <div>
+    <div class="row col-md-8 bg-light">
         <?= $hallPriceAggregates->appends($queries)->links(); ?>
     </div>
 </div>

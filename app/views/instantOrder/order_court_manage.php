@@ -87,7 +87,7 @@
     </div>
 </div>
 
-<script type="text/javascript" src="/assets/plugins/kkcountdown/js/build/kkcountdown.js"></script>
+<!--<script type="text/javascript" src="/assets/plugins/kkcountdown/js/build/kkcountdown.js"></script>-->
 
 <script>
     seajs.use('court/manage', function(courtManage){

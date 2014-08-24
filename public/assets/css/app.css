@@ -1002,3 +1002,60 @@ i.style-switcher-btn-option:hover {
     /*opacity: 0.9;*/
     /*background-color: #e4e9f0;*/
 }
+
+.hall-on-sale .hall{
+    padding: 10px;
+    border: 1px solid #cccccc;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px !important;
+    margin-bottom: 10px;
+}
+.hall-on-sale .head-img{
+    padding: 1px;
+}
+
+.hall-on-sale .head-img .thumbnail{
+    margin: 1px;
+    padding: 3px;
+    background-color: #FFFFFF;
+    border: 1px solid #cccccc;
+}
+
+.hall-on-sale .description{
+    padding-right: 2px;
+}
+
+.hall-on-sale .description .name{
+    margin-bottom: 5%;
+    font-size: 1.8em;
+    color: #009A10;
+    font-weight: bold;
+}
+
+.hall-on-sale .description p{
+    font-size: 1.4em;
+}
+.hall-on-sale .description .title{
+    font-weight: bold;
+}
+
+.hall-on-sale .price{
+    /*background-color: #dddddd;*/
+    font-family: arial;
+    color: #ed145b;
+}
+
+.hall-on-sale .symbol{
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.hall-on-sale .money{
+    font-weight: bolder;
+    font-size: 3em;
+}
+
+.hall-on-sale .go{
+
+}
