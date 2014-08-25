@@ -916,7 +916,9 @@ i.style-switcher-btn-option:hover {
 /**
     工作台样式
 **/
-
+.worktable .date{
+    padding-right: 5px;
+}
 
 .table-court thead > tr > th,
 .table-court tbody > tr > th,
@@ -932,17 +934,44 @@ i.style-switcher-btn-option:hover {
     white-space:nowrap;
 }
 
+.table-court{
+    width: 100%;
+    overflow:auto;
+    white-space:nowrap;
+    font-size: 0px;
+}
+
+.table-court .content{
+    height: 500px;
+}
+
+.table-court .col-hour,
+.table-court .col-instant-order{
+    display: inline-block;
+}
+
+.table-court .col-hour{
+    width: 80px;
+}
+.table-court .col-instant-order{
+    width: 140px;
+}
+
 .table-court .court,
 .table-court .hour,
 .table-court .instant-order{
     text-align: center;
-    display: block;
     width: 100%;
     vertical-align: middle;
     margin-bottom: 0;
-    padding: 10px 16px;
+    padding: 10px 5px;
     line-height: 1.33;
     font-size: 18px;
+    display: block;
+    border: 1px solid #dddddd;
+
+    text-decoration: none;
+
 }
 
 .table-court .court,

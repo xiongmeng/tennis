@@ -132,6 +132,7 @@ Route::get('/hall_on_sale', array('before' => 'auth', function () {
 
     $instantOrder = new InstantOrder();
     $hallPriceAggregates = $instantOrder->searchHallPriceAggregate($queries, 8);
+
     $hallIds = array();
     foreach($hallPriceAggregates as $hallPriceAggregate){
         $hallIds[$hallPriceAggregate->hall_id] = $hallPriceAggregate->hall_id;
@@ -196,12 +197,22 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
         $dates[date('Y-m-d', $time)] = $time;
     }
 
-    $worktableService = new InstantOrderManager();
-    $workTableData = $worktableService->loadWorktableByHallAndDate($hallID, $activeDate);
+    $instantOrders = InstantOrder::orderBy('start_hour', 'asc')
+        ->where('hall_id', '=', $hallID)->where('event_date', '=', $activeDate)->get();
+
+    $formattedInstants = array();
+    foreach ($instantOrders as $instant) {
+        !isset($formattedInstants[$instant->court_id]) && $formattedInstants[$instant->court_id] = array();
+        $formattedInstants[$instant->court_id][$instant->start_hour] = $instant;
+        $instant['select'] = false;
+    }
+
+    $courts = Court::where('hall_id', '=', $hallID)->get();
 
     return View::make('layout')->nest('content', 'instantOrder.order_court_manage', array(
         'halls' => $halls, 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
-        'activeDate' => $activeDate, 'worktableData' => $workTableData
+        'activeDate' => $activeDate, 'courts' => $courts,  'formattedInstants' => $formattedInstants,
+        'instantOrders'=>$instantOrders
     ));
 }));
 
@@ -209,7 +220,8 @@ Route::get('/order_court_buyer/{hallID?}', array('before' => 'auth', function ($
     $hall = Hall::findOrFail($hallID);
 
     $activeDate = Input::get('date');
-    empty($activeDate) && $activeDate = date('Y-m-d');
+    $activeDateTimeStamp =  empty($activeDate) ? time() : strtotime($activeDate);
+    $activeDate = date('Y-m-d', $activeDateTimeStamp);
 
     $dates = array();
     for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
@@ -217,12 +229,22 @@ Route::get('/order_court_buyer/{hallID?}', array('before' => 'auth', function ($
         $dates[date('Y-m-d', $time)] = $time;
     }
 
-    $worktableService = new InstantOrderManager();
-    $workTableData = $worktableService->loadWorktableByHallAndDate($hallID, $activeDate);
+    $instantOrders = InstantOrder::orderBy('start_hour', 'asc')
+        ->where('hall_id', '=', $hallID)->where('event_date', '=', $activeDate)->get();
+
+    $formattedInstants = array();
+    foreach ($instantOrders as $instant) {
+        !isset($formattedInstants[$instant->court_id]) && $formattedInstants[$instant->court_id] = array();
+        $formattedInstants[$instant->court_id][$instant->start_hour] = $instant;
+        $instant['select'] = false;
+    }
+
+    $courts = Court::where('hall_id', '=', $hallID)->get();
 
     return View::make('layout')->nest('content', 'instantOrder.order_court_buyer', array(
         'halls' => array($hall), 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
-        'activeDate' => $activeDate, 'worktableData' => $workTableData
+        'activeDate' => $activeDate, 'courts' => $courts,  'formattedInstants' => $formattedInstants,
+        'loginUserId' => Auth::getUser()->user_id, 'instantOrders'=>$instantOrders
     ));
 
 }));

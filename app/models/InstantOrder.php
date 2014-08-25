@@ -77,7 +77,7 @@ class InstantOrder extends Eloquent implements \Finite\StatefulInterface {
                     : $builder->where('state', '=', $aQuery['state']);
             }
         })->groupBy(array('hall_id', 'quote_price'))->orderBy('quote_price', 'asc')
-            ->paginate($iPageSize, array('hall_id','quote_price', DB::raw('COUNT(1) AS count')));
+            ->paginate($iPageSize, array('hall_id','quote_price','event_date','start_hour','court_id', DB::raw('COUNT(1) AS count')));
     }
 
 

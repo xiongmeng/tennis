@@ -55,18 +55,16 @@
                 </div>
                 <div class="row col-md-4">
                     <div class="col-md-12 col-xs-5 price">
-<!--                        <p class="price">-->
                             <span class="symbol">￥</span>
                             <span class="money">
                                 <?= intval($hallPriceAggregate->quote_price) ?>
                             </span>
-<!--                        </p>-->
                     </div>
                     <div class="col-md-12 col-xs-1">&nbsp;</div>
                     <div class="col-md-12 col-xs-7 go">
                         <a class="btn btn-primary btn-lg" target="_blank"
 
-                           href="<?= url_wrapper("/order_court_buyer/" . $hallPriceAggregate->hall_id) ?>">
+                           href="<?= url_wrapper("/order_court_buyer/$hallPriceAggregate->hall_id?date=$hallPriceAggregate->event_date#instant-order-$hallPriceAggregate->court_id-$hallPriceAggregate->start_hour") ?>">
                             <span>快去看看</span>
                         </a>
                     </div>
