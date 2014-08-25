@@ -61,10 +61,6 @@
 
 <body>
 
-<!--=== Top ===-->
-<?php echo $top; ?><!--/top-->
-<!--=== End Top ===-->
-
 <!--=== Header ===-->
 <?php echo $header; ?><!--/header-->
 <!--=== End Header ===-->

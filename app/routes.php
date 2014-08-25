@@ -34,16 +34,6 @@ Route::get('/', function () {
     }
 });
 
-View::creator('format.top', function ($view) {
-    if (Auth::check()) {
-        $user = Auth::getUser();
-    } else {
-        $user = array();
-    }
-
-    $view->with('user', $user);
-});
-
 View::creator('format.header', function ($view) {
     if (Auth::check()) {
         $user = Auth::getUser();
@@ -61,16 +51,12 @@ View::creator('format.header', function ($view) {
                 $acl = array_merge($acl, $rolesHeaders);
             }
         }
-        $data = array('headers' => $headers, 'acl' => $acl);
-    } else {
-        $data = array('headers' => array());
+        $view->with('headers', $headers)->with('acl', $acl)->with('user', $user);
     }
-    $view->with('data', $data);
 });
 
 View::creator('layout', function (\Illuminate\View\View $view) {
-    $view->nest('top', 'format.top')->nest('header', 'format.header')
-        ->nest('copyright', 'format.copyright');
+    $view->nest('header', 'format.header')->nest('copyright', 'format.copyright');
 });
 
 Route::get('/home', function () {
