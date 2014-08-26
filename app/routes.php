@@ -14,6 +14,8 @@
 require_once 'route/xmTest.php';
 require_once 'route/fjTest.php';
 require_once 'route/finance.php';
+require_once 'route/mobile.php';
+
 
 Route::get('/', function () {
     if (Auth::check()) {
