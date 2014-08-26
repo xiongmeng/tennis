@@ -16,6 +16,7 @@ body {
    color: #333; 
    font-size: 13px;
    line-height: 1.6;
+   font-family: '微软雅黑';
 }
 
 p, a, li { 
@@ -38,7 +39,7 @@ h1, h2, h3, h4, h5 {
    margin-top: 5px; 
    text-shadow: none; 
    font-weight: normal !important; 
-   font-family: 'Open Sans', sans-serif; 
+   font-family: '微软雅黑', sans-serif;
 } 
 h1 i, h2 i, h3 i, h4 i, h5 i {
    margin-right: 7px;
@@ -916,9 +917,6 @@ i.style-switcher-btn-option:hover {
 /**
     工作台样式
 **/
-.worktable .date{
-    padding-right: 5px;
-}
 
 .table-court thead > tr > th,
 .table-court tbody > tr > th,
@@ -954,7 +952,7 @@ i.style-switcher-btn-option:hover {
     width: 80px;
 }
 .table-court .col-instant-order{
-    width: 140px;
+    width: 130px;
 }
 
 .table-court .court,
@@ -966,7 +964,7 @@ i.style-switcher-btn-option:hover {
     margin-bottom: 0;
     padding: 10px 5px;
     line-height: 1.33;
-    font-size: 18px;
+    font-size: 16px;
     display: block;
     border: 1px solid #dddddd;
 
@@ -1026,9 +1024,20 @@ i.style-switcher-btn-option:hover {
     background-color: #99CC99;
 }
 
-.worktable-toolbar{
+.worktable .hall a{
+    padding: 10px 10px !important;
+    font-size: 16px;
+    font-family: '微软雅黑';
+}
+
+.worktable .dates{
+
+}
+.worktable .toolbar{
     padding-left: 15px;
-    /*opacity: 0.9;*/
+    opacity: 0.8;
+    z-index: 1;
+    position: fixed;
     /*background-color: #e4e9f0;*/
 }
 
