@@ -2,7 +2,7 @@
 <div class="container worktable" id="worktable">
     <div class="row halls">
         <div class="tab-v2 col-xs-12 col-md-12">
-            <ul class="nav nav-tabs" style="border-bottom: solid 1px #dddddd">
+            <ul class="nav nav-tabs">
                 <?php foreach ($halls as $hall) { ?>
                     <li role="presentation" class="<?php if ($hall->id == $hallID) { ?>active<?php } ?>"><a
                             href="/order_court_buyer/<?php echo $hall->id ?>?court_id=">
@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="row margin-bottom-10">
-        <div class="tab-v1 col-xs-12 col-md-10 dates">
+        <div class="tab-v1 col-xs-12 col-md-12 dates">
             <ul class="nav nav-tabs">
                 <?php foreach ($dates as $date => $time) { ?>
                     <li class="<?php if ($date == $activeDate) { ?>active<?php } ?>">
@@ -70,8 +70,7 @@
                                             css: {active: select}">
                                             <span style="font-size: small" class="money">￥</span><span
                                                 data-bind="text: quote_price"></span>
-                                            <em style="color: red" class="countDown"
-                                                data-bind="attr: {'data-time': expire_time()+60}"></em>
+                                            <em style="color: red" class="countDown" data-bind="attr: {'data-time': parseInt(expire_time())+60}"></em>
 
                                         <?php } else if ($loginUserId == $instantOrder->buyer && $instantOrder->state == 'payed') { ?>
                                             class="instant-order living" style="background-color: #f0ad4e">待打球
