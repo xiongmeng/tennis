@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/headers/header1.css">
     <link rel="stylesheet" href="/assets/css/responsive.css">
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">
     <!-- CSS Implementing Plugins -->
     <link rel="stylesheet" href="/assets/plugins/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="/assets/plugins/flexslider/flexslider.css">
