@@ -15,7 +15,7 @@
     <link href="/mobile/css/ratchet.css" rel="stylesheet">
 
     <link href="/mobile/css/app.css?1" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.css">
+<!--    <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.css">-->
 
     <!-- Include the compiled Ratchet JS -->
     <script src="/mobile/js/ratchet.js"></script>
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="/assets/plugins/seajs/sea.js"></script>
     <script type="text/javascript" src="/assets/js/seajs-config.js"></script>
     <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--    <script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>-->
 
     <script type="text/javascript">
         seajs.config({
@@ -77,7 +77,7 @@
                             <?php $instantOrder = $formattedInstants[$court->id][$startHour]; ?>
                             <!-- ko with:$root.instantOrders[<?= $court->id ?>][<?= $startHour ?>]-->
                             <a name="<?= 'instant-order-' . $court->id . '-' . $startHour ?>"
-                               title="<?= $startHour.'-'.($startHour+1). ' ' . $court->number . '号场'?>"
+                               title="<?= $startHour . '-' . ($startHour + 1) . ' ' . $court->number . '号场' ?>"
                                 <?php if ($instantOrder->state == 'on_sale') { ?>
                                class="instant-order buy"
                                data-bind="click: $root.select, css: {active: select}">
@@ -90,7 +90,8 @@
                                     css: {active: select}">
                                     <span style="font-size: small" class="money">￥</span><span
                                         data-bind="text: quote_price"></span>
-                                    <em style="color: red" class="countDown" data-bind="attr: {'data-time': parseInt(expire_time())+60}"></em>
+                                    <em style="color: red" class="countDown"
+                                        data-bind="attr: {'data-time': parseInt(expire_time())+60}"></em>
 
                                 <?php } else if ($loginUserId == $instantOrder->buyer && $instantOrder->state == 'payed') { ?>
                                     class="instant-order living" style="background-color: #f0ad4e">待打球
@@ -112,10 +113,10 @@
 <!-- Block button in standard bar fixed above the footer -->
 <div class="bar bar-standard bar-footer-secondary" data-bind="visible: selected().length>0">
     <div class="segmented-control">
-        <a class="control-item "
-           data-bind="click: batchBuy, visible: currentState()=='on_sale'">buy</a>
-        <a class="control-item "
-           data-bind="click: batchPay, visible: currentState()=='paying'">pay</a>
+        <a class="control-item" href="#confirmingBuyModal"
+           data-bind="visible: currentState()=='on_sale'">buy</a>
+        <a class="control-item" href="#confirmingPayModal"
+           data-bind="visible: currentState()=='paying'">pay</a>
         <a class="control-item "
            data-bind="click: batchCancelBuy, visible: currentState()=='paying'">cancel-buy</a>
     </div>
@@ -125,20 +126,76 @@
 <nav class="bar bar-tab bar-footer">
     <a class="tab-item" href="<?= url_wrapper('/mobile_home/instant') ?>" data-transition="slide-in"
        data-ignore="push">
-home    </a>
+        home </a>
     <a class="tab-item" href="<?= url_wrapper('/mobile_buyer') ?>" data-transition="slide-in" data-ignore="push">
 
-center
+        center
     </a>
-    <a class="tab-item" href="http://homestead.app:8000/order_court_buyer/8935" data-transition="slide-in" data-ignore="push">
+    <a class="tab-item" href="http://homestead.app:8000/order_court_buyer/8935" data-transition="slide-in"
+       data-ignore="push">
 
-notice    </a>
+        notice </a>
 </nav>
-<!--==end nav==-->
+
+
+<div id="confirmingBuyModal" class="modal">
+    <header class="bar bar-nav">
+        <a class="icon icon-close pull-right" href="#confirmingPayModal"></a>
+        <h1 class="title">确认购买吗</h1>
+    </header>
+
+    <div class="content">
+        <p class="content-padded">共选取<mark data-bind="text:selected().length"></mark>个时段，共计<mark data-bind="text:selectedMoney"></mark>元</p>
+        <div class="content-padded">
+            <button class="btn btn-positive btn-block" data-bind="click: batchBuy">去购买</button>
+        </div>
+    </div>
+</div><!--==end nav==-->
+
+<div id="confirmingPayModal" class="modal">
+    <header class="bar bar-nav">
+        <a class="icon icon-close pull-right" href="#confirmingPayModal"></a>
+        <h1 class="title">确认支付吗</h1>
+    </header>
+
+    <div class="content">
+        <p class="content-padded">共选取<mark data-bind="text:selected().length"></mark>个时段，共计<mark data-bind="text:selectedMoney"></mark>元</p>
+        <div class="content-padded">
+            <button class="btn btn-positive btn-block" data-bind="click: batchPay">去支付</button>
+        </div>
+    </div>
+</div><!--==end nav==-->
+
+
+<div id="noMoneyModal" class="modal" data-bind="with:$root.noMoney">
+    <header class="bar bar-nav">
+        <a class="icon icon-close pull-right" href="#noMoneyModal"></a>
+        <h1 class="title">余额不够啦</h1>
+    </header>
+
+    <div class="content">
+        <p class="content-padded">总共需要花费
+            <mark data-bind="text: needPay"></mark>
+            元
+        </p>
+        <p class="content-padded">您当前可用余额
+            <mark data-bind="text: balance">
+                <mark>元
+        </p>
+        <p class="content-padded">您还需要支付
+            <mark data-bind="text: needRecharge"></mark>
+            元
+        </p>
+        <div class="content-padded">
+            <a class="btn btn-positive btn-block" data-bind="attr{href: adviseForwardUrl}" data-ignore="push">去支付</a>
+        </div>
+    </div>
+</div><!--==end nav==-->
+
 <script>
     seajs.use('/mobile/js/manage', function (courtManage) {
-        courtManage.init($('#worktable')[0],
-            <?= json_encode(array('instantOrders' => $formattedInstants))?>);
+        courtManage.init($('body')[0],
+            <?= json_encode(array('instantOrders' => $formattedInstants, 'noMoney' => $noMoney))?>);
     })
     ;
 </script>
