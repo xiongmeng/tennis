@@ -29,3 +29,44 @@ function url_wrapper($url)
     return $url;
 
 }
+
+function balance($userId = null, $refresh=false){
+    static $balance = null;
+    if($balance === null || $refresh){
+        if($userId === null){
+            $user = Auth::getUser();
+            if(!empty($user)){
+                $userId = $user->user_id;
+            }
+        }
+
+        if(!empty($userId)){
+            $account = Finance::ensureAccountExisted($userId, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
+            $balance = intval($account->getBalance());
+        }else{
+            $balance = 0;
+        }
+    }
+    return $balance;
+}
+
+function points($userId = null, $refresh=false){
+    static $balance = null;
+    if($balance === null || $refresh){
+        if($userId === null){
+            $user = Auth::getUser();
+            if(!empty($user)){
+                $userId = $user->user_id;
+            }
+        }
+
+        if(!empty($userId)){
+            $account = Finance::ensureAccountExisted($userId, \Sports\Constant\Finance::PURPOSE_POINTS);
+            $balance = intval($account->getBalance());
+        }else{
+            $balance = 0;
+        }
+    }
+    return $balance;
+}
+

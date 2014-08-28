@@ -1024,10 +1024,18 @@ i.style-switcher-btn-option:hover {
     background-color: #99CC99;
 }
 
-.worktable .hall a{
+.worktable .halls a{
     padding: 10px 10px !important;
     font-size: 16px;
     font-family: '微软雅黑';
+}
+
+.worktable .halls ul{
+    border-bottom: solid 1px #dddddd
+}
+.worktable .dates ul{
+    border-left: solid 1px #dddddd;
+    border-right: solid 1px #dddddd;
 }
 
 .worktable .dates{

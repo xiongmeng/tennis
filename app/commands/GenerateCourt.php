@@ -40,7 +40,7 @@ class GenerateCourt extends Command
     public function fire()
     {
         $hallIds = $this->option(self::OPTION_HALL);
-        $hallIds = explode(',', $hallIds);
+        $hallIds = strlen($hallIds)>0 ? explode(',', $hallIds) : array();
 
         if (Court::where(function (Builder $builder) use ($hallIds) {
             if (count($hallIds) > 0) {

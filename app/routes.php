@@ -157,7 +157,7 @@ Route::get('/hall_on_sale', array('before' => 'auth', function () {
 
     $hours = array('不限');
     for($i=8; $i<23; $i++){
-        $hours[$i] = sprintf('%s时 - %s时', $i, $i +1);
+        $hours[$i] = sprintf('%s时', $i, $i +1);
     }
 
     return View::make('layout')->nest('content', 'instantOrder.hall_on_sale',

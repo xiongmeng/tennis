@@ -12,7 +12,7 @@
     </div>
 
     <div class="row margin-bottom-10">
-        <div class="tab-v1 col-xs-12 col-md-10 dates">
+        <div class="tab-v1 col-xs-12 col-md-12 dates">
             <ul class="nav nav-tabs">
                 <?php foreach ($dates as $date => $time) { ?>
                     <li class="<?php if ($date == $activeDate) { ?>active<?php } ?>">
@@ -55,22 +55,21 @@
                                     <?php $instantOrder = $formattedInstants[$court->id][$startHour]; ?>
                                     <!-- ko with:$root.instantOrders[<?= $court->id ?>][<?= $startHour ?>]-->
                                     <a name="<?= 'instant-order-' . $court->id . '-' . $startHour ?>"
-                                       title="<?= $startHour.'-'.($startHour+1). ' ' . $court->number . '号场'?>"
-                                    <?php if ($instantOrder->state == 'draft') { ?>
-                                        class="instant-order online"
-                                              data-bind="click: $root.select, css: {active: select}">&nbsp;
-                                    <?php } else if ($instantOrder->state == 'on_sale') { ?>
-                                        class="instant-order offline"
-                                              data-bind="click: $root.select, css: {active: select}">待售
-                                    <?php } else if ($instantOrder->state == 'waste' || $instantOrder->state == 'expired') { ?>
-                                        class="instant-order waste">&nbsp;
-                                    <?php } else if ($instantOrder->state == 'paying') { ?>
-                                        class="instant-order living"><span>支付中</span>(<em style="color: red"
-                                                                                                class="countDown"
-                                                                                                data-bind="attr: {'data-time': expire_time()+60}"></em>)</span>
-                                    <?php } else { ?>
-                                        class="instant-order living">已售
-                                    <?php }?>
+                                       title="<?= $startHour . '-' . ($startHour + 1) . ' ' . $court->number . '号场' ?>"
+                                        <?php if ($instantOrder->state == 'draft') { ?>
+                                       class="instant-order online"
+                                       data-bind="click: $root.select, css: {active: select}">&nbsp;
+                                        <?php } else if ($instantOrder->state == 'on_sale') { ?>
+                                            class="instant-order offline"
+                                            data-bind="click: $root.select, css: {active: select}">待售
+                                        <?php } else if ($instantOrder->state == 'waste' || $instantOrder->state == 'expired') { ?>
+                                            class="instant-order waste">&nbsp;
+                                        <?php } else if ($instantOrder->state == 'paying') { ?>
+                                            class="instant-order living"><span>支付中</span>
+                                            <em style="color: red" class="countDown" data-bind="attr: {'data-time': parseInt(expire_time())+60}"></em>
+                                        <?php } else { ?>
+                                            class="instant-order living">已售
+                                        <?php } ?>
                                     </a>
                                     <!--/ko-->
                                 <?php } else { ?>

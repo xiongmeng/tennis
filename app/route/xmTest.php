@@ -150,4 +150,33 @@ Route::group(array('prefix' => 'xm'), function(){
         }
         $mysqlConnection->lastInsertId();
     });
+
+    Route::get('cache', function(){
+//        $users = DB::table('gt_user_tiny')->remember(10)->first();
+
+        User::where('nickname', '=', 'rener')->remember(1)->get();
+        User::where('telephone', '=', '18611367408')->remember(1)->get();
+
+
+//        $rener = User::where('nickname', '=', 'rener')->get();
+//
+//        $rener->
+
+//        $instantOrder = InstantOrder::remember(10)->findOrFail(12253);
+//        $instantOrder->generated_price=150;
+//        $instantOrder->save();
+//        return $instantOrder;
+
+//        $instantOrders = InstantOrder::remember(10)->limit(2)->get();
+//        foreach($instantOrders as $instantOrder){
+//            $instantOrders->generated_price=150;
+//            $instantOrders->save();
+//        }
+//        return $instantOrders;
+
+        $expiresAt = \Carbon\Carbon::now()->addMinutes(10);
+        Cache::put('test-key','test-value', $expiresAt);
+
+        return Cache::get('test-key');
+    });
 });

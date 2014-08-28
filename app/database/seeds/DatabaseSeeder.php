@@ -11,7 +11,14 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		// $this->call('UserTableSeeder');
+        $start = strtotime('2015-04-04');
+        for ($i = 0; $i < 30; $i++) {
+            $time = strtotime("+$i day", $start);
+            $this->call('instantOrder:generate', array('--date' => date('Y-m-d', $time)));
+
+        }
+        exit;
+
 	}
 
 }
