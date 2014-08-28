@@ -135,40 +135,5 @@ Route::any('weixin_access', 'WeiXinController@index');
 
 
 
-Route::get('/bond', function () {
-    $queries = Input::all();
 
-    if (isset($queries['nickname']) && isset($queries['password'])) {
-        $queries = Input::all();
-        $nickname = $queries['nickname'];
-        $password = $queries['password'];
-        $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
-        $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
-        if ($isNickLog | $isTeleLog) {
-            if (Auth::check()) {
-                $user = Auth::getUser();
-                $userID = Auth::user()->user_id;
-                $app = RelationUserApp::where('user_id', '=', $userID)->first();
-                if (!$app) {
-                    $app = new RelationUserApp;
-                    $app->user_id = $userID;
-                    $app->app_id = $queries['app_id'];
-                    $app->app_user_id = $queries['app_user_id'];
-                    $app->save();
-                }
-                else{
-                    if($app instanceof RelationUserApp){
-                        $app->app_user_id = $queries['app_user_id'];
-                        $app->save();
-                    }
-                }
-            }
-            return View::make('layout')->nest('content', 'bond_success', array(''));
-        } else {
-            echo '绑定失败，用户名密码错误';
-        }
-    } else {
-        return View::make('layout')->nest('content', 'bond', array('queries' => $queries));
-    }
-});
 

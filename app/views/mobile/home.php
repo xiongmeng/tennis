@@ -1,23 +1,35 @@
-<div class="bar bar-standard bar-header-secondary">
-    <form>
-        <input type="search" placeholder="搜索场馆">
-    </form>
-</div>
 
+<div class="bar bar-standard bar-header-secondary">
+    <div class="segmented-control">
+        <?php foreach($orders as $orderkey =>$order){?>
+        <a class="control-item <?php if($orderkey==$curOrder){echo 'active';}?>" href="<?= url_wrapper($order['url']) ?>"   data-ignore="push">
+            <?= $order['label']?>
+        </a>
+        <?php } ?>
+
+    </div>
+
+</div>
 
 <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
 <div class="content">
+
+    <form>
+        <input type="search" placeholder="搜索场馆">
+    </form>
+<?php if($curOrder == 'reserve'){?>
     <div class="segmented-control">
-        <a class="control-item active" href="mobile_recommend_hall">
+        <a class="control-item active" href=""  data-ignore="push">
             推荐场馆
         </a>
-        <a class="control-item" href="mobile_nearby_hall">
+        <a class="control-item" href="mobile_nearby_hall"  data-ignore="push">
             附近场馆
         </a>
-        <a class="control-item" href="mobile_ordered_hall">
+        <a class="control-item" href="<?= url_wrapper('mobile_ordered_hall') ?>"  data-ignore="push">
             常订场馆
         </a>
     </div>
+<?php } elseif($curOrder == 'instant'){?>
     <div class="segmented-control">
         <a class="control-item" href="#item1mobile" id="search-more-btn">
 
@@ -40,6 +52,7 @@
         <button class="btn btn-link">硬地</button>
 
     </div>
+    <?php }?>
     <ul class="table-view">
         <?php if ($hallPriceAggregates->count() <= 0) { ?>
             <div class="alert alert-warning"><strong>未找到有合适场地的场馆！</strong></div>
@@ -58,7 +71,7 @@
         ?>
         <li class="table-view-cell media">
             <a class="navigate-right">
-                <img class="media-object pull-left" src="<?= ($hallImage instanceof HallImage) ? 'http://wangqiuer.com' . $hallImage->path : 'http://wangqiuer.com/uploadfiles/court/201205/8920_e4b32c3b0eb0f699f8fc4217ddae403e.jpg' ?>">
+                <img class="media-object pull-left" src="<?= 'http://wangqiuer.com/Images/weixinImage/CourtPic/'.$hall->id.'.jpg'?>">
 
                 <div class="media-body">
                     <?= $hall->name ?>
@@ -71,7 +84,7 @@
                 </div>
             </a>
         </li>
-            <?php } ?>
-        <?php } ?>
+<?php }?>
+        <?php }?>
     </ul>
 </div>

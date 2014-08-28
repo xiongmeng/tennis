@@ -106,19 +106,19 @@ Route::filter('csrf', function () {
 
 Route::filter('weixin', function () {
 
-    if (Input::get('app_user_id') && Input::get('app_id')) {
+
         $appUserID = Input::get('app_user_id');
         $appID = Input::get('app_id');
         $app = RelationUserApp::find($appUserID);
         if (!$app) {
             Auth::logout();
-            return Redirect::to(url_wrapper('bond'));
+            return Redirect::to(url_wrapper('mobile_bond'));
         } else {
             $user = User::find($app['user_id']);
             if ($user instanceof User) {
                 Auth::login($user);
             }
         }
-    }
+
 
 });
