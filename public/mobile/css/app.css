@@ -1,4 +1,19 @@
+/*Modal的漆黑背景改成透明。受不了屏幕整体忽明忽暗的效果！*/
+.modal-backdrop,.modal-backdrop.fade.in {
+    filter:alpha(opacity=50);
+    -moz-opacity:0.5;
+    -khtml-opacity: 0.5;
+    opacity: 0.5;}
 
+/*貌似不起作用！*/
+.modal.fade {
+    transition: opacity .3s ease-in-out;
+}
+
+/*调整Modal位置，原设置有些偏上*/
+.modal,.modal.fade.in {
+    top: 25%; /* was 10% */
+}
 
 .table-court{
     width: 100%;
@@ -111,6 +126,25 @@
 .worktable .dates{
 
 }
+
+.worktable .date{
+    display: table-cell;
+    width: 1%;
+    padding-top: 6px;
+    padding-bottom: 7px;
+    overflow: hidden;
+    line-height: 1;
+    color: #333;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-left: 1px solid #ccc;
+}
+
+.worktable .date.active{
+    background-color: #dddddd;
+}
+
 .worktable .toolbar{
     padding-left: 15px;
     opacity: 0.8;
