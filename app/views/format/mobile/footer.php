@@ -13,9 +13,9 @@
     <a class="tab-item" href="<?= url_wrapper('#r') ?>" data-transition="slide-in" data-ignore="push">
 
         <span class="icon icon-star-filled"></span>
-        <?php if ($isActive == true) { ?>
-            <span class="badge badge-negative">!</span>
-        <?php } ?>
+<!--        --><?php //if ($isActive == true) { ?>
+<!--            <span class="badge badge-negative">!</span>-->
+<!--        --><?php //} ?>
         <span class="tab-label">提醒</span>
     </a>
 
