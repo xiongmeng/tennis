@@ -3,8 +3,6 @@ define(function (require) {
     var mapping = require('knockout_mapping');
     require('knockout_switch_case');
     require('rest');
-    require('bootbox');
-    require('kkcountdown');
 
     var option = {
         'submitUrl': ''
@@ -84,30 +82,20 @@ define(function (require) {
 
             defer.done(function (res, data) {
                 if (data.status == 'no_money') {
-
                     mapping.fromJS({'noMoney' :data},self);
-
-                    $('#confirmingPayModal').removeClass('active');
                     $('#noMoneyModal').addClass('active');
-//                    $modalDom = $('#dialog-go-to-pay');
-//                    $model = mapping.fromJS(data);
-//                    ko.applyBindings($model, $modalDom[0]);
-//
-//                    $modalDom.modal().on('hidden.bs.modal', function () {
-//                        window.location.reload();
-//                    });
                 } else if (data.status == 'pay_success') {
-                    bootbox.alert('恭喜您，购买成功！您可以在已购买订单里面查看详情！').on('hidden.bs.modal', function () {
-                        window.location.reload();
-                    });
+                    $('#paySuccessModal').addClass('active');
                 }
             });
         }
 
         self.batchBuy = function () {
+            $('#confirmingBuyModal').removeClass('active');
             doPay('/instantOrder/batchBuy');
         };
         self.batchPay = function () {
+            $('#confirmingPayModal').removeClass('active');
             doPay('/instantOrder/batchPay');
         };
 

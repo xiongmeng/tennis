@@ -247,3 +247,37 @@ Route::get('/hall_reserve',function(){
 
     return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve');
 });
+
+Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'auth', function($hallID){
+    $hall = Hall::findOrFail($hallID);
+
+    $activeDate = Input::get('date');
+    $activeDateTimeStamp =  empty($activeDate) ? time() : strtotime($activeDate);
+    $activeDate = date('Y-m-d', $activeDateTimeStamp);
+
+    $dates = array();
+    for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
+        $time = strtotime("+$i day");
+        $dates[date('Y-m-d', $time)] = $time;
+    }
+
+    $instantOrders = InstantOrder::orderBy('start_hour', 'asc')
+        ->where('hall_id', '=', $hallID)->where('event_date', '=', $activeDate)->get();
+
+    $formattedInstants = array();
+    foreach ($instantOrders as $instant) {
+        !isset($formattedInstants[$instant->court_id]) && $formattedInstants[$instant->court_id] = array();
+        $formattedInstants[$instant->court_id][$instant->start_hour] = $instant;
+        $instant['select'] = false;
+    }
+
+    $courts = Court::where('hall_id', '=', $hallID)->get();
+
+    return View::make('mobile.court_buyer', array(
+        'halls' => array($hall), 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
+        'activeDate' => $activeDate, 'courts' => $courts,  'formattedInstants' => $formattedInstants,
+        'loginUserId' => Auth::getUser()->user_id, 'instantOrders'=>$instantOrders, 'noMoney'=>array(
+            'needPay'=>0, 'balance'=>0, 'needRecharge'=>0,'adviseForwardUrl'=>''
+        )
+    ));
+}));
