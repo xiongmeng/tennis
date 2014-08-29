@@ -73,7 +73,7 @@ Route::get('/mobile_home/instant', function () {
     for ($i = 8; $i < 23; $i++) {
         $hours[$i] = sprintf('%s时 - %s时', $i, $i + 1);
     }
-    return View::make('mobile_layout')->nest('content', 'mobile.home',
+    return View::make('mobile_layout')->nest('content', 'mobile.instant_order',
         array('queries' => $queries, 'hallPriceAggregates' => $hallPriceAggregates,
             'halls' => $halls, 'dates' => $dates, 'hours' => $hours, 'orders' => $orders, 'curOrder' => $curOrder));
 
