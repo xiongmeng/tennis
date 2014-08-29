@@ -1,0 +1,195 @@
+
+.table-court{
+    width: 100%;
+    overflow-x :auto;
+    white-space:nowrap;
+    font-size: 0px;
+    height: 500px;
+
+}
+
+.table-court .content{
+    /*height: 500px;*/
+}
+
+.table-court .col-hour,
+.table-court .col-instant-order{
+    display: inline-block;
+}
+
+.table-court .col-hour{
+    width: 45px;
+}
+.table-court .col-instant-order{
+    width: 55px;
+}
+
+.table-court .court,
+.table-court .hour,
+.table-court .instant-order{
+    text-align: center;
+    width: 100%;
+    vertical-align: middle;
+    margin-bottom: 0;
+    padding: 10px 5px;
+    line-height: 1.33;
+    font-size: 12px;
+    display: block;
+    border: 1px solid #dddddd;
+
+    text-decoration: none;
+
+}
+
+.table-court .court,
+.table-court .hour{
+    background-color: #FFFFFF;
+    color: #333333;
+}
+
+.table-court .instant-order{
+    background-color: #EEEEEE;
+}
+
+.table-court .buy,
+.table-court .offline{
+    color: #ffffff;
+    background-color: #5cb85c;
+    cursor: pointer;
+}
+.table-court .buy:hover,
+.table-court .offline:hover{
+    background-color: #47a447;
+}
+
+.table-court .online{
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+.table-court .online:hover{
+    background-color: #ffeeee;
+}
+
+.table-court .living{
+    color: #ffffff;
+    background-color: #f0ad4e;
+}
+
+.table-court .paying{
+    color: #ffffff;
+    background-color: #f0ad4e;
+    cursor: pointer;
+}
+
+.table-court .paying:hover{
+    background-color: #ed9c28;
+}
+
+.table-court .active{
+    background-color: #99CC99;
+}
+
+.table-court .active:hover{
+    background-color: #99CC99;
+}
+
+.worktable .halls a{
+    padding: 10px 10px !important;
+    font-size: 16px;
+    font-family: '微软雅黑';
+}
+
+.worktable .halls ul{
+    border-bottom: solid 1px #dddddd
+}
+.worktable .dates ul{
+    border-left: solid 1px #dddddd;
+    border-right: solid 1px #dddddd;
+}
+
+.worktable .dates{
+
+}
+
+.worktable .date{
+    display: table-cell;
+    width: 1%;
+    padding-top: 6px;
+    padding-bottom: 7px;
+    overflow: hidden;
+    line-height: 1;
+    color: #333;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-left: 1px solid #ccc;
+}
+
+.worktable .date.active{
+    background-color: #dddddd;
+}
+
+.worktable .toolbar{
+    padding-left: 15px;
+    opacity: 0.8;
+    z-index: 1;
+    position: fixed;
+    /*background-color: #e4e9f0;*/
+}
+
+.hall-on-sale .hall{
+    padding: 10px;
+    border: 1px solid #cccccc;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px !important;
+    margin-bottom: 10px;
+}
+.hall-on-sale .head-img{
+    padding: 1px;
+}
+
+.hall-on-sale .head-img .thumbnail{
+    margin: 1px;
+    padding: 3px;
+    background-color: #FFFFFF;
+    border: 1px solid #cccccc;
+}
+
+.hall-on-sale .description{
+    padding-right: 2px;
+}
+
+.hall-on-sale .description .name{
+    margin-bottom: 5%;
+    font-size: 1.8em;
+    color: #009A10;
+    font-weight: bold;
+}
+
+.hall-on-sale .description p{
+    font-size: 1.4em;
+}
+.hall-on-sale .description .title{
+    font-weight: bold;
+}
+
+.hall-on-sale .price{
+    /*background-color: #dddddd;*/
+    font-family: arial;
+    color: #ed145b;
+}
+
+.hall-on-sale .symbol{
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.hall-on-sale .money{
+    font-weight: bolder;
+    font-size: 3em;
+}
+
+.hall-on-sale .go{
+
+}
