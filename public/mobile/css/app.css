@@ -11,8 +11,7 @@ body{
     overflow-x :auto;
     white-space:nowrap;
     font-size: 0px;
-    height: 500px;
-
+    height: 100%;
 }
 
 .table-court .content{
@@ -38,9 +37,9 @@ body{
     width: 100%;
     vertical-align: middle;
     margin-bottom: 0;
-    padding: 10px 5px;
+    padding: 5px 5px;
     line-height: 1.33;
-    font-size: 12px;
+    font-size: 10px;
     display: block;
     border: 1px solid #dddddd;
     text-decoration: none;
@@ -107,39 +106,36 @@ body{
 .worktable .halls ul{
     border-bottom: solid 1px #dddddd
 }
-.worktable .dates ul{
-    border-left: solid 1px #dddddd;
-    border-right: solid 1px #dddddd;
-}
-
-.worktable .dates{
-
-}
 
 .worktable .date{
     display: table-cell;
     width: 1%;
-    padding-top: 6px;
-    padding-bottom: 7px;
+    padding-top: 3px;
+    padding-bottom: 3px;
     overflow: hidden;
     line-height: 1;
     color: #333;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #72c02c;
+}
+
+.worktable .date p{
+    margin-bottom: 2px;
+    font-size: 10px;
 }
 
 .worktable .date.active{
-    background-color: #dddddd;
+    border-top: 1px solid #72c02c;
+    border-left: 1px solid #72c02c;
+    border-right: 1px solid #72c02c;
+    border-bottom: none;
 }
 
-.worktable .toolbar{
-    padding-left: 15px;
-    opacity: 0.8;
-    z-index: 1;
-    position: fixed;
-    /*background-color: #e4e9f0;*/
+.worktable .date.active p{
+    font-weight: bold;
+    color: #72c02c;
 }
 
 .hall-on-sale .head-img{
@@ -187,4 +183,27 @@ body{
 
 .hall-on-sale .go{
 
+}
+
+.toolbar,
+.toolbar .segmented-control{
+    filter:alpha(opacity=80);
+    -moz-opacity:0.8;
+    -khtml-opacity: 0.8;
+    opacity: 0.8;
+    background-color: transparent;
+    border: none;
+}
+
+.toolbar{
+    height: 40px;
+    padding: 0;
+    margin: 0;
+}
+
+.toolbar .control-item,
+.toolbar .control-item.active{
+    background-color: #d9534f;
+    color: #FFFFFF;
+    font-weight: bolder;
 }

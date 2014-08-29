@@ -1,16 +1,16 @@
 <!-- Block button in standard bar fixed below top bar -->
-<div class="bar bar-standard bar-header-secondary">
-    <div class="segmented-control worktable">
+<div class="bar bar-standard bar-header-secondary" style="padding: 1px;border: none">
+    <div class="segmented-control worktable" style="height: 100%;top: 0;margin-bottom: 2px; border: none">
         <?php foreach ($dates as $date => $time) { ?>
             <a class="date <?php if ($date == $activeDate) { ?>active<?php } ?>"
                href="/mobile_court_buyer/<?= $hallID ?>?date=<?= $date ?>" data-ignore="push">
-                <?= date('m-d', $time) ?>
+                <p>周一</p><p style="margin-top: 6px"><?= date('m-d', $time) ?></p>
             </a>
         <?php } ?>
     </div>
 </div>
 
-<div class="content">
+<div class="content" style="border: none; margin-top: 2px; margin-bottom: 50px">
     <?php if (empty($instantOrders)) { ?>
         <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
     <?php } else { ?>
@@ -34,15 +34,11 @@
                                 <?php if ($instantOrder->state == 'on_sale') { ?>
                                class="instant-order buy"
                                data-bind="click: $root.select, css: {active: select}">
-                                <span style="font-size: small" class="money">￥</span><span
-                                    data-bind="text: quote_price"></span>
-
+                                ￥<?= intval($instantOrder->quote_price)?>
                                 <?php } else if ($loginUserId == $instantOrder->buyer && $instantOrder->state == 'paying') { ?>
-
                                     class="instant-order paying" data-bind="click: $root.select,
                                     css: {active: select}">
-                                    <span style="font-size: small" class="money">￥</span><span
-                                        data-bind="text: quote_price"></span>
+                                    ￥<?= intval($instantOrder->quote_price)?>
                                 <?php } else if ($loginUserId == $instantOrder->buyer && $instantOrder->state == 'payed') { ?>
                                     class="instant-order living" style="background-color: #f0ad4e">待打球
                                 <?php } else { ?>
@@ -54,19 +50,27 @@
                             <span class="instant-order">&nbsp;</span>
                         <?php } ?>
                     <?php } ?>
+                    <a name="court-<?= $court->id ?>" class="court disabled"><?= $court->number ?>号场</a>
                 </div>>
             <?php } ?>
+            <div class="col-hour">
+                <a class="hour disabled">&nbsp;</a>
+                <?php for ($startHour = $instantOrders->first()->start_hour; $startHour < $instantOrders->last()->start_hour; $startHour++) { ?>
+                    <a class="hour disabled"
+                       name="hour-<?= $startHour ?>"><?= $startHour, '-' . ($startHour + 1) ?></a>
+                <?php } ?>
+            </div>
         </div>
     <?php } ?>
 </div>
 
 <!-- Block button in standard bar fixed above the footer -->
-<div class="bar bar-standard bar-footer-secondary" data-bind="visible: selected().length>0">
+<div class="bar bar-standard bar-footer-secondary toolbar" data-bind="visible:selected().length>0" style="display: none">
     <div class="segmented-control">
-        <a class="control-item" onclick="$('#confirmingBuyModal').addClass('active')" data-bind="visible: currentState()=='on_sale'">buy</a>
-        <a class="control-item" onclick="$('#confirmingPayModal').addClass('active')" data-bind="visible: currentState()=='paying'">pay</a>
+        <a class="control-item" onclick="$('#confirmingBuyModal').addClass('active')" data-bind="visible: currentState()=='on_sale'">预&nbsp;订</a>
+        <a class="control-item" onclick="$('#confirmingPayModal').addClass('active')" data-bind="visible: currentState()=='paying'">继续支付</a>
         <a class="control-item"
-           data-bind="click: batchCancelBuy, visible: currentState()=='paying'">cancel-buy</a>
+           data-bind="click: batchCancelBuy, visible: currentState()=='paying'">取消预订</a>
     </div>
 </div>
 
