@@ -1,50 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>GoTennis</title>
-
-    <!-- Sets initial viewport load and disables zooming  -->
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-
-    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-    <!-- Include the compiled Ratchet CSS -->
-    <link href="/mobile/css/ratchet.css" rel="stylesheet">
-
-    <link href="/mobile/css/app.css?1" rel="stylesheet">
-<!--    <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.css">-->
-
-    <!-- Include the compiled Ratchet JS -->
-    <script src="/mobile/js/ratchet.js"></script>
-
-    <script type="text/javascript" src="/assets/plugins/seajs/sea.js"></script>
-    <script type="text/javascript" src="/assets/js/seajs-config.js"></script>
-    <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
-<!--    <script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>-->
-
-    <script type="text/javascript">
-        seajs.config({
-            paths: {
-                plugin: '/assets/plugins',
-                module: '/assets/js/module'
-            },
-            base: '/assets/js/module/',
-            charset: 'utf-8',
-            map: [
-                [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201408221157']
-            ]
-        });
-    </script>
-</head>
-<body>
-
-<header class="bar bar-nav">
-    <h1 class="title push-left">123</h1>
-</header>
-
 <!-- Block button in standard bar fixed below top bar -->
 <div class="bar bar-standard bar-header-secondary">
     <div class="segmented-control worktable">
@@ -117,22 +70,6 @@
     </div>
 </div>
 
-<!--==nav==-->
-<nav class="bar bar-tab bar-footer">
-    <a class="tab-item" href="<?= url_wrapper('/mobile_home/instant') ?>" data-transition="slide-in"
-       data-ignore="push">
-        home </a>
-    <a class="tab-item" href="<?= url_wrapper('/mobile_buyer') ?>" data-transition="slide-in" data-ignore="push">
-
-        center
-    </a>
-    <a class="tab-item" href="http://homestead.app:8000/order_court_buyer/8935" data-transition="slide-in"
-       data-ignore="push">
-
-        notice </a>
-</nav>
-
-
 <div id="confirmingBuyModal" class="modal">
     <header class="bar bar-nav">
         <a class="icon icon-close pull-right" onclick="$('#confirmingBuyModal').removeClass('active')"></a>
@@ -196,5 +133,3 @@
     })
     ;
 </script>
-</body>
-</html>

@@ -273,11 +273,11 @@ Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'auth', function($
 
     $courts = Court::where('hall_id', '=', $hallID)->get();
 
-    return View::make('mobile.court_buyer', array(
+    return View::make('mobile_layout')->nest('content', 'mobile.court_buyer',array(
         'halls' => array($hall), 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
-        'activeDate' => $activeDate, 'courts' => $courts,  'formattedInstants' => $formattedInstants,
-        'loginUserId' => Auth::getUser()->user_id, 'instantOrders'=>$instantOrders, 'noMoney'=>array(
-            'needPay'=>0, 'balance'=>0, 'needRecharge'=>0,'adviseForwardUrl'=>''
-        )
+    'activeDate' => $activeDate, 'courts' => $courts,  'formattedInstants' => $formattedInstants,
+    'loginUserId' => Auth::getUser()->user_id, 'instantOrders'=>$instantOrders, 'noMoney'=>array(
+        'needPay'=>0, 'balance'=>0, 'needRecharge'=>0,'adviseForwardUrl'=>''
+    )
     ));
 }));

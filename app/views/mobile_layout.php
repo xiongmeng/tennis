@@ -18,7 +18,23 @@
     <!-- Include the compiled Ratchet JS -->
     <script src="/mobile/js/ratchet.js"></script>
 
+    <script type="text/javascript" src="/assets/plugins/seajs/sea.js"></script>
+    <script type="text/javascript" src="/assets/js/seajs-config.js"></script>
     <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript">
+        seajs.config({
+            paths: {
+                plugin: '/assets/plugins',
+                module: '/assets/js/module'
+            },
+            base: '/assets/js/module/',
+            charset: 'utf-8',
+            map: [
+                [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201408221157']
+            ]
+        });
+    </script>
 </head>
 <body>
 

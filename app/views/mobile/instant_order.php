@@ -1,7 +1,7 @@
 <div class="bar bar-standard bar-header-secondary">
     <form style="display: inline">
         <input style="width: 65%;font-size:15px;"
-               type="search" name="hall_name" class="pull-left" placeholder="请输入场馆名" value="<?=$queries['hall_name']?>">
+               type="search" name="hall_name" class="pull-left" placeholder="请输入场馆名" value="<?=isset($queries['hall_name']) ? $queries['hall_name'] : ''?>">
         <input type="submit" style="width: 28%; margin-left: 5px;float: right" class="btn btn-primary" value="search">
     </form>
 </div>
@@ -56,7 +56,10 @@
                                 <?= intval($hallPriceAggregate->quote_price) ?>
                             </span></p>
                             <br>
-                            <button class="btn btn-primary">去看看</button>
+                            <button class="btn btn-primary"
+
+
+                            onclick="window.location.href='<?= url_wrapper("/mobile_court_buyer/$hallPriceAggregate->hall_id?date=$hallPriceAggregate->event_date#instant-order-$hallPriceAggregate->court_id-$hallPriceAggregate->start_hour")?>'">去看看</button>
                         </div>
                     </a>
                 </li>
