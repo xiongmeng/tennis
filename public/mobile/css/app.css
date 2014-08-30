@@ -185,6 +185,21 @@ body{
 
 }
 
+.hall-on-sale table{
+    margin-top: 5px;
+    width: 100%;
+}
+.hall-on-sale table thead > tr > th{
+    color: #72c02c;
+}
+.hall-on-sale table thead > tr > th,
+.hall-on-sale table tbody > tr > td
+{
+    font-size: 10px;
+    text-align: center;
+    border: 1px solid #dddddd;
+}
+
 .toolbar,
 .toolbar .segmented-control{
     filter:alpha(opacity=80);
