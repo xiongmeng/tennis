@@ -175,8 +175,6 @@ foreach($Halls as $key=> $hall){
 Route::get('/mobile_buyer', array('before' => 'weixin', function () {
     $user = Auth::getUser();
     $userID = $user['user_id'];
-    $userAccount = UserAccount::where('user_id', '=', $userID)->where('purpose', '=', 1)->first();
-    $userPoint = UserAccount::where('user_id', '=', $userID)->where('purpose', '=', 2)->first();
 
     $instantModel = new InstantOrder();
     $queries['buyer'] = $userID;
@@ -187,7 +185,7 @@ Route::get('/mobile_buyer', array('before' => 'weixin', function () {
     $payedInstants = $instantModel->search($queries);
     $payed = $payedInstants->count();
     return View::make('mobile_layout')->nest('content', 'mobile.mobile_buyer',
-        array('user' => $user, 'account' => $userAccount, 'point' => $userPoint, 'paying' => $paying, 'payed' => $payed));
+        array('user' => $user, 'paying' => $paying, 'payed' => $payed));
 
 }));
 

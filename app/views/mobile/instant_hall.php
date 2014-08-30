@@ -58,7 +58,6 @@
                             <br>
                             <button class="btn btn-primary"
 
-
                             onclick="window.location.href='<?= url_wrapper("/mobile_court_buyer/$hallPriceAggregate->hall_id?date=$hallPriceAggregate->event_date#instant-order-$hallPriceAggregate->court_id-$hallPriceAggregate->start_hour")?>'">去看看</button>
                         </div>
                     </a>
