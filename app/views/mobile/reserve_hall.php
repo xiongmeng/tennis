@@ -15,7 +15,7 @@
 </div>
 
 <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
-<div class="content" style="margin-bottom: 30px">
+<div class="content" style="margin-bottom: 50px">
     <ul class="table-view hall-on-sale">
         <?php if($curType == 'nearby'){?>
             <?php if(!$Halls){?>
