@@ -7,7 +7,7 @@
 <div class="content" style="margin-top: 10px">
     <form style="display: inline" id="form1" action="<?= url_wrapper('/submit_reserve_order') ?>" method="post">
         <a style="width: 28%; margin-left: 20px;float: left">预定人</a>
-        <input style="width: 65%;font-size:15px;"
+        <input style="width: 60%;font-size:15px;"
                type="text" name="nickname" class="pull-left" placeholder="" readonly="readonly" class="calc"
                id="mynickname"
                value="<?= $user->nickname ?>">
@@ -15,14 +15,14 @@
 
 
         <a style="width: 28%; margin-left: 20px;float: left">场馆名称</a>
-        <input style="width: 65%;font-size:15px;"
+        <input style="width: 60%;font-size:15px;"
                type="text" name="hallname" class="pull-left" placeholder="" readonly="readonly"
                value="<?= $hall->name ?>">
         <input type="hidden" name="hall_id" value="<?= $hall->id ?>" class="calc" id="select_order_court">
 
         <a style="width: 28%; margin-left: 20px;float: left">日期</a>
 
-        <select name="event_date" style="width: 65%;" id="stimestart">
+        <select name="event_date" style="width: 60%;" id="stimestart">
             <?php foreach ($dates as $key => $date) { ?>
 
                 <option class="calc" value="<?= $key ?>"><?= $date ?></option>
@@ -31,7 +31,7 @@
 
         <a style="width: 28%; margin-left: 20px;float: left">时段</a>
 
-        <select name="start_time" id="start_time" style="width: 30%;" class="calc">
+        <select name="start_time" id="start_time" style="width: 25%;" class="calc">
             <?php foreach ($hours as $key => $hour) { ?>
                 <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
             <?php } ?>
@@ -39,7 +39,7 @@
 
         <a style="width: 15%;font-size:15px;">&nbsp;-&nbsp;</a>
 
-        <select name="end_time" id="end_time" style="width: 30%;" class="calc">
+        <select name="end_time" id="end_time" style="width: 25%;" class="calc">
 
             <?php foreach ($hours as $key => $hour) { ?>
                 <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
@@ -49,7 +49,7 @@
 
         <a style="width: 28%; margin-left: 20px;float: left">片数</a>
 
-        <select name="court_num" style="width: 65%;" id="court_num" class="calc">
+        <select name="court_num" style="width: 60%;" id="court_num" class="calc">
             <option value="1">1片</option>
             <option value="2">2片</option>
             <option value="3">3片</option>
@@ -57,12 +57,12 @@
         </select>
 
         <a style="width: 28%; margin-left: 20px;float: left">金额（元）</a>
-        <input style="width: 42%;font-size:15px;"
+        <input style="width: 40%;font-size:15px;"
                type="text" name="price" class="pull-left" placeholder="自动生成 不可修改" readonly="readonly"
                id="order_cost">
         <input type="button" id="cost" style="width: 18%; margin-left: 10px;" class="btn btn-primary" value="计算金额">
         <br/><br/>
-        <input type="button" id="ok2" style="width: 45%; margin-left: 30%;" class="btn btn-primary btn-block"
+        <input type="button" id="ok2" style="width: 40%; margin-left: 30%;" class="btn btn-primary btn-block"
                value="预订">
 
 </div>
