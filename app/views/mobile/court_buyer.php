@@ -4,7 +4,7 @@
         <?php foreach ($dates as $date => $time) { ?>
             <a class="date <?php if ($date == $activeDate) { ?>active<?php } ?>"
                href="/mobile_court_buyer/<?= $hallID ?>?date=<?= $date ?>" data-ignore="push">
-                <p>周一</p><p style="margin-top: 6px"><?= date('m-d', $time) ?></p>
+                <p><?=$weekdayOption[date('w', $time)]?></p><p style="margin-top: 6px"><?= date('m-d', $time) ?></p>
             </a>
         <?php } ?>
     </div>
@@ -21,6 +21,7 @@
                     <a class="hour disabled"
                        name="hour-<?= $startHour ?>"><?= $startHour, '-' . ($startHour + 1) ?></a>
                 <?php } ?>
+                <a class="hour disabled">&nbsp;</a>
             </div>
             <?php foreach ($courts as $court) { ?>
                 <div class="col-instant-order">
@@ -51,7 +52,7 @@
                         <?php } ?>
                     <?php } ?>
                     <a name="court-<?= $court->id ?>" class="court disabled"><?= $court->number ?>号场</a>
-                </div>>
+                </div>
             <?php } ?>
             <div class="col-hour">
                 <a class="hour disabled">&nbsp;</a>
@@ -59,6 +60,7 @@
                     <a class="hour disabled"
                        name="hour-<?= $startHour ?>"><?= $startHour, '-' . ($startHour + 1) ?></a>
                 <?php } ?>
+                <a class="hour disabled">&nbsp;</a>
             </div>
         </div>
     <?php } ?>
