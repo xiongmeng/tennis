@@ -26,14 +26,26 @@
         <?php }?>
     </div>
     <ul class="table-view">
-        <?php foreach($halls as $key =>$hall){?>
+        <?php if ($Halls->count() <= 0) { ?>
+            <div class="alert alert-warning"><strong>未找到有合适场地的场馆！</strong></div>
+        <?php } else { ?>
+        <?php foreach ($Halls as $Hall) { ?>
+            <?php
+            $hall = $halls[$Hall->hall_id];
+            $hallPrice = null;
+            if ($hall instanceof Hall) {
+                if ($hall->Envelope) {
+                    $hallPrice = $hall;
+                }
+            }
+            ?>
         <li class="table-view-cell media">
-            <a class="navigate-right" href="/hall_reserve?hall_id=<?=$hall['id']?>">
+            <a class="navigate-right" href="<?= url_wrapper('/hall_reserve?hall_id='.$hall->id)?>">
 <!--                <img class="media-object pull-left" src="http://placehold.it/42x42">-->
                 <div class="media-body">
-                    <?= $hall['name']?>
-                    <p><span>地址：</span><?= $hall['area_text'] ?></p>
-                    <p><span">电话：</span><?= $hall['telephone'] ?></p>
+                    <?= $hall->name?>
+                    <p><span>地址：</span><?= $hall->area_text ?></p>
+                    <p><span">电话：</span><?= $hall->telephone ?></p>
 
                 </div>
             </a>
@@ -51,20 +63,20 @@
                     金卡会员
                 </a>
             </div>
-            <?php foreach($hall['price'] as $price){?>
+            <?php foreach($hallPrice as $price){?>
             <div class="segmented-control">
 
                 <a class="control-item" >
-                    <?=$price['name']?>
+                    <?=$price->name?>
                 </a>
                     <a class="control-item" >
-                        <?=$price['market']?>
+                        <?=$price->market?>
                     </a>
                     <a class="control-item" >
-                        <?=$price['member']?>
+                        <?=$price->member?>
                     </a>
                     <a class="control-item" >
-                        <?=$price['vip']?>
+                        <?=$price->vip?>
                     </a>
 
             </div>
@@ -81,7 +93,7 @@
                 </div>
             </a>
         </li>
-<?php } elseif($curOrder == 'instant'){?>
+<?php }}elseif($curOrder == 'instant'){?>
     <div class="segmented-control">
         <a class="control-item" href="#item1mobile" id="search-more-btn">
 
@@ -122,7 +134,7 @@
                 }
                 ?>
                 <li class="table-view-cell media">
-                    <a class="navigate-right">
+                    <a class="navigate-right" href="/hall_reserve?hall_id=<?=$hall->id?>">
                         <img class="media-object pull-left" src="<?= 'http://wangqiuer.com/Images/weixinImage/CourtPic/'.$hall->id.'.jpg'?>">
 
                         <div class="media-body">

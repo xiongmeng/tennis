@@ -22,7 +22,7 @@
 
     <ul class="table-view">
         <li class="table-view-cell media">
-            <a class="navigate-right" href="<?= url_wrapper('mobile_buyer_account_balancee') ?>" data-ignore="push">
+            <a class="navigate-right" href="<?= url_wrapper('reserve_order_buyer') ?>" data-ignore="push">
 
                 <div class="media-body">
                     预约订单
@@ -41,14 +41,14 @@
     </ul>
     <div class="segmented-control" style="border-top: none">
 
-        <a class="control-item" href="<?= url_wrapper('') ?>" data-ignore="push">
+        <a class="control-item" href="<?= url_wrapper('/mobile_buyer_order?state=paying')?>" >
             <span class="icon icon-info"></span><br/>
             待付款
             <?php if ($paying != 0) { ?>
                 <span class="badge badge-negative "><?= $paying ?></span>
             <?php } ?>
         </a>
-        <a class="control-item" href="<?= url_wrapper('') ?>" data-ignore="push">
+        <a class="control-item" href="<?= url_wrapper('/mobile_buyer_order?state=payed')?>">
             <span class="icon icon-check"></span><br/>
             等待打球
             <?php if ($payed != 0) { ?>

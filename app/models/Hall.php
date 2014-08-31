@@ -2,7 +2,7 @@
 
 class Hall extends Eloquent {
     protected $table = 'gt_hall_tiny';
-
+    protected $primaryKey = 'id';
     public function CourtGroup(){
         return $this->hasOne('CourtGroup', 'hall_id');
     }

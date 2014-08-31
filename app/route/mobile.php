@@ -108,67 +108,53 @@ Route::get('/mobile_home/reserve/{curType?}', function ($curType) {
     );
     $curOrder = 'reserve';
     if ($curType == 'recommend') {
-        $HallActive = HallActive::where('type', '=', 1)->get();
-        $Halls = array();
-        foreach ($HallActive as $Hall) {
-            $array = Hall::where('id', '=', $Hall['hall_id'])->get();
-            $array = $array->toArray();
-            $Halls = array_merge($Halls, $array);
-        }
+        $Halls = HallActive::where('type', '=', 1)->get();
+
     } elseif ($curType == 'nearby') {
         $appUserID = Input::get('app_user_id');
         $time = strtotime(date('Y-m-d', time()));
-        $location = WXLocation::where('app_user_id', '=', $appUserID)->where('creattime', '>', $time)->orderBy('creattime', 'desc')->first();
+        $location = WXLocation::where('openid', '=', $appUserID)->where('creattime', '<', $time)->orderBy('creattime', 'desc')->first();
         if ($location) {
-            $lat = $location->lat;
-            $lon = $location->lon;
-            $hallNearby = DB::select('select `hall_id`,`lon`,`lat`,ACOS(SIN((" . $lat . " * 3.1415) / 180 ) * SIN((`lat` * 3.1415) / 180 ) + COS((" . $lat . " * 3.1415) / 180 ) * COS((`lat` * 3.1415) / 180 ) * COS((" . $lon . " * 3.1415) / 180 - (`long` * 3.1415) / 180 ) ) * 6380 as description from `gt_hall_tiny` as a join `gt_hall_map` as b on a.id=b.`hall_id` where
+            $lat = $location -> lat;
+            $lon = $location -> lon;
+            $Halls = DB::select('select `hall_id`,`long`,`lat`,ACOS(SIN((" . $lat . " * 3.1415) / 180 ) * SIN((`lat` * 3.1415) / 180 ) + COS((' . $lat . '* 3.1415) / 180 ) * COS((`lat` * 3.1415) / 180 ) * COS((' . $lon . ' * 3.1415) / 180 - (`long` * 3.1415) / 180 ) ) * 6380 as description from `gt_hall_tiny` as a join `gt_hall_map` as b on a.id=b.`hall_id` where
                           a.`stat` =2 and
-                          b.`lat` > " . $lat . "-1 and
-                          b.`lat` < " . $lat . "+1 and
-                          b.`long` > " . $lon . "-1 and
-                          b.`long` < " . $lon . "+1 order by description asc limit 7', array());
-            $Halls = array();
-            foreach ($hallNearby as $Hall) {
-                $array = Hall::where('id', '=', $Hall['hall_id'])->get();
-                $array = $array->toArray();
-                $Halls = array_merge($Halls, $array);
-            }
-        } else {
-            // 没有开启地理位置服务
+                          b.`lat` > ' . $lat . '-1 and
+                          b.`lat` < ' . $lat . '+1 and
+                          b.`long` > ' . $lon . '-1 and
+                          b.`long` <  ' . $lon . '+1 order by description asc limit 7');
         }
+        else{$Halls =array();}
     } elseif ($curType == 'ordered') {
         $appUserID = Input::get('app_user_id');
         $app = RelationUserApp::where('app_user_id', '=', $appUserID)->first();
         if ($app) {
             $userID = $app->user_id;
-            $hallOrdered = ReserveOrder::where('user_id', '=', $userID)->orderBy('event_date', 'desc')->select( 'hall_id')->distinct()->get();
+            $Halls = ReserveOrder::where('user_id', '=', $userID)->orderBy('event_date', 'desc')->select( 'hall_id')->distinct()->get();
 
-            if (!isset($hallOrdered)) {
-                //还没定过场地
-            } else {
-                $Halls = array();
-                foreach ($hallOrdered as $Hall) {
-                    $array = Hall::where('id', '=', $Hall->hall_id)->distinct()->get();
-                    $array = $array->toArray();
-                    $Halls = array_merge($Halls, $array);
-                }
-            }
+
         }
         else{
             //跳转绑定
         }
     }
+    $hallIds = array();
+    foreach ($Halls as $Hall) {
+        $hallIds[$Hall->hall_id] = $Hall->hall_id;
+    }
 
-foreach($Halls as $key=> $hall){
-    $temp = HallPrice::where('hall_id','=',$hall['id'])->get();
+    $halls = array();
+    if (count($hallIds) > 0) {
+        $hallDbResults = Hall::with('HallPrices')->whereIn('id', $hallIds)->get();
+        foreach ($hallDbResults as $hallDbResult) {
+            $halls[$hallDbResult->id] = $hallDbResult;
+        }
+    }
 
-    $temp = $temp->toArray();
-    $Halls[$key]['price'] = $temp;
-}
-    //print_r($Halls);exit;
+
+
     return View::make('mobile_layout')->nest('content', 'mobile.reserve_hall',
-        array('orders' => $orders, 'curOrder' => $curOrder, 'curType' => $curType, 'types' => $types,'halls'=>$Halls,
+        array('orders' => $orders, 'curOrder' => $curOrder, 'curType' => $curType, 'types' => $types,'Halls'=>$Halls,'halls' => $halls
         ));
 });
 
@@ -233,18 +219,39 @@ Route::get('/mobile_buyer_order', array('before' => 'weixin', function () {
     $userID = $user['user_id'];
     $instantModel = new InstantOrder();
     $queries['buyer'] = $userID;
+    $label = Input::get('state');
+    if(!$label){
+        $label = 'all';
+    }
+
+
     $instants = $instantModel->search($queries);
 
 
     return View::make('mobile_layout')->nest('content', 'mobile.order_buyer',
-        array('user' => $user, 'instants' => $instants));
+        array('user' => $user, 'instants' => $instants,'label'=>$label));
 
 }));
 
-Route::get('/hall_reserve',function(){
+Route::get('/hall_reserve',array('before'=>'weixin',function(){
+    $hallID = Input::get('hall_id');
+    $hall = Hall::find($hallID);
+    $user = Auth::getUser();
 
-    return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve');
-});
+    $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
+    $dates = array();
+    for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
+        $time = strtotime("+$i day");
+        $dates[date('Y-m-d', $time)] = sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]);
+    }
+    $hours = array('不限');
+    for($i=7; $i<23; $i++){
+        $hours[$i] = sprintf('%s时', $i, $i +1);
+    }
+
+    return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve',
+        array('hall'=>$hall,'user'=>$user,'dates'=>$dates, 'hours' => $hours));
+}));
 
 Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'auth', function($hallID){
     $hall = Hall::findOrFail($hallID);
@@ -278,4 +285,27 @@ Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'auth', function($
         'needPay'=>0, 'balance'=>0, 'needRecharge'=>0,'adviseForwardUrl'=>''
     )
     ));
+}));
+
+Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
+    $queries = Input::all();
+    $order = new Order;
+    $order->hall_id = $queries['hall_id'];
+    $order->user_id = $queries['user_id'];
+    $order->start_time = $queries['start_time'];
+    $order->end_time = $queries['end_time'];
+    $order->createtime = time();
+    $order->cost = $queries['price'];
+    $order->court_num = $queries['court_num'];
+    $order->event_date = strtotime($queries['event_date']);
+    $order->createuser = $queries['user_id'];
+    $order->save();
+    return Redirect::to(url_wrapper('/reserve_order_buyer'));
+}));
+
+Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
+    //展示预定订单
+    $user = Auth::getUser();
+    $reserveOrders = Order::where('user_id','=',$user->user_id)->get();
+    return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',array('reserves'=>$reserveOrders));
 }));

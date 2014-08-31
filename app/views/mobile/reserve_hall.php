@@ -17,9 +17,16 @@
 <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
 <div class="content" style="margin-bottom: 30px">
     <ul class="table-view hall-on-sale">
+        <?php if($curType == 'nearby'){?>
+            <?php if(!$Halls){?>
+                <div class="alert alert-warning"><strong>您还没有同意上传地理位置信息哦！</strong></div>
+            <?php }?>
+        <?php }elseif ($curType != 'nearby' && $Halls->count() <= 0) {?>
+            <div class="alert alert-warning"><strong>未找到有合适场地的场馆！</strong></div>
+        <?php } else { ?>
         <?php foreach($halls as $key =>$hall){?>
         <li class="table-view-cell media">
-            <a class="navigate-right" href="/hall_reserve?hall_id=<?=$hall['id']?>">
+            <a class="navigate-right" href="<?= url_wrapper('/hall_reserve?hall_id='.$hall['id'])?>">
                 <img style="width: 80px" class="media-object pull-left"
                      src="<?= 'http://wangqiuer.com/Images/weixinImage/CourtPic/' . $hall['id'] . '.jpg' ?>">
 
@@ -43,7 +50,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach($hall['price'] as $price){?>
+                <?php foreach($hall->hall_prices as $price){?>
 
                 <tr>
                     <td>                    <?=$price['name']?>
@@ -59,6 +66,6 @@
                 </tbody>
             </table>
         </li>
-        <?php }?>
+        <?php }?><?php }?>
     </ul>
 </div>

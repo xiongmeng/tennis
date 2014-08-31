@@ -1,13 +1,13 @@
 <!-- Block button in standard bar fixed below top bar -->
 <div class="bar bar-standard bar-header-secondary" style="padding: 1px;border: none; height: 30px">
     <div class="segmented-control worktable" style="height: 100%;top: 5px; border: none">
-        <a class="date active" href="mobile_instant_order"  data-ignore="push">
+        <a class="date <?php if($label=='all'){echo 'active';}?>" href="<?= url_wrapper('/mobile_buyer_order?')?>">
             全部
         </a>
-        <a class="date" href="mobile_nearby_hall"  data-ignore="push">
+        <a class="date <?php if($label=='paying'){echo 'active';}?>" href="<?= url_wrapper('/mobile_buyer_order?state=paying')?>">
             待付款
         </a>
-        <a class="date" href="<?= url_wrapper('mobile_ordered_hall') ?>"  data-ignore="push">
+        <a class="date <?php if($label=='payed'){echo 'active';}?>" href="<?= url_wrapper('/mobile_buyer_order?state=payed')?>">
             待打球
         </a>
     </div>
