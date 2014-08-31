@@ -44,6 +44,10 @@ class WeiXinController extends \BaseController
                 $this->saveLocation($message);
 
             }
+            if ($Event == 'scan'){
+                $reply = $server->getXml4Txt('http://www.gotennis.cn/reserve/recommend?app_id=2&app_user_id='.$appUserID);
+                echo $reply;
+            }
 
             if ($Event == 'click') { //CLICK事件
 
@@ -351,7 +355,9 @@ class WeiXinController extends \BaseController
                     $reply = $server->getXml4Txt("您还没有绑定网球通账号");
                 }
             } else {
-                $reply = $server->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
+//                $reply = $server->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
+                $reply = $server->getXml4Txt('http://www.gotennis.cn/reserve/recommend?app_id=2&app_user_id='.$appUserID);
+
             }
 
             echo $reply;
