@@ -2,7 +2,7 @@
 
     <h1 class="title">预订订单</h1>
 </header>
-<div class="content" style="padding-top: 30px">
+<div class="content" style="padding-top: 30px;margin-bottom: 50px">
     <ul class="table-view hall-on-sale" style="padding-top: 10px">
         <?php if ($reserves->count() <= 0) { ?>
             <div class="alert alert-warning"><strong>您还没有订过场地哦！</strong></div>
