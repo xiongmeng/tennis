@@ -7,7 +7,7 @@
 
     <div class="segmented-control worktable" style="top: 0;margin-bottom: 2px; border: none">
         <?php foreach($types as $typekey =>$type){?>
-            <a class="date <?php if($typekey==$curType){echo 'active';}?>" href="<?= url_wrapper($type['url'])?>" >
+            <a class="date <?php if($typekey==$curType){echo 'active';}?>" href="<?= url_wrapper($type['url'])?>" data-ignore="push">
                 <?= $type['label']?>
             </a>
         <?php }?>
@@ -26,7 +26,7 @@
         <?php } else { ?>
         <?php foreach($halls as $key =>$hall){?>
         <li class="table-view-cell media">
-            <a class="navigate-right" href="<?= url_wrapper('/hall_reserve?hall_id='.$hall['id'])?>">
+            <a class="navigate-right" href="<?= url_wrapper('/hall_reserve?hall_id='.$hall['id'])?>" >
                 <img style="width: 80px" class="media-object pull-left"
                      src="<?= 'http://wangqiuer.com/Images/weixinImage/CourtPic/' . $hall['id'] . '.jpg' ?>">
 
