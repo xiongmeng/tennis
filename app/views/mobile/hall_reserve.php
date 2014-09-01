@@ -2,7 +2,7 @@
 
     <h1 class="title">填写订单</h1>
 </div>
-</div>
+
 
 <div class="content" style="margin-top: 10px">
     <form style="display: inline" id="form1" action="<?= url_wrapper('/submit_reserve_order') ?>" method="post">

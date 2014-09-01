@@ -26,7 +26,7 @@
         <?php } else { ?>
         <?php foreach($halls as $key =>$hall){?>
         <li class="table-view-cell media">
-            <a class="navigate-right" href="<?= url_wrapper('/hall_reserve?hall_id='.$hall['id'])?>">
+            <a class="navigate-right" href="<?= url_wrapper('/hall_reserve?hall_id='.$hall['id'])?>"  data-ignore="push">
                 <img style="width: 80px" class="media-object pull-left"
                      src="<?= 'http://wangqiuer.com/Images/weixinImage/CourtPic/' . $hall['id'] . '.jpg' ?>">
 
@@ -50,7 +50,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach($hall->hall_prices as $price){?>
+                <?php foreach($hall->HallPrices as $price){?>
 
                 <tr>
                     <td>                    <?=$price['name']?>
