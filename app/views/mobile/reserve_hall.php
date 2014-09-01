@@ -50,7 +50,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach($hall->hall_prices as $price){?>
+                <?php foreach($hall->HallPrices as $price){?>
 
                 <tr>
                     <td>                    <?=$price['name']?>
