@@ -211,7 +211,6 @@ body{
 }
 
 .toolbar{
-    height: 40px;
     padding: 0;
     margin: 0;
 }
@@ -221,6 +220,7 @@ body{
     background-color: #d9534f;
     color: #FFFFFF;
     font-weight: bolder;
+    font-size: 18px;
 }
 
 .user-center .table-view{

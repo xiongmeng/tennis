@@ -60,6 +60,7 @@ Route::get('/alipay_return', function () {
     if ($bBes) {
         $rechargeId = intval($sTradeNo);
         $recharge = Recharge::findOrFail($rechargeId);
+
         if($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER){
             $instantOrderString = $recharge->callback_action_token;
             $instantOrderIds = explode(',', $instantOrderString);
@@ -67,11 +68,11 @@ Route::get('/alipay_return', function () {
             DB::beginTransaction();
             try{
                 $manager = new InstantOrderManager();
-                $result = $manager->batchPay($instantOrderIds);
+                $result = $manager->batchPay($instantOrderIds, $recharge->user_id);
                 DB::commit();
 
                 if($result['status'] == 'pay_success'){
-                    return Redirect::to('instant_order_buyer');
+                    return '支付成功';
                 }else{
                     return '支付失败';
                 }

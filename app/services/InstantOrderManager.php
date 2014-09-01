@@ -94,7 +94,7 @@ class InstantOrderManager
      * @return mixed
      * @throws Exception
      */
-    public function batchPay($instants)
+    public function batchPay($instants, $payUserId = null)
     {
         if (!$instants instanceof \Illuminate\Database\Eloquent\Collection) {
             $instants = InstantOrder::whereIn('id', $instants)->get();
@@ -111,8 +111,12 @@ class InstantOrderManager
         $result['needPay'] = $needPay;
 
         //获取用户当前余额
-        $user = Auth::getUser();
-        $account = Finance::ensureAccountExisted($user->user_id, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
+        if(empty($payUserId)){
+            $user = Auth::getUser();
+            $payUserId = $user->user_id;
+        }
+
+        $account = Finance::ensureAccountExisted($payUserId, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
         $result['balance'] = $account->getAvailableAmount();
 
         $result['needRecharge'] = $needPay - $result['balance'];
