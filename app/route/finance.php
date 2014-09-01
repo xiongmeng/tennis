@@ -27,7 +27,7 @@ Route::get('/recharge/alipay/{money?}/{actionType?}/{actionToken}',
         return $sHtmlText;
     }));
 
-Route::get('/alipay_notify', array('before' => 'auth', function () {
+Route::get('/alipay_notify', function () {
     $aParams = $aError = array();
     $sTradeNo = Input::get('out_trade_no'); //获取支付宝传递过来的订单号
     $iMoney = Input::get('total_fee'); //获取支付宝传递过来的总价格
@@ -43,9 +43,9 @@ Route::get('/alipay_notify', array('before' => 'auth', function () {
     } else {
         return 'fail';
     }
-}));
+});
 
-Route::get('/alipay_return', array('before' => 'auth', function () {
+Route::get('/alipay_return', function () {
     $aParams = $aError = array();
     $sTradeNo = Input::get('out_trade_no'); //获取支付宝传递过来的订单号
     $iMoney = Input::get('total_fee'); //获取支付宝传递过来的总价格
@@ -84,4 +84,4 @@ Route::get('/alipay_return', array('before' => 'auth', function () {
     } else {
         return 'fail';
     }
-}));
+});
