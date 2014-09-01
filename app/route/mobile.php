@@ -306,6 +306,7 @@ Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
 Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
     //展示预定订单
     $user = Auth::getUser();
-    $reserveOrders = Order::where('user_id','=',$user->user_id)->get();
+    $reserveOrders = Order::where('user_id','=',$user->user_id)->orderBy('event_date','desc')->get();
+
     return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',array('reserves'=>$reserveOrders));
 }));
