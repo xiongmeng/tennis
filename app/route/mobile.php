@@ -26,19 +26,8 @@ View::creator('mobile_layout', function (\Illuminate\View\View $view) {
 //});
 
 Route::get('/mobile_home/instant', function () {
-    $orders = array(
-        'reserve' => array(
-            'label' => '预约场地',
-            'url' => '/mobile_home/reserve/recommend',
+    MobileLayout::$activeService = 'instant';
 
-        ),
-        'instant' => array(
-            'label' => '即时场地',
-            'url' => '/mobile_home/instant',
-
-        ),
-    );
-    $curOrder = 'instant';
     $queries = Input::all();
 
     $curDate = date('Y-m-d');
@@ -75,23 +64,13 @@ Route::get('/mobile_home/instant', function () {
     }
     return View::make('mobile_layout')->nest('content', 'mobile.instant_hall',
         array('queries' => $queries, 'hallPriceAggregates' => $hallPriceAggregates,
-            'halls' => $halls, 'dates' => $dates, 'hours' => $hours, 'orders' => $orders, 'curOrder' => $curOrder));
+            'halls' => $halls, 'dates' => $dates, 'hours' => $hours));
 
 });
 
 Route::get('/mobile_home/reserve/{curType?}', function ($curType) {
-    $orders = array(
-        'reserve' => array(
-            'label' => '预约场地',
-            'url' => '/mobile_home/reserve/recommend',
+    MobileLayout::$activeService = 'reserve';
 
-        ),
-        'instant' => array(
-            'label' => '即时场地',
-            'url' => '/mobile_home/instant',
-
-        ),
-    );
     $types = array(
         'recommend' => array(
             'label' => '推荐场馆',
@@ -106,7 +85,6 @@ Route::get('/mobile_home/reserve/{curType?}', function ($curType) {
             'url' => '/mobile_home/reserve/ordered',
         ),
     );
-    $curOrder = 'reserve';
     if ($curType == 'recommend') {
         $Halls = HallActive::where('type', '=', 1)->get();
 
@@ -154,11 +132,13 @@ Route::get('/mobile_home/reserve/{curType?}', function ($curType) {
 
 
     return View::make('mobile_layout')->nest('content', 'mobile.reserve_hall',
-        array('orders' => $orders, 'curOrder' => $curOrder, 'curType' => $curType, 'types' => $types,'Halls'=>$Halls,'halls' => $halls
+        array('curType' => $curType, 'types' => $types,'Halls'=>$Halls,'halls' => $halls
         ));
 });
 
 Route::get('/mobile_buyer', array('before' => 'weixin', function () {
+    MobileLayout::$activeService = 'center';
+
     $user = Auth::getUser();
     $userID = $user['user_id'];
 
@@ -177,6 +157,8 @@ Route::get('/mobile_buyer', array('before' => 'weixin', function () {
 
 
 Route::get('/mobile_bond', function () {
+    MobileLayout::$activeService = 'center';
+
     $queries = Input::all();
 
     if (isset($queries['nickname']) && isset($queries['password'])) {
@@ -213,6 +195,8 @@ Route::get('/mobile_bond', function () {
 });
 
 Route::get('/mobile_buyer_order', array('before' => 'weixin', function () {
+    MobileLayout::$activeService = 'center';
+
     $queries = Input::all();
 
     $user = Auth::getUser();
@@ -234,6 +218,8 @@ Route::get('/mobile_buyer_order', array('before' => 'weixin', function () {
 }));
 
 Route::get('/hall_reserve',array('before'=>'weixin',function(){
+    MobileLayout::$activeService = 'reserve';
+
     $hallID = Input::get('hall_id');
     $hall = Hall::find($hallID);
     $user = Auth::getUser();
@@ -254,6 +240,9 @@ Route::get('/hall_reserve',array('before'=>'weixin',function(){
 }));
 
 Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'auth', function($hallID){
+    MobileLayout::$activeService = 'instant';
+    MobileLayout::$previousUrl = URL::previous();
+
     $hall = Hall::findOrFail($hallID);
 
     $activeDate = Input::get('date');
@@ -278,6 +267,7 @@ Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'auth', function($
 
     $courts = Court::where('hall_id', '=', $hallID)->get();
 
+    MobileLayout::$title = $hall->name;
     return View::make('mobile_layout')->nest('content', 'mobile.court_buyer',array(
         'halls' => array($hall), 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
     'activeDate' => $activeDate, 'courts' => $courts,  'formattedInstants' => $formattedInstants,
@@ -304,6 +294,8 @@ Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
 }));
 
 Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
+    MobileLayout::$activeService = 'center';
+
     //展示预定订单
     $user = Auth::getUser();
     $reserveOrders = Order::where('user_id','=',$user->user_id)->orderBy('event_date','desc')->get();
