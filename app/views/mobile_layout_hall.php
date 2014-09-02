@@ -31,7 +31,7 @@
             base: '/assets/js/module/',
             charset: 'utf-8',
             map: [
-                [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201408221157']
+                [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201409021922']
             ]
         });
     </script>
