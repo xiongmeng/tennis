@@ -41,16 +41,16 @@
     </ul>
     <div class="segmented-control" style="border-top: none">
 
-        <a class="control-item" href="<?= url_wrapper('/mobile_buyer_order?state=paying')?>" >
+        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=paying')?>'" data-ignore="push">
             <span class="icon icon-info"></span><br/>
-            待付款
+            待支付
             <?php if ($paying != 0) { ?>
                 <span class="badge badge-negative "><?= $paying ?></span>
             <?php } ?>
         </a>
-        <a class="control-item" href="<?= url_wrapper('/mobile_buyer_order?state=payed')?>">
+        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=payed')?>'" data-ignore="push">
             <span class="icon icon-check"></span><br/>
-            等待打球
+            已支付
             <?php if ($payed != 0) { ?>
                 <span class="badge badge-negative"><?= $payed ?></span>
             <?php } ?>

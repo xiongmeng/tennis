@@ -123,12 +123,13 @@
 
 <div id="paySuccessModal" class="modal">
     <header class="bar bar-nav">
-        <a class="icon icon-close pull-right" onclick="$('#paySuccessModal').removeClass('active');window.location.reload();"></a>
+        <a class="icon icon-check pull-right" onclick="$('#paySuccessModal').removeClass('active');window.location.reload();"></a>
         <h1 class="title">支付成功啦</h1>
     </header>
 
     <div class="content">
-        <p class="content-padded">恭喜您，购买成功！您可以在<b>个人中心/已购买订单</b>里面查看详情！</p>
+        <p class="content-padded">恭喜您，支付成功！</p>
+        <p class="content-padded">您可以在<a data-ignore="push" href="<?= url_wrapper("/mobile_buyer_order?state=payed")?>">个人中心/已支付订单</a>里面查看详情！</p>
     </div>
 </div><!--==end nav==-->
 
