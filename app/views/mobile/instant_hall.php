@@ -1,10 +1,10 @@
-<div class="bar bar-standard bar-header-secondary">
-    <form style="display: inline">
+<header class="bar bar-nav">
+    <form style="display: inline" class="search">
         <input style="width: 65%;font-size:15px;"
                type="search" name="hall_name" class="pull-left" placeholder="请输入场馆名" value="<?=isset($queries['hall_name']) ? $queries['hall_name'] : ''?>">
-        <input type="submit" style="width: 28%; margin-left: 5px;float: right" class="btn btn-primary" value="search">
+        <input type="submit" class="btn btn-primary" value="search">
     </form>
-</div>
+</header>
 
 <div class="content">
     <div class="segmented-control" style="display: none">
@@ -42,23 +42,18 @@
                 }
                 ?>
                 <li class="table-view-cell media">
-                    <a style="padding: 5px">
+                    <a style="padding: 10px 5px" data-ignore="push" href="<?= url_wrapper("/mobile_court_buyer/$hallPriceAggregate->hall_id?date=$hallPriceAggregate->event_date#instant-order-$hallPriceAggregate->court_id-$hallPriceAggregate->start_hour")?>">
                         <img class="media-object pull-left head-img"
                              src="<?= 'http://wangqiuer.com/Images/weixinImage/CourtPic/' . $hall->id . '.jpg' ?>">
 
                         <div class="media-body description" style="width: 52%; float: left">
                             <p class="name"><?= $hall->name ?></p>
                             <p><span class="header">地址：</span><?= $hall->city ?></p>
-                            <p><span class="header">电话：</span><?= $hall->telephone ?></p>
                         </div>
-                        <div style="width: 18%; float: right;">
+                        <div style="width: 66px; float: right;">
                             <p class="price"><span class="symbol">￥</span><span class="money">
                                 <?= intval($hallPriceAggregate->quote_price) ?>
                             </span></p>
-                            <br>
-                            <button class="btn btn-primary"
-
-                            onclick="window.location.href='<?= url_wrapper("/mobile_court_buyer/$hallPriceAggregate->hall_id?date=$hallPriceAggregate->event_date#instant-order-$hallPriceAggregate->court_id-$hallPriceAggregate->start_hour")?>'">去看看</button>
                         </div>
                     </a>
                 </li>

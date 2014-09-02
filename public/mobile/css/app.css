@@ -139,8 +139,8 @@ body{
 }
 
 .hall-on-sale .head-img{
-    width: 80px;
-    /*margin: 1px;*/
+    width: 70px;
+    padding-top: 5px;
     /*background-color: #FFFFFF;*/
     /*border: 1px solid #cccccc;*/
 }
@@ -150,11 +150,12 @@ body{
 }
 
 .hall-on-sale .description p{
-    font-size: 10px;
+    padding-top: 4px;
+    font-size: 14px;
 }
 
 .hall-on-sale .description .name{
-    font-size: 12px;
+    font-size: 14px;
     color: #009A10;
     font-weight: bold;
     /*white-space: nowrap;*/
@@ -162,23 +163,27 @@ body{
 
 
 .hall-on-sale .description .header{
-    font-size: 10px;
+    font-size: 14px;
     font-weight: bold;
 }
 
 .hall-on-sale .price{
     /*background-color: #dddddd;*/
     color: #ed145b;
+    padding-top: 5px;
 }
 
 .hall-on-sale .symbol{
+    position: relative;
+    top: -5px;
+    left: 10px;
     font-weight: bold;
     font-size: 10px;
 }
 
 .hall-on-sale .money{
     font-weight: bolder;
-    font-size: 18px;
+    font-size: 25px;
 }
 
 .hall-on-sale .go{
@@ -227,4 +232,12 @@ body{
     border-top: none;
     padding: 0;
     margin: 0;
+}
+
+.bar .search .btn{
+    width: 28%;
+    margin-left: 5px;
+    float: right;
+    font-size: 18px;
+    top: 5px;
 }
