@@ -21,10 +21,10 @@
     <ul class="table-view hall-on-sale">
         <?php if($curType == 'nearby'){?>
             <?php if(!$Halls){?>
-                <div class="alert alert-warning"><strong>您还没有同意上传地理位置信息哦！</strong></div>
+                <li class="table-view-cell media notice"><p>您还没有同意上传地理位置信息哦！</p></li>
             <?php }?>
         <?php }elseif ($curType != 'nearby' && $Halls->count() <= 0) {?>
-            <div class="alert alert-warning"><strong>未找到有合适场地的场馆！</strong></div>
+            <li class="table-view-cell media notice"><p>未找到有合适场地的场馆！</p></li>
         <?php } else { ?>
         <?php foreach($halls as $key =>$hall){?>
         <li class="table-view-cell media">
