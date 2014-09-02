@@ -37,18 +37,15 @@
                         <p class="name"><?= $instant->hall_name ?></p>
 
                         <p><span
-                                class="header"><?= substr($instant->event_date, 0, 10) . "日 $instant->start_hour" . "点-$instant->end_hour" . "点" ?></span>
+                                class="header"><?= substr($instant->event_date, 5, 5) . "日 $instant->start_hour" . "点-$instant->end_hour" . "点" ?>&nbsp;<?= $instant->court_tags ?></span>
                         </p>
-
-                        <p><span class="header">类型：</span><?= $instant->court_tags ?></p>
                     </div>
                     <div class="price">
                         <p><span class="symbol">￥</span><span class="money">
                                 <?= intval($instant->quote_price) ?>
                             </span></p>
-                        <?php if ($label == 'payed') { ?>
-                            <br>
-                            <button class="btn btn-primary"
+                        <?php if ($label == 'paying') { ?>
+                            <button class="btn btn-primary go"
                                     onclick="window.location.href='<?= url_wrapper("/mobile_court_buyer/$instant->hall_id?date=$instant->event_date#instant-order-$instant->court_id-$instant->start_hour") ?>'">
                                 去支付
                             </button>

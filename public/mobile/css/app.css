@@ -218,7 +218,9 @@ header.bar .title {
 }
 
 .hall-on-sale .go{
-
+    font-size: 1.1em;
+    margin-top: 10px;
+    margin-left: 0;
 }
 
 .hall-on-sale table{
