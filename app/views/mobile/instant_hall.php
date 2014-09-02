@@ -48,7 +48,7 @@
 
                         <div class="media-body description" style="width: 52%; float: left">
                             <p class="name"><?= $hall->name ?></p>
-                            <p><span class="header">地址：</span><?= $hall->city ?></p>
+                            <p><span class="header">地址：</span><?= $hall->area_text ?></p>
                         </div>
                         <div style="width: 66px; float: right;">
                             <p class="price"><span class="symbol">￥</span><span class="money">
