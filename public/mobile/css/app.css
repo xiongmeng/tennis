@@ -37,9 +37,9 @@ body{
     width: 100%;
     vertical-align: middle;
     margin-bottom: 0;
-    padding: 10px 5px;
+    padding: 10px 1px;
     line-height: 1.33;
-    font-size: 15px;
+    font-size: 14px;
     display: block;
     border: 1px solid #dddddd;
     text-decoration: none;
@@ -183,7 +183,7 @@ body{
 
 .hall-on-sale .money{
     font-weight: bolder;
-    font-size: 1.8em;
+    font-size: 1.7em;
 }
 
 .hall-on-sale .go{
