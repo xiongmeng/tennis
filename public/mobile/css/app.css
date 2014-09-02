@@ -155,7 +155,7 @@ body{
 }
 
 .hall-on-sale .description .name{
-    font-size: 14px;
+    font-size: 15px;
     color: #009A10;
     font-weight: bold;
     /*white-space: nowrap;*/
@@ -200,8 +200,9 @@ body{
 .hall-on-sale table thead > tr > th,
 .hall-on-sale table tbody > tr > td
 {
-    font-size: 10px;
+    font-size: 14px;
     text-align: center;
+    font-weight: bold;
     border: 1px solid #dddddd;
 }
 
