@@ -51,10 +51,10 @@
         </select>
 
         <a style="width: 28%; margin-left: 20px;float: left">金额（元）</a>
-        <input style="width: 40%;font-size:15px;"
-               type="text" name="price" class="pull-left" placeholder="自动生成 不可修改" readonly="readonly"
+        <input style="width: 35%;font-size:15px;"
+               type="text" name="price" class="pull-left" placeholder="自动生成" readonly="readonly"
                id="order_cost">
-        <input type="button" id="cost" style="width: 18%; margin-left: 10px;" class="btn btn-primary" value="计算金额">
+        <input type="button" id="cost" style="width: 22%; margin-left: 10px;" class="btn btn-primary" value="计算金额">
         <br/><br/>
         <input type="button" id="ok2" style="width: 40%; margin-left: 30%;" class="btn btn-primary btn-block"
                value="预订">
