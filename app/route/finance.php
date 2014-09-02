@@ -2,9 +2,16 @@
 Route::get('/recharge/alipay/{money?}/{actionType?}/{actionToken}',
     array('before' => 'auth', function ($money, $actionType, $actionToken) {
         $user = Auth::getUser();
-
+        $appID = Input::get('app_id');
+        $appUserID = Input::get('app_user_id');
         //添加一条充值记录
+
         $aRecharge = new Recharge();
+        if($appID && $appUserID){
+            $aRecharge->app_user_id = $appUserID;
+            $aRecharge->app_id = $appID;
+
+        }
         $aRecharge->user_id = $user->user_id;
         $aRecharge->money = $money;
         $aRecharge->type = 1; //支付方式
@@ -64,14 +71,20 @@ Route::get('/alipay_return', function () {
         if($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER){
             $instantOrderString = $recharge->callback_action_token;
             $instantOrderIds = explode(',', $instantOrderString);
+            $appUserID = $recharge->app_user_id;
+            $appID = $recharge->app_id;
 
             DB::beginTransaction();
             try{
                 $manager = new InstantOrderManager();
                 $result = $manager->batchPay($instantOrderIds, $recharge->user_id);
                 DB::commit();
-
                 if($result['status'] == 'pay_success'){
+                    if($appID == 2 && $appUserID){
+                        return Redirect::to('/pay_success?app_id='.$appID.'&app_user_id='.$appUserID);
+
+                    }
+
                     return '支付成功';
                 }else{
                     return '支付失败';

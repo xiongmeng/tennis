@@ -352,3 +352,14 @@ Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
     return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',
         array('reserves'=>$reserves,'orders'=>$orderIds,'stat'=>$stat));
 }));
+
+Route::get('/pay_success',array('before'=>'weixin',function(){
+    MobileLayout::$activeService = 'center';
+    MobileLayout::$title = '支付成功';
+    MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
+
+
+
+    return View::make('mobile_layout')->nest('content','mobile.pay_success');
+
+}));
