@@ -1,7 +1,7 @@
 
     <div class="content" style="margin-top: 10px">
 
-            <a><h1 style="margin-left: 17%; margin-top: 20%">您已经支付成功！</h1></a>
+            <a><h1 style="margin-left: 17%; margin-top: 20%">支付成功啦！</h1></a>
 
 <!--            <span class="icon icon-check">恭喜</span>-->
 

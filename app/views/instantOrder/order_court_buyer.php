@@ -44,7 +44,7 @@
                 <div class="table-court">
                     <div class="col-hour">
                         <a class="hour disabled">&nbsp;</a>
-                        <?php for ($startHour = $instantOrders->first()->start_hour; $startHour < $instantOrders->last()->start_hour; $startHour++) { ?>
+                        <?php for ($startHour = $instantOrders->first()->start_hour; $startHour <= $instantOrders->last()->start_hour; $startHour++) { ?>
                             <a class="hour disabled"
                                name="hour-<?= $startHour ?>"><?= $startHour, '-' . ($startHour + 1) ?></a>
                         <?php } ?>
@@ -52,7 +52,7 @@
                     <?php foreach ($courts as $court) { ?>
                         <div class="col-instant-order">
                             <a name="court-<?= $court->id ?>" class="court disabled"><?= $court->number ?>号场</a>
-                            <?php for ($startHour = $instantOrders->first()->start_hour; $startHour < $instantOrders->last()->start_hour; $startHour++) { ?>
+                            <?php for ($startHour = $instantOrders->first()->start_hour; $startHour <= $instantOrders->last()->start_hour; $startHour++) { ?>
                                 <?php if (isset($formattedInstants[$court->id]) && isset($formattedInstants[$court->id][$startHour])) { ?>
                                     <?php $instantOrder = $formattedInstants[$court->id][$startHour]; ?>
                                     <!-- ko with:$root.instantOrders[<?= $court->id ?>][<?= $startHour ?>]-->

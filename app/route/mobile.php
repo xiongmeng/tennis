@@ -257,7 +257,7 @@ Route::get('/hall_reserve',array('before'=>'weixin',function(){
         $dates[date('Y-m-d', $time)] = sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]);
     }
     $hours = array('不限');
-    for($i=7; $i<23; $i++){
+    for($i=7; $i<=24; $i++){
         $hours[$i] = sprintf('%s时', $i, $i +1);
     }
 
@@ -265,7 +265,7 @@ Route::get('/hall_reserve',array('before'=>'weixin',function(){
         array('hall'=>$hall,'user'=>$user,'dates'=>$dates, 'hours' => $hours));
 }));
 
-Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'auth', function($hallID){
+Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'weixin', function($hallID){
     MobileLayout::$activeService = 'instant';
     MobileLayout::$previousUrl = URL::previous();
 
@@ -329,28 +329,20 @@ Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
     $user = Auth::getUser();
     $stat = Input::get('stat');
     if(isset($stat)){
-        $reserveOrders = Order::where('user_id','=',$user->user_id)->where('stat','=',$stat)->orderBy('event_date','desc')->get();
+        $orderDbResults = Order::with('Hall')->where('user_id','=',$user->user_id)->where('stat','=',$stat)->orderBy('event_date','desc')->get();
     }
     else{
-    $reserveOrders = Order::where('user_id','=',$user->user_id)->orderBy('event_date','desc')->get();
+        $orderDbResults = Order::with('Hall')->where('user_id','=',$user->user_id)->orderBy('event_date','desc')->get();
         $stat = '7';
     }
 
-    $orderIds = array();
-    foreach ($reserveOrders as $reserveOrder) {
-        $orderIds[$reserveOrder->id] = $reserveOrder->id;
-    }
-
     $reserves = array();
-    if (count($orderIds) > 0) {
-        $orderDbResults = Order::with('Hall')->whereIn('id', $orderIds)->get();
-        foreach ($orderDbResults as $orderDbResult) {
-            $reserves[$orderDbResult->id] = $orderDbResult;
-        }
+    foreach ($orderDbResults as $orderDbResult) {
+        $reserves[$orderDbResult->id] = $orderDbResult;
     }
 
     return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',
-        array('reserves'=>$reserves,'orders'=>$orderIds,'stat'=>$stat));
+        array('reserves'=>$reserves,'stat'=>$stat));
 }));
 
 Route::get('/pay_success',array('before'=>'weixin',function(){
