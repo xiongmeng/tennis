@@ -128,7 +128,7 @@ class InstantOrderManager
                 $instantOrderIds[] = $instant->id;
             }
 
-            $result['adviseForwardUrl'] = sprintf('/recharge/alipay/%s/%s/%s',
+            $result['adviseForwardUrl'] = url_wrapper(sprintf('/recharge/alipay/%s/%s/%s'),
                 $result['needRecharge'], RECHARGE_CALLBACK_PAY_INSTANT_ORDER, implode(',', $instantOrderIds));
 
             $result['status'] = 'no_money';
