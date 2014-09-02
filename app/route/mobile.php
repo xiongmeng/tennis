@@ -40,7 +40,7 @@ Route::get('/mobile_home/instant', function () {
     $queries['state'] = array('on_sale');
 
     $instantOrder = new InstantOrder();
-    $hallPriceAggregates = $instantOrder->searchHallPriceAggregate($queries, 8);
+    $hallPriceAggregates = $instantOrder->searchHallPriceAggregate($queries, 20);
 
     $hallIds = array();
     foreach ($hallPriceAggregates as $hallPriceAggregate) {
