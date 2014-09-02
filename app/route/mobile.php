@@ -4,6 +4,10 @@ View::creator('mobile_layout', function (\Illuminate\View\View $view) {
     $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
 });
 
+View::creator('mobile_layout_hall', function (\Illuminate\View\View $view) {
+    $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
+});
+
 //View::creator('format.mobile.footer', function ($view) {
 //    if (Auth::check()) {
 //        $user = Auth::getUser();
@@ -36,7 +40,7 @@ Route::get('/mobile_home/instant', function () {
     $queries['state'] = array('on_sale');
 
     $instantOrder = new InstantOrder();
-    $hallPriceAggregates = $instantOrder->searchHallPriceAggregate($queries, 8);
+    $hallPriceAggregates = $instantOrder->searchHallPriceAggregate($queries, 20);
 
     $hallIds = array();
     foreach ($hallPriceAggregates as $hallPriceAggregate) {
@@ -62,7 +66,7 @@ Route::get('/mobile_home/instant', function () {
     for ($i = 8; $i < 23; $i++) {
         $hours[$i] = sprintf('%s时 - %s时', $i, $i + 1);
     }
-    return View::make('mobile_layout')->nest('content', 'mobile.instant_hall',
+    return View::make('mobile_layout_hall')->nest('content', 'mobile.instant_hall',
         array('queries' => $queries, 'hallPriceAggregates' => $hallPriceAggregates,
             'halls' => $halls, 'dates' => $dates, 'hours' => $hours));
 
@@ -131,7 +135,7 @@ Route::get('/mobile_home/reserve/{curType?}', function ($curType) {
 
 
 
-    return View::make('mobile_layout')->nest('content', 'mobile.reserve_hall',
+    return View::make('mobile_layout_hall')->nest('content', 'mobile.reserve_hall',
         array('curType' => $curType, 'types' => $types,'Halls'=>$Halls,'halls' => $halls
         ));
 });
