@@ -78,7 +78,13 @@ define(function (require) {
                 selectedMoney += parseInt(instantOrder.quote_price());
             });
 
-            var defer = $.restPost(url, {'instant_order_ids': selectedIds.join(',')});
+            var params = {'instant_order_ids': selectedIds.join(',')};
+            var appUserId = getQueryString('app_user_id');
+            var appId = getQueryString('app_id');
+            appUserId && (params.app_user_id = appUserId);
+            appId && (params.app_id = appId);
+
+            var defer = $.restPost(url, params);
 
             defer.done(function (res, data) {
                 if (data.status == 'no_money') {
@@ -98,6 +104,12 @@ define(function (require) {
             $('#confirmingPayModal').removeClass('active');
             doPay('/instantOrder/batchPay');
         };
+
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
 
         return self;
     };
