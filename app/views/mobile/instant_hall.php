@@ -50,8 +50,8 @@
                             <p class="name"><?= $hall->name ?></p>
                             <p><span class="header">地址：</span><?= $hall->area_text ?></p>
                         </div>
-                        <div style="width: 20%; float: right;">
-                            <p class="price"><span class="symbol">￥</span><span class="money">
+                        <div class="price">
+                            <p><span class="symbol">￥</span><span class="money">
                                 <?= intval($hallPriceAggregate->quote_price) ?>
                             </span></p>
                         </div>

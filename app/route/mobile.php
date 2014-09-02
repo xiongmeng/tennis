@@ -172,7 +172,7 @@ Route::get('/mobile_buyer', array('before' => 'weixin', function () {
     if(empty($insPaying)){$insPaying=0;}
     if(empty($payed)){$payed=0;}
 
-    return View::make('mobile_layout')->nest('content', 'mobile.mobile_buyer',
+    return View::make('mobile_layout_hall')->nest('content', 'mobile.mobile_buyer',
         array('user' => $user, 'insPaying' => $insPaying, 'payed' => $payed ,'resPaying'=>$resPaying,'pending'=>$pending));
 
 }));
@@ -218,6 +218,8 @@ Route::get('/mobile_bond', function () {
 
 Route::get('/mobile_buyer_order', array('before' => 'weixin', function () {
     MobileLayout::$activeService = 'center';
+    MobileLayout::$title = "我的即时订单";
+    MobileLayout::$previousUrl = '/mobile_buyer';
 
     $queries = Input::all();
 
@@ -241,6 +243,8 @@ Route::get('/mobile_buyer_order', array('before' => 'weixin', function () {
 
 Route::get('/hall_reserve',array('before'=>'weixin',function(){
     MobileLayout::$activeService = 'reserve';
+    MobileLayout::$title = '填写订单';
+    MobileLayout::$previousUrl = URL::previous();
 
     $hallID = Input::get('hall_id');
     $hall = Hall::find($hallID);
@@ -317,7 +321,8 @@ Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
 
 Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
     MobileLayout::$activeService = 'center';
-
+    MobileLayout::$title = '我的预约订单';
+    MobileLayout::$previousUrl = '/mobile_buyer';
 
 
     //展示预定订单

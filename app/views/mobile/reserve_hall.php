@@ -6,10 +6,10 @@
     </form>
 </header>
 
-<div class="bar bar-standard bar-header-secondary" style="padding: 1px;border: none; height: 30px">
-    <div class="segmented-control worktable" style="top: 0;margin-bottom: 2px; border: none">
+<div class="bar bar-standard bar-header-secondary tab">
+    <div class="segmented-control worktable">
         <?php foreach($types as $typekey =>$type){?>
-            <a class="date <?php if($typekey==$curType){echo 'active';}?>" style="font-size: 16px;padding: 10px" href="<?= url_wrapper($type['url'])?>" >
+            <a class="date <?php if($typekey==$curType){echo 'active';}?>" href="<?= url_wrapper($type['url'])?>" >
                 <?= $type['label']?>
             </a>
         <?php }?>

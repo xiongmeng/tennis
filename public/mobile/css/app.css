@@ -1,8 +1,9 @@
 body{
     font-family: "微软雅黑";
 }
-.title {
-    font-size: 15px;
+
+header.bar .title {
+    font-size: 1.1em;
     font-weight: bold;
 }
 
@@ -138,6 +139,18 @@ body{
     color: #72c02c;
 }
 
+.tab.bar-header-secondary{
+    padding: 1px;border: none; height: 30px
+}
+.tab .segmented-control{
+    top: 0;margin-bottom: 2px; border: none
+}
+
+.tab .segmented-control a{
+    font-size: 16px;
+    padding: 10px
+}
+
 .hall-on-sale .head-img{
     width: 70px;
     padding-top: 5px;
@@ -168,6 +181,10 @@ body{
 }
 
 .hall-on-sale .price{
+    width: 20%; float: right;
+}
+
+.hall-on-sale .price p{
     /*background-color: #dddddd;*/
     color: #ed145b;
     padding-top: 5px;
@@ -184,6 +201,20 @@ body{
 .hall-on-sale .money{
     font-weight: bolder;
     font-size: 1.7em;
+}
+
+.hall-on-sale .status{
+    margin-top: 20px;
+    margin-right: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    float: right;
+}
+
+.hall-on-sale .notice p{
+    padding: 5px;
+    text-align: center;
+    font-size: 15px;
 }
 
 .hall-on-sale .go{
@@ -214,11 +245,13 @@ body{
     opacity: 0.8;
     background-color: transparent;
     border: none;
+    height: 50px;
 }
 
 .toolbar{
     padding: 0;
     margin: 0;
+    bottom: 50px;
 }
 
 .toolbar .control-item,
@@ -226,13 +259,27 @@ body{
     background-color: #d9534f;
     color: #FFFFFF;
     font-weight: bolder;
-    font-size: 18px;
+    font-size: 2em;
 }
 
 .user-center .table-view{
+    border: 1px solid #dddddd;
+    background-color: #EEEEEE;
+    padding: 1px;
+    margin: 10px 5px 0 5px;
+    border-radius: 5px;
+}
+.user-center .instant,
+.user-center .reserve{
+    border-radius: 5px 5px 0 0;
+}
+
+.user-center .segmented-control{
+    background-color: #EEEEEE;
+    padding: 1px;
+    margin: 0 5px 0 5px;
+    border-radius: 0 0 5px 5px;
     border-top: none;
-    padding: 0;
-    margin: 0;
 }
 
 .bar .search .btn{

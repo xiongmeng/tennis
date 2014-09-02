@@ -20,7 +20,7 @@
         </li>
     </ul>
 
-    <ul class="table-view">
+    <ul class="table-view reserve">
         <li class="table-view-cell media">
             <a class="navigate-right" href="<?= url_wrapper('reserve_order_buyer') ?>" data-ignore="push">
 
@@ -30,7 +30,7 @@
             </a>
         </li>
     </ul>
-    <div class="segmented-control" style="border-top: none">
+    <div class="segmented-control">
 
         <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=0')?>'" data-ignore="push">
             <span class="icon icon-info"></span><br/>
@@ -48,7 +48,7 @@
         </a>
 
     </div>
-    <ul class="table-view">
+    <ul class="table-view instant">
         <li class="table-view-cell media">
             <a class="navigate-right" href="<?= url_wrapper('mobile_buyer_order') ?>" data-ignore="push">
 
@@ -58,9 +58,7 @@
             </a>
         </li>
     </ul>
-    <div class="segmented-control" style="border-top: none">
-
-
+    <div class="segmented-control">
         <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=paying')?>'" data-ignore="push">
             <span class="icon icon-info"></span><br/>
             待支付
@@ -75,7 +73,6 @@
                 <span class="badge badge-negative"><?= $payed ?></span>
             <?php } ?>
         </a>
-
     </div>
 <!--    <ul class="table-view">-->
 <!--        <li class="table-view-cell media">-->
