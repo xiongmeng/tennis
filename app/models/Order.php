@@ -22,4 +22,8 @@ class Order extends Eloquent implements UserInterface, RemindableInterface {
     protected $table = 'gt_order';
 
     protected $primaryKey = 'user_id';
+    public function Hall(){
+        return $this->hasOne('Hall', 'id','hall_id');
+
+    }
 }

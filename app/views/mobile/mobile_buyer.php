@@ -25,11 +25,30 @@
             <a class="navigate-right" href="<?= url_wrapper('reserve_order_buyer') ?>" data-ignore="push">
 
                 <div class="media-body">
-                    预约订单
+                    预约订单<span class="pull-right" style="font-size: 12px">&nbsp;(查看全部)</span>
                 </div>
             </a>
-        </li></ul>
-        <ul class="table-view">
+        </li>
+    </ul>
+    <div class="segmented-control" style="border-top: none">
+
+        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=0')?>'" data-ignore="push">
+            <span class="icon icon-info"></span><br/>
+            待处理
+            <?php if ($pending != 0) { ?>
+                <span class="badge badge-negative "><?= $pending ?></span>
+            <?php } ?>
+        </a>
+        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=1')?>'" data-ignore="push">
+            <span class="icon icon-check"></span><br/>
+            待支付
+            <?php if ($resPaying != 0) { ?>
+                <span class="badge badge-negative"><?=$resPaying ?></span>
+            <?php } ?>
+        </a>
+
+    </div>
+    <ul class="table-view">
         <li class="table-view-cell media">
             <a class="navigate-right" href="<?= url_wrapper('mobile_buyer_order') ?>" data-ignore="push">
 
@@ -41,11 +60,12 @@
     </ul>
     <div class="segmented-control" style="border-top: none">
 
+
         <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=paying')?>'" data-ignore="push">
             <span class="icon icon-info"></span><br/>
             待支付
-            <?php if ($paying != 0) { ?>
-                <span class="badge badge-negative "><?= $paying ?></span>
+            <?php if ($insPaying != 0) { ?>
+                <span class="badge badge-negative "><?= $insPaying ?></span>
             <?php } ?>
         </a>
         <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=payed')?>'" data-ignore="push">

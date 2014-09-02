@@ -143,15 +143,33 @@ Route::get('/mobile_buyer', array('before' => 'weixin', function () {
     $userID = $user['user_id'];
 
     $instantModel = new InstantOrder();
-    $queries['buyer'] = $userID;
-    $queries['state'] = 'paying';
-    $payingInstants = $instantModel->search($queries);
-    $paying = $payingInstants->count();
-    $queries['state'] = 'payed';
-    $payedInstants = $instantModel->search($queries);
-    $payed = $payedInstants->count();
+
+    $instant = $instantModel->select(array('state',DB::raw('COUNT(1) AS count')))->where('buyer','=',$userID)->groupBy('state')->get();
+    foreach($instant as $ins){
+        if($ins->state == 'paying'){
+            $insPaying = $ins->count;
+        }
+        elseif($ins->state == 'payed'){
+            $payed = $ins->count;
+        }
+    }
+
+    $reserve = Order::where('user_id','=',$user->user_id)->select(array('stat',DB::raw('COUNT(1) AS count')))->groupBy('stat')->get();
+    foreach($reserve as $res){
+        if($res->stat == '0'){
+            $pending = $res->count;
+        }
+        elseif($res->stat == '1'){
+            $resPaying = $res->count;
+        }
+    }
+    if(empty($pending)){$pending=0;}
+    if(empty($resPaying)){$resPaying=0;}
+    if(empty($insPaying)){$insPaying=0;}
+    if(empty($payed)){$payed=0;}
+
     return View::make('mobile_layout')->nest('content', 'mobile.mobile_buyer',
-        array('user' => $user, 'paying' => $paying, 'payed' => $payed));
+        array('user' => $user, 'insPaying' => $insPaying, 'payed' => $payed ,'resPaying'=>$resPaying,'pending'=>$pending));
 
 }));
 
@@ -296,9 +314,32 @@ Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
 Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
     MobileLayout::$activeService = 'center';
 
+
+
     //展示预定订单
     $user = Auth::getUser();
+    $stat = Input::get('stat');
+    if(isset($stat)){
+        $reserveOrders = Order::where('user_id','=',$user->user_id)->where('stat','=',$stat)->orderBy('event_date','desc')->get();
+    }
+    else{
     $reserveOrders = Order::where('user_id','=',$user->user_id)->orderBy('event_date','desc')->get();
+        $stat = '7';
+    }
 
-    return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',array('reserves'=>$reserveOrders));
+    $orderIds = array();
+    foreach ($reserveOrders as $reserveOrder) {
+        $orderIds[$reserveOrder->id] = $reserveOrder->id;
+    }
+
+    $reserves = array();
+    if (count($orderIds) > 0) {
+        $orderDbResults = Order::with('Hall')->whereIn('id', $orderIds)->get();
+        foreach ($orderDbResults as $orderDbResult) {
+            $reserves[$orderDbResult->id] = $orderDbResult;
+        }
+    }
+
+    return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',
+        array('reserves'=>$reserves,'orders'=>$orderIds,'stat'=>$stat));
 }));
