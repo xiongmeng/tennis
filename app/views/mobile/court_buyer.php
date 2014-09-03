@@ -3,7 +3,7 @@
     <div class="segmented-control worktable" style="height: 100%;top: 0;margin-bottom: 2px; border: none">
         <?php foreach ($dates as $date => $time) { ?>
             <a class="date <?php if ($date == $activeDate) { ?>active<?php } ?>"
-               href="/mobile_court_buyer/<?= $hallID ?>?date=<?= $date ?>" data-ignore="push">
+               href="<?= url_wrapper("/mobile_court_buyer/$hallID?date=$date")?>" data-ignore="push">
                 <p><?=$weekdayOption[date('w', $time)]?></p><p style="margin-top: 6px"><?= date('m-d', $time) ?></p>
             </a>
         <?php } ?>
