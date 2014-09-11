@@ -80,5 +80,11 @@ class InstantOrder extends Eloquent implements \Finite\StatefulInterface {
             ->paginate($iPageSize, array('hall_id','quote_price','event_date','start_hour','court_id', DB::raw('COUNT(1) AS count')));
     }
 
+    public function User(){
+        return $this->belongsTo('User', 'user_id', 'user_id');
+    }
 
+    public function Hall(){
+        return $this->belongsTo('Hall', 'hall_id', 'id');
+    }
 }

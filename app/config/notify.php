@@ -34,6 +34,35 @@ return array(
 
                     return $msg;
                 }
+        ),
+        //即时订单购买成功后用户的消息
+        'user_instant_order_payed' => array(
+            'users' => function (InstantOrder $order, NotifyChunkPack $chunk) {
+                    return User::whereUserId($order->buyer)->get();
+                },
+            'object' => function ($objectId) {
+                    return InstantOrder::with(array('Hall', 'User'))->find($objectId);
+                },
+            'msg' => function (InstantOrder $order, User $buyer, $channel) {
+                    $hall = $order->Hall;
+                    return sprintf("您预订的场地已经支付成功，订单号%s（%s%s日%s点-%s点%s号场地）。场馆联系电话：%s。%s",
+                        $order->id,  $hall->name, substr($order->event_date, 0, 10), $order->start_hour,
+                        $order->end_hour, $order->court_number, $hall->telephone, contactFinanceInfo($buyer));
+                }
+        ),
+        //即时订单购买成功后场馆侧的消息提醒
+        'hall_instant_order_sold' => array(
+            'users' => function (InstantOrder $order, NotifyChunkPack $chunk) {
+                    return User::whereUserId($order->seller)->get();
+                },
+            'object' => function ($objectId) {
+                    return InstantOrder::with(array('Hall'))->find($objectId);
+                },
+            'msg' => function (InstantOrder $order, User $seller, $channel) {
+                    $hall = $order->Hall;
+                    return sprintf("售出%s%s日%s点-%s点%s号场地，订单号%s。", $hall->name, substr($order->event_date,0,10),
+                        $order->start_hour, $order->end_hour, $order->court_number, $order->id);
+                }
         )
     ),
 
