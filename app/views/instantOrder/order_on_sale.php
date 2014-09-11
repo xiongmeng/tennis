@@ -19,7 +19,6 @@
 <!--=== Content Part ===-->
 <div class="container">
         <div class="row">
-    <?php function weekday($time){if(is_numeric($time)){$weekday = array('星期日','星期一','星期二','星期三','星期四','星期五','星期六');return $weekday[date('w',$time)];}}?>
     <?php foreach ( $instants as $instant){?>
     <?php   $fsm = new InstantOrderFsm($instant);?>
     <?php if ($fsm->can('buy')){?>

@@ -179,4 +179,8 @@ Route::group(array('prefix' => 'xm'), function(){
 
         return Cache::get('test-key');
     });
+
+    Route::get('notify', function(){
+        Notify::doNotify('mgr_reserve_order_created', 16891);
+    });
 });

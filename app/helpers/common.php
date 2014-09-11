@@ -9,8 +9,10 @@ function weekday_option()
     return array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
 }
 
-;
-
+function weekday($timestamp){
+    $weekday = weekday_option();
+    return $weekday[date('w',$timestamp)];
+}
 
 function url_wrapper($url)
 {
@@ -77,3 +79,13 @@ function points($userId = null, $refresh = false)
     return $balance;
 }
 
+
+/**
+ * option列表 - 用户权限
+ */
+function option_user_privilege($sLanguage='cn'){
+    if($sLanguage=='en')
+        return array(1 => "member", 2 => "vip");
+    else
+        return array(1 => "普通会员", 2 => "vip会员");
+}
