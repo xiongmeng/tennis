@@ -192,7 +192,7 @@
             error: function () {
                 alert("网络错误，请稍后再试！~");
             }
-        })
+        });
         return true;
     }
 

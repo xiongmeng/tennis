@@ -112,7 +112,7 @@ Route::filter('weixin', function () {
         $app = RelationUserApp::find($appUserID);
         if (!$app) {
             Auth::logout();
-            return Redirect::to(url_wrapper('mobile_bond'));
+            return Redirect::to(url_wrapper('/mobile_bond'));
         } else {
             $user = User::find($app['user_id']);
             if ($user instanceof User) {

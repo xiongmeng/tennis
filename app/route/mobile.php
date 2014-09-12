@@ -180,11 +180,11 @@ Route::get('/mobile_buyer', array('before' => 'weixin', function () {
 
 Route::get('/mobile_bond', function () {
     MobileLayout::$activeService = 'center';
-
+    MobileLayout::$title = '绑定';
     $queries = Input::all();
 
     if (isset($queries['nickname']) && isset($queries['password'])) {
-        $queries = Input::all();
+
         $nickname = $queries['nickname'];
         $password = $queries['password'];
         $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
@@ -192,7 +192,7 @@ Route::get('/mobile_bond', function () {
         if ($isNickLog | $isTeleLog) {
             if (Auth::check()) {
                 $user = Auth::getUser();
-                $userID = Auth::user()->user_id;
+                $userID = $user->user_id;
                 $app = RelationUserApp::where('user_id', '=', $userID)->first();
                 if (!$app) {
                     $app = new RelationUserApp;
@@ -207,14 +207,79 @@ Route::get('/mobile_bond', function () {
                     }
                 }
             }
-            return View::make('layout')->nest('content', 'bond_success', array(''));
-        } else {
-            echo '绑定失败，用户名密码错误';
+            return View::make('mobile_layout')->nest('content', 'mobile.bond_success', array('user' => $user));
         }
     } else {
-        return View::make('layout')->nest('content', 'bond', array('queries' => $queries));
+
+        return View::make('mobile_layout')->nest('content', 'mobile.bond', array('queries' => $queries));
     }
 });
+
+Route::get('/mobile_register', function () {
+    MobileLayout::$activeService = 'center';
+    $queries = Input::all();
+    return View::make('mobile_layout')->nest('content', 'mobile.register', array('queries' => $queries));
+
+});
+
+Route::post('/mobile_register', function(){
+
+    $rules = array(
+        'nickname'              => 'required|unique:gt_user_tiny,nickname',
+        'realname'              => 'required',
+        'password'              => 'required|between:6,20|confirmed',
+        'password_confirmation' => 'required|between:6,20',
+        'telephone'             => 'required|digits:11|unique:gt_user_tiny,telephone',
+        'validcode'             => 'required|digits:4',
+    );
+    $messages = array(
+        'required'        => '请确保每项都填入了您的信息',
+        'nickname.unique' => '昵称已经被注册，换个昵称试试',
+        'confirmed'       => '两次输入的密码不相同',
+        'between'         => '密码需要在6-20位之间',
+        'telephone.digits'=> '请输入有效的电话号码',
+        'telephone.unique'=> '该电话号码已经注册过网球通帐号',
+        'validcode.digits'=> '请输入正确的验证码',
+    );
+
+    $validator = Validator::make(Input::all(), $rules,$messages);
+
+    if ($validator->fails())
+    {
+
+        MobileLayout::$title = '注册';
+        return Redirect::to('/mobile_register')->withErrors($validator);
+    }else{
+
+        MobileLayout::$title = '注册成功';
+        $user = new User;
+        $user->nickname = Input::get('nickname');
+        $user->realname = Input::get('realname');
+        $user->telephone = Input::get('telephone');
+        $user->password = md5(Input::get('password'));
+
+        $user->save();
+        $app = RelationUserApp::where('app_user_id', '=', Input::get('app_user_id'))->first();
+        if (!$app) {
+            $app = new RelationUserApp;
+            $app->user_id = $user->user_id;
+            $app->app_id = Input::get('app_id');
+            $app->app_user_id = Input::get('app_user_id');
+            $app->save();
+        } else {
+            if ($app instanceof RelationUserApp) {
+                $app->app_user_id = $user->user_id;;
+                $app->save();
+            }
+        }
+
+
+        return View::make('mobile_layout')->nest('content', 'mobile.reg_success',array('user'=>$user));
+
+    }
+});
+
+
 
 Route::get('/mobile_buyer_order', array('before' => 'weixin', function () {
     MobileLayout::$activeService = 'center';
@@ -363,3 +428,26 @@ Route::get('/pay_success',array('before'=>'weixin',function(){
     return View::make('mobile_layout')->nest('content','mobile.pay_success');
 
 }));
+
+Route::post('/telValidCodeMake',function(){
+    $telephone = Input::get('telephone');
+    $iCode = rand(1000,9999);
+    if (Cache::has($telephone))
+    {
+        Cache::forget($telephone);
+    }
+    Cache::put($telephone,$iCode, 3600*6);
+    echo 'true';
+});
+
+Route::post('/telValidCodeValid',function(){
+    $telephone = Input::get('telephone');
+    $validcode = Input::get('validcode');
+
+    if (Cache::has($telephone) && (Cache::get($telephone) == $validcode))
+    {
+        echo 'true';
+    }else{
+        echo 'false';
+    }
+});
