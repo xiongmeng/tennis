@@ -187,4 +187,8 @@ Route::group(array('prefix' => 'xm'), function(){
 
         Notify::doNotify('hall_instant_order_sold', 20857);
     });
+
+    Route::get('log', function(){
+//    sasas
+    });
 });

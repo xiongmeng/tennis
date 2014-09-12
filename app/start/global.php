@@ -31,7 +31,18 @@ ClassLoader::addDirectories(array(
 |
 */
 
-Log::useFiles(storage_path().'/logs/laravel.log');
+Log::useDailyFiles(storage_path().'/logs/laravel.log');
+
+App::before(function(\Illuminate\Http\Request $request){
+    Log::info(sprintf("route-request:%s", Session::getId()),
+        array('url' => $request->fullUrl(), 'params' => $request->all()));
+});
+
+App::after(function(\Illuminate\Http\Request $request, $response){
+    $content = $response->getContent();
+    Log::info(sprintf("route-response:%s", Session::getId()),
+        array('content' => ($request->ajax() || strlen($content) < 256) ? $content : 'html or more than 256 bytes'));
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -48,9 +59,14 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 
 App::error(function(Exception $exception, $code)
 {
-	Log::error($exception);
+	Log::error(sprintf("exception:%s", Session::getId()), array('code' => $exception->getCode(),
+        'msg' => $exception->getMessage(), 'line' => $exception->getLine(), 'file' => $exception->getFile()));
 });
 
+//App::fatal(function(Exception $exception){
+//    Log::critical(sprintf("exception:%s", Session::getId()), array('code' => $exception->getCode(),
+//        'msg' => $exception->getMessage(), 'line' => $exception->getLine(), 'file' => $exception->getFile()));
+//});
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler
@@ -81,6 +97,8 @@ require app_path().'/filters.php';
 
 
 DB::listen(function($sql, $bindings, $time){
-    Log::info(substr($sql, 0, 512), array(
-        'bindings' => count($bindings) > 100 ? 'binding is over 100' : $bindings, 'time'=> $time));
+    if(Config::get('app.debug')){
+        Log::info(sprintf('sql:%s', substr($sql, 0, 512)), array(
+            'bindings' => count($bindings) > 100 ? 'binding is over 100' : $bindings, 'time'=> $time));
+    }
 });
