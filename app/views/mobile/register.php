@@ -70,27 +70,39 @@ function realcheck(){
     }
 }
 function pwdcheck(){
-    var paaword = $('#password').val();
-    if(!paaword){
+    var password = $('#password').val();
+    if(!password){
         pwd.innerText = "请输入密码";
     }else{
-        pwd.innerText = "";
+        if(password.length < 6 || password.length > 20){
+            pwd.innerText = "密码需要在6-20位之间哦";
+        }else{
+            pwd.innerText = "";
+        }
     }
 }
 function con_pwdcheck(){
+    var password = $('#password').val();
     var password_confirmation = $('#password_confirmation').val();
     if(!password_confirmation){
         con_pwd.innerText = "请再次确认密码";
     }else{
-        con_pwd.innerText = "";
+        if(password != password_confirmation){
+            con_pwd.innerText = "两次的密码不一致哦";
+        }else{
+            con_pwd.innerText = "";
+        }
     }
 }
 function telecheck(){
     var telephone = $('#id_telephone').val();
     if(!telephone){
-        tele.innerText = "请输入电话号码";
+        tele.innerText = "请输入手机号码";
     }else{
-        tele.innerText = "";
+        if(telephone.length != 11){
+            tele.innerText = "请输入有效的手机号码";
+        }else{
+        tele.innerText = "";}
     }
 }
 function codecheck(){
@@ -98,11 +110,10 @@ function codecheck(){
     if(!validcode){
         code.innerText = "请输入验证码";
     }else{
-
         $.ajax({
             url: "/telValidCodeValid",
             type: "POST",
-            data: {'telephone': $('#id_telephone').val(),'validcode': $('#validcode').val()},
+            data: {'telephone': $('#id_telephone').val(),'validcode': validcode},
             dataType: 'json',
             beforeSend: function () {
 
@@ -112,162 +123,35 @@ function codecheck(){
 //
                 if (!data) {
                     code.innerText = '验证码错误';
+                }else{
+                    code.innerText = "";
                 }
 
-                submit();
+
             },
             complete: function (data) {
 
 
             }
         });//ajax
-    }
 
+    }
 
 }
 
+$('#ok2').click(function () {
+    submit();
+});
+
 function submit(){
-    if(!code.innerText){
+    if(!code.innerText && !nick.innerText && !real.innerText && !tele.innerText
+        && !pwd.innerText && !con_pwd.innerText ){
         $('#form_reg').submit();
     }
     else{
-        alert('验证码错误'); }
+        alert('您没有正确填写！请检查红色标记部分。'); }
 }
 
-//    $('#ok2').click(function () {
-//
-//
-//        var nickname = $('#nickname').val();
-//        var password = $('#password').val();
-//        var realname = $('#realname').val();
-//        var confirm_pwd = $('#confirm_pwd').val();
-//        var telephone = $('#id_telephone').val();
-//        var validcode = $('#label8').val();
-//
-//        var validnick = validataname(nickname,realname);
-//        if(validnick){
-//
-//            var validpwd = validatapwd(password, confirm_pwd);}
-//            if(validpwd){
-//                var validtele = validatetele(telephone);
-//                if(validtele){
-//                    var vvalidcode = validatacode(validcode);
-//                }
-//            }
-//
-//        if (validnick && validtele && validpwd && vvalidcode){
-//            $('#form_reg').submit();
-//        }
-//    });
-//
-//    function validataname(nickname,realname) {
-//
-//        if (!realname) {
-//            alert('请填写您的真实姓名');
-//            return false;
-//        }
-//        if (!nickname) {
-//            alert('你还没有填写昵称');
-//            validnick = false;
-//            return false;
-//
-//        }
-//        $.ajax({
-//            type: "POST",  //请求方式
-//            url: "http://www.wangqiuer.com/ajax/user_nicknameValid",  //请求路径：页面/方法名字
-//            data: {'nickname': nickname},     //参数
-//            dataType: "text",
-//
-//
-//            success: function (data) {
-//                if (!data) {
-//                    alert('您输入的昵称已经存在');
-//                    }
-//               var valid = data;
-//            }
-//        });
-//        return valid;
-//
-//    }
-//
-//    function validatapwd(password, confirm_pwd) {
-//        var validpwd = true;
-//        if (!password) {
-//            alert('你还没有填写密码');
-//            return validpwd = false;
-//        }
-//        if (!confirm_pwd) {
-//            alert('请再次输入密码');
-//            return validpwd = false;
-//
-//        }
-//        if (password.length < 6 && password.length > 20) {
-//            alert('密码需要在6-20位之间');
-////            document.form_reg.password.focus();
-//            return validpwd = false;
-//        }
-//        if (password != confirm_pwd) {
-//            alert('两次输入密码不一致');
-////            document.form_reg.password.focus();
-//            return validpwd = false;
-//        }
-//        return validpwd;
-//    }
-//
-//
-//    function validatetele(telephone) {
-//        var validtele = true;
-//        if (telephone.length == 0) {
-//            alert('请输入手机号码！');
-////            document.form_reg.telephone.focus();
-//            return validtele = false;
-//
-//        }
-//        if (telephone.length != 11) {
-//            alert('请输入有效的手机号码');
-////            document.form_reg.telephone.focus();
-//            return validtele = false;
-//
-//        }
-//        $.ajax({
-//            type: "POST",  //请求方式
-//            url: "http://www.wangqiuer.com/ajax/user_telValidCodeVaild",  //请求路径：页面/方法名字
-//            data: {'telephone': telephone},     //参数
-//            dataType: "text",
-//            success: function (data) {
-//                if (!data) {
-//                    alert('您输入的手机号已经存在');
-//                    validtele = false;
-//                }
-//            }
-//        });
-//        return validtele;
-//
-//    }
-//
-//    function validatacode(validcode) {
-//        var vvalidcode = true;
-//        if (!validcode) {
-//            alert('您还没输入验证码');
-//            return vvalidcode = false;
-//        }
-//        $.ajax({
-//            type: "POST",  //请求方式
-//            url: "http://www.wangqiuer.com/ajax/user_telValidCodeVaild",  //请求路径：页面/方法名字
-//            data: {'validcode': validcode, 'telephone': telephone},     //参数
-//            dataType: "text",
-//            success: function (data) {
-//                if (!data) {
-//                    alert('验证码错误');
-//                    vvalidcode = false;
-//
-//                }
-//            }
-//        });
-//        return vvalidcode;
-//    }
-//
-//
     //验证码
     var stat = 1;
     var oButton = null;
@@ -309,6 +193,7 @@ function submit(){
     $(function () {
 
         $('#tel_valid_code').click(function () {
+            if($('#id_telephone').val()){
             oButton = this;
             $.ajax({
                 url: "/telValidCodeMake",
@@ -320,16 +205,7 @@ function submit(){
                 },
                 success: function (data) {
                     ajax_res = data;
-//                    art.dialog({
-//                            title:"提示",
-//                            content:ajax_res.desc,
-//                            lock: true,//开启锁屏遮罩
-//                            fixed: true,//开启固定定位
-//                            okValue:"确定",
-//                            ok: function () {
-//                                return true;
-//                            }
-//                    });
+//
                     if (!ajax_res) {
                         return;
                     }
@@ -341,6 +217,10 @@ function submit(){
                         oButton.disabled = false;
                 }
             });//ajax
+            }
+            else{
+                alert('请输入您的手机号码');
+            }
         });//click
     });//function
 

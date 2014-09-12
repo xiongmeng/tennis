@@ -128,6 +128,10 @@ Route::group(array('prefix' => 'fj'), function () {
         $user = Auth::getUser();
     }
     ));
+
+    Route::get('/sms', function(){
+        Sms::sendASync('18611367408', 'hello', -1);
+    });
 });
 Route::any('weixin_access', 'WeiXinController@index');
 

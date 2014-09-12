@@ -248,7 +248,7 @@ Route::post('/mobile_register', function(){
     {
 
         MobileLayout::$title = '注册';
-        return Redirect::to('/mobile_register')->withErrors($validator);
+        return Redirect::to(url_wrapper('/mobile_register'))->withErrors($validator);
     }else{
 
         MobileLayout::$title = '注册成功';
@@ -429,6 +429,7 @@ Route::post('/telValidCodeMake',function(){
         Cache::forget($telephone);
     }
     Cache::put($telephone,$iCode, 3600*6);
+    Sms::sendASync($telephone, '您的手机验证码为'.$iCode.'感谢您对网球通的支持。以后打球不办卡，办卡就找【网球通】。', '');
     echo 'true';
 });
 
