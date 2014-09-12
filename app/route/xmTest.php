@@ -179,4 +179,16 @@ Route::group(array('prefix' => 'xm'), function(){
 
         return Cache::get('test-key');
     });
+
+    Route::get('notify', function(){
+//        Notify::doNotify('mgr_reserve_order_created', 16891);
+
+//        Notify::doNotify('user_instant_order_payed', 20857);
+
+        Notify::doNotify('hall_instant_order_sold', 20857);
+    });
+
+    Route::get('log', function(){
+//    sasas
+    });
 });

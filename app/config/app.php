@@ -124,6 +124,8 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'FinanceServiceProvider',
+        'SmsProvider',
+        'NotifyProvider',
         'Cooper\Wechat\WechatServiceProvider',
 	),
 
@@ -191,7 +193,9 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
-        'Finance'         => 'FinanceServiceFacades'
-	),
+        'Finance'         => 'FinanceServiceFacades',
+        'Sms'         => 'SmsFacades',
+        'Notify'         => 'NotifyFacades'
+    ),
 
 );

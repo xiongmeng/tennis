@@ -30,7 +30,7 @@
 
                 <li class="table-view-cell media" style="padding: 5px">
 
-                    <img width="80px" class="media-object pull-left"
+                    <img class="media-object pull-left head-img"
                          src="<?= 'http://wangqiuer.com/Images/weixinImage/CourtPic/' . $instant->hall_id . '.jpg' ?>">
 
                     <div class="media-body description" style="width: 52%; float: left">

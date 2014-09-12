@@ -3,7 +3,7 @@
     <div class="segmented-control worktable" style="height: 100%;top: 0;margin-bottom: 2px; border: none">
         <?php foreach ($dates as $date => $time) { ?>
             <a class="date <?php if ($date == $activeDate) { ?>active<?php } ?>"
-               href="/mobile_court_buyer/<?= $hallID ?>?date=<?= $date ?>" data-ignore="push">
+               href="<?= url_wrapper("/mobile_court_buyer/$hallID?date=$date")?>" data-ignore="push">
                 <p><?=$weekdayOption[date('w', $time)]?></p><p style="margin-top: 6px"><?= date('m-d', $time) ?></p>
             </a>
         <?php } ?>
@@ -17,7 +17,7 @@
         <div class="table-court">
             <div class="col-hour">
                 <a class="hour disabled">&nbsp;</a>
-                <?php for ($startHour = $instantOrders->first()->start_hour; $startHour < $instantOrders->last()->start_hour; $startHour++) { ?>
+                <?php for ($startHour = $instantOrders->first()->start_hour; $startHour <= $instantOrders->last()->start_hour; $startHour++) { ?>
                     <a class="hour disabled"
                        name="hour-<?= $startHour ?>"><?= $startHour, '-' . ($startHour + 1) ?></a>
                 <?php } ?>
@@ -26,7 +26,7 @@
             <?php foreach ($courts as $court) { ?>
                 <div class="col-instant-order">
                     <a name="court-<?= $court->id ?>" class="court disabled"><?= $court->number ?>号场</a>
-                    <?php for ($startHour = $instantOrders->first()->start_hour; $startHour < $instantOrders->last()->start_hour; $startHour++) { ?>
+                    <?php for ($startHour = $instantOrders->first()->start_hour; $startHour <= $instantOrders->last()->start_hour; $startHour++) { ?>
                         <?php if (isset($formattedInstants[$court->id]) && isset($formattedInstants[$court->id][$startHour])) { ?>
                             <?php $instantOrder = $formattedInstants[$court->id][$startHour]; ?>
                             <!-- ko with:$root.instantOrders[<?= $court->id ?>][<?= $startHour ?>]-->
@@ -56,7 +56,7 @@
             <?php } ?>
             <div class="col-hour">
                 <a class="hour disabled">&nbsp;</a>
-                <?php for ($startHour = $instantOrders->first()->start_hour; $startHour < $instantOrders->last()->start_hour; $startHour++) { ?>
+                <?php for ($startHour = $instantOrders->first()->start_hour; $startHour <= $instantOrders->last()->start_hour; $startHour++) { ?>
                     <a class="hour disabled"
                        name="hour-<?= $startHour ?>"><?= $startHour, '-' . ($startHour + 1) ?></a>
                 <?php } ?>

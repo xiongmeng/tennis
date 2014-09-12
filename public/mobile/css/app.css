@@ -3,7 +3,7 @@ body{
 }
 
 header.bar .title {
-    font-size: 1.1em;
+    font-size: 16px;
     font-weight: bold;
 }
 
@@ -218,7 +218,7 @@ header.bar .title {
 }
 
 .hall-on-sale .go{
-    font-size: 1.1em;
+    font-size: 15px;
     margin-top: 10px;
     margin-left: 0;
 }
