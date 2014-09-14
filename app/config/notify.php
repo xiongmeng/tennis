@@ -68,7 +68,9 @@ return array(
 
     'channels' => array(
         'sms' => array('send' => function ($msg, User $user) {
-                Sms::sendAsync($user->telephone, $msg, $user->user_id);
+                if($user->telephone){
+                    Sms::sendAsync($user->telephone, $msg, $user->user_id);
+                }
             })
     )
 );

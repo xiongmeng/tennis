@@ -8,27 +8,6 @@ View::creator('mobile_layout_hall', function (\Illuminate\View\View $view) {
     $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
 });
 
-//View::creator('format.mobile.footer', function ($view) {
-//    if (Auth::check()) {
-//        $user = Auth::getUser();
-//        $userID = $user->user_id;
-//        $instantModel = new InstantOrder();
-//        $queries['buyer'] = $userID;
-//        $queries['state'] = 'paying';
-//        $payingInstants = $instantModel->search($queries);
-//        $paying = $payingInstants->count();
-//        $queries['state'] = 'payed';
-//        $payedInstants = $instantModel->search($queries);
-//        $payed = $payedInstants->count();
-//        if ($payed == 0 && $paying == 0) {
-//            $isActive = false;
-//        } else {
-//            $isActive = true;
-//        }
-//        $view->with('isActive', $isActive);
-//    }
-//});
-
 Route::get('/mobile_home/instant', function () {
     MobileLayout::$activeService = 'instant';
 
@@ -158,7 +137,7 @@ Route::get('/mobile_buyer', array('before' => 'weixin', function () {
         }
     }
 
-    $reserve = Order::where('user_id','=',$user->user_id)->select(array('stat',DB::raw('COUNT(1) AS count')))->groupBy('stat')->get();
+    $reserve = ReserveOrder::where('user_id','=',$user->user_id)->select(array('stat',DB::raw('COUNT(1) AS count')))->groupBy('stat')->get();
     foreach($reserve as $res){
         if($res->stat == '0'){
             $pending = $res->count;
@@ -370,7 +349,7 @@ Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'weixin', function
 
 Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
     $queries = Input::all();
-    $order = new Order;
+    $order = new ReserveOrder;
     $order->hall_id = $queries['hall_id'];
     $order->user_id = $queries['user_id'];
     $order->start_time = $queries['start_time'];
@@ -381,6 +360,9 @@ Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
     $order->event_date = strtotime($queries['event_date']);
     $order->createuser = $queries['user_id'];
     $order->save();
+
+    Notify::doNotify('mgr_reserve_order_created', $order->id);
+
     return Redirect::to(url_wrapper('/reserve_order_buyer'));
 }));
 
@@ -394,10 +376,10 @@ Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
     $user = Auth::getUser();
     $stat = Input::get('stat');
     if(isset($stat)){
-        $orderDbResults = Order::with('Hall')->where('user_id','=',$user->user_id)->where('stat','=',$stat)->orderBy('event_date','desc')->get();
+        $orderDbResults = ReserveOrder::with('Hall')->where('user_id','=',$user->user_id)->where('stat','=',$stat)->orderBy('event_date','desc')->get();
     }
     else{
-        $orderDbResults = Order::with('Hall')->where('user_id','=',$user->user_id)->orderBy('event_date','desc')->get();
+        $orderDbResults = ReserveOrder::with('Hall')->where('user_id','=',$user->user_id)->orderBy('event_date','desc')->get();
         $stat = '7';
     }
 

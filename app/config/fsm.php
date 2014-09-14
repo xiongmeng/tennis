@@ -182,6 +182,10 @@ return array(
                             $expireTime = strtotime($instant->event_date) + (($instant->start_hour) * 3600);
                             $instant->expire_time = $expireTime;
                             $instant->save();
+
+                            Notify::doNotify('user_instant_order_payed', $instant->id);
+
+                            Notify::doNotify('hall_instant_order_sold', $instant->id);
                         }
                 ),
                 array( //已支付->取消
