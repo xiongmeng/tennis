@@ -291,3 +291,29 @@ header.bar .title {
     font-size: 18px;
     top: 5px;
 }
+
+.form-controller {
+    margin-bottom: 15px;
+}
+
+.form-controller .label{
+    width: 22%;
+    padding-right: 2%;
+    float: left;
+    text-align: right;
+    color: #428bca;
+}
+
+.form-controller .input-normal{
+    width: 70%;
+    margin-bottom: 5px;
+}
+
+.form-controller .item{
+}
+
+.form-controller .error{
+    padding-left: 22%;
+    font-size: 14px;
+    color: red;
+}
