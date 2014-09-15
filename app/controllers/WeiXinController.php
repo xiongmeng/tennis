@@ -117,7 +117,7 @@ class WeiXinController extends \BaseController
                         'title' => '订场就找网球通',
                         'desc' => '订场就找网球通',
                         'pic' => "http://wx.gotennis.cn/assets/img/logo.jpg",
-                        'url' => "http://wx.gotennis.cn/bond?app_user_id=" . $appUserID . '&app_id=2'
+                        'url' => "http://wx.gotennis.cn/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
                     ),
                     1 => array(
                         'title' => '预约订场',
@@ -153,7 +153,7 @@ class WeiXinController extends \BaseController
                         'title' => '订场就找网球通',
                         'desc' => '订场就找网球通',
                         'pic' => "http://wx.gotennis.cn/assets/img/logo.jpg",
-                        'url' => "http://wx.gotennis.cn/bond?app_user_id=" . $appUserID . '&app_id=2'
+                        'url' => "http://wx.gotennis.cn/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
                     ),
                     1 => array(
                         'title' => '预约订场',
