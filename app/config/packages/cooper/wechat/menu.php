@@ -7,18 +7,21 @@ return array(
            "type":"click",
            "name":"预订场地",
            "key":"Reserve",
+           "sub_button": [ ]
 
        },
        {
            "type":"click",
            "name":"即时订场",
-           "key":"Instant"
+           "key":"Instant",
+             "sub_button": [ ]
 
        },
      {
           "type":"click",
           "name":"活动资讯",
-          "key":"Active"
+          "key":"Active",
+            "sub_button": [ ]
       }]
 
  }'
