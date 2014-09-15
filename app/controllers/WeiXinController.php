@@ -11,9 +11,9 @@ class WeiXinController extends \BaseController
     public function index()
     {
         //生成自定义菜单
-//        $menu = Config::get('/packages/cooper/wechat/menu.WeChatMenu');
-//        $client = new \Cooper\Wechat\WeChatClient();
-//        $client->setMenu($menu[0]);
+        $menu = Config::get('/packages/cooper/wechat/menu.WeChatMenu');
+        $client = new \Cooper\Wechat\WeChatClient();
+        $client->setMenu($menu[0]);
 
         //获取微信消息
         $server = new \Cooper\Wechat\WeChatServer();
