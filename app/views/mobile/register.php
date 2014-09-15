@@ -101,7 +101,30 @@
             nick.innerText = "昵称不能为空";
         }
         else {
-            nick.innerText = "";
+            $.ajax({
+                url: "/nicknameValid",
+                type: "POST",
+                data: {'nickname': nickname},
+                dataType: 'json',
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+
+//
+                    if (!data) {
+                        nick.innerText = '昵称已经存在，换个昵称试试';
+                    } else {
+                        nick.innerText = "";
+                    }
+
+
+                },
+                complete: function (data) {
+
+
+                }
+            });//ajax
         }
     }
     function realcheck() {
@@ -145,7 +168,30 @@
             if (telephone.length != 11) {
                 tele.innerText = "请输入有效的手机号码";
             } else {
-                tele.innerText = "";
+                $.ajax({
+                    url: "/telephoneValid",
+                    type: "POST",
+                    data: {'telephone': telephone},
+                    dataType: 'json',
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+
+//
+                        if (!data) {
+                            tele.innerText = '您的手机号已经注册了哦';
+                        } else {
+                            tele.innerText = "";
+                        }
+
+
+                    },
+                    complete: function (data) {
+
+
+                    }
+                });//ajax
             }
         }
     }

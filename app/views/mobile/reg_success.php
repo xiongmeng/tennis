@@ -7,8 +7,8 @@
     <!--            <span class="icon icon-check">恭喜</span>-->
 
     <br/><br/>
-    <button class="btn btn-primary btn-block"
-            onclick="window.location.href='<?= url_wrapper('/mobile_buyer')?>'" style="width:60%; margin-left: 20% ">充值</button>
+<!--    <button class="btn btn-primary btn-block"-->
+<!--            onclick="window.location.href='--><?//= url_wrapper('/mobile_buyer')?><!--'" style="width:60%; margin-left: 20% ">充值</button>-->
     <button class="btn btn-primary btn-block"
             onclick="window.location.href='<?= url_wrapper('/mobile_buyer')?>'" style="width:60%; margin-left: 20% ">先去逛逛</button>
 

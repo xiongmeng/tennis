@@ -426,3 +426,25 @@ Route::post('/telValidCodeValid',function(){
         echo 'false';
     }
 });
+
+Route::post('/nicknameValid',function(){
+    $nickname = Input::get('nickname');
+    $user = User::where('nickname','=',$nickname)->first();
+    if($user){
+        echo 'false';
+    }
+    else{
+        echo 'true';
+    }
+});
+
+Route::post('/telephoneValid',function(){
+    $telephone = Input::get('telephone');
+    $user = User::where('telephone','=',$telephone)->first();
+    if($user){
+        echo 'false';
+    }
+    else{
+        echo 'true';
+    }
+});
