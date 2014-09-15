@@ -52,10 +52,10 @@ class WeiXinController extends \BaseController
 
             if ($Event == 'click') { //CLICK事件
 
-               // $key = $message['eventkey']; //获取当前菜单key
+               // $key = $message['key']; //获取当前菜单key
                 $isBond = $this->getUser($appUserID);
                 if($isBond){
-                    $res = array_merge(Config::get('/packages/cooper/wechat/message.WeChatMsg'),Config::get('/packages/cooper/wechat/message.bondMember'));
+                    $res = array_merge(Config::get('/packages/cooper/wechat/message.WeChatMsg',$appUserID),Config::get('/packages/cooper/wechat/message.bondMember',$appUserID));
                     $reply = $server->getXml4RichMsgByArray($res);
                     echo $reply;
                 }
