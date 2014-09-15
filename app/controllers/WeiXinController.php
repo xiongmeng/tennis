@@ -123,25 +123,25 @@ class WeiXinController extends \BaseController
                         'title' => '预约订场',
                         'desc' => '预定场地1',
                         'pic' => "http://wx.gotennis.cn/assets/img/logo.jpg",
-                        'url' => "http://wx.gotennis.cn/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                        'url' => "http://wx.gotennis.cn/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
                     ),
                     2 => array(
                         'title' => '即时订场',
                         'desc' => '预定场地1',
                         'pic' => "http://wx.gotennis.cn/assets/img/logo.jpg",
-                        'url' => "http://wx.gotennis.cn/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                        'url' => "http://wx.gotennis.cn/mobile_home/instant?app_user_id=" . $appUserID . '&app_id=2'
                     ),
                     3 => array(
                         'title' => '活动资讯',
                         'desc' => '预定场地1',
                         'pic' => "http://wx.gotennis.cn/assets/img/logo.jpg",
-                        'url' => "http://wx.gotennis.cn/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                        'url' => "http://wx.gotennis.cn/mobile_home/reserve?app_user_id=" . $appUserID . '&app_id=2'
                     ),
                     4 => array(
                         'title' => '个人中心',
                         'desc' => '预定场地1',
                         'pic' => "http://wx.gotennis.cn/assets/img/logo.jpg",
-                        'url' => "http://wx.gotennis.cn/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                        'url' => "http://wx.gotennis.cn/mobile_buyer?app_user_id=" . $appUserID . '&app_id=2'
                     ),
 
             );
