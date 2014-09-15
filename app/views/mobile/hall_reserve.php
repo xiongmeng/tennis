@@ -1,60 +1,77 @@
 <div class="content" style="margin-top: 10px">
     <form style="display: inline" id="form1" action="<?= url_wrapper('/submit_reserve_order') ?>" method="post">
-        <a style="width: 28%; margin-left: 20px;float: left">预定人</a>
-        <input style="width: 60%;font-size:15px;"
-               type="text" name="nickname" class="pull-left" placeholder="" readonly="readonly" class="calc"
-               id="mynickname"
-               value="<?= $user->nickname ?>">
-        <input type="hidden" name="user_id" value="<?= $user->user_id ?>" class="calc" id="user_id">
+        <div class="form-controller">
+            <div class="item">
+                <a class="label">预定人</a>
+                <input class="input-normal"
+                       type="text" name="nickname" placeholder="" readonly="readonly" class="calc"
+                       id="mynickname"
+                       value="<?= $user->nickname ?>">
+                <input type="hidden" name="user_id" value="<?= $user->user_id ?>" class="calc" id="user_id">
+            </div>
+        </div>
 
+        <div class="form-controller">
+            <div class="item">
+                <a class="label">场馆名称</a>
+                <input class="input-normal"
+                       type="text" name="hallname" placeholder="" readonly="readonly"
+                       value="<?= $hall->name ?>">
+                <input type="hidden" name="hall_id" value="<?= $hall->id ?>" class="calc" id="select_order_court">
+            </div>
+        </div>
 
-        <a style="width: 28%; margin-left: 20px;float: left">场馆名称</a>
-        <input style="width: 60%;font-size:15px;"
-               type="text" name="hallname" class="pull-left" placeholder="" readonly="readonly"
-               value="<?= $hall->name ?>">
-        <input type="hidden" name="hall_id" value="<?= $hall->id ?>" class="calc" id="select_order_court">
+        <div class="form-controller">
+            <div class="item">
+                <a class="label">日期</a>
 
-        <a style="width: 28%; margin-left: 20px;float: left">日期</a>
+                <select name="event_date" style="width: 60%;" id="stimestart">
+                    <?php foreach ($dates as $key => $date) { ?>
 
-        <select name="event_date" style="width: 60%;" id="stimestart">
-            <?php foreach ($dates as $key => $date) { ?>
+                        <option class="calc" value="<?= $key ?>"><?= $date ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
 
-                <option class="calc" value="<?= $key ?>"><?= $date ?></option>
-            <?php } ?>
-        </select>
+        <div class="form-controller">
+            <div class="item">
+                <a class="label">时段</a>
 
-        <a style="width: 28%; margin-left: 20px;float: left">时段</a>
+                <select name="start_time" id="start_time" style="width: 25%;">
+                    <?php foreach ($hours as $key => $hour) { ?>
+                        <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
+                    <?php } ?>
+                </select>
+                <a style="width: 15%;font-size:15px;">&nbsp;-&nbsp;</a>
 
-        <select name="start_time" id="start_time" style="width: 25%;" class="calc">
-            <?php foreach ($hours as $key => $hour) { ?>
-                <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
-            <?php } ?>
-        </select>
+                <select name="end_time" id="end_time" style="width: 25%;">
 
-        <a style="width: 15%;font-size:15px;">&nbsp;-&nbsp;</a>
+                    <?php foreach ($hours as $key => $hour) { ?>
+                        <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
+                    <?php } ?>
 
-        <select name="end_time" id="end_time" style="width: 25%;" class="calc">
+                </select>
+            </div>
+        </div>
 
-            <?php foreach ($hours as $key => $hour) { ?>
-                <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
-            <?php } ?>
+        <div class="form-controller">
+            <a class="label">片数</a>
 
-        </select>
-
-        <a style="width: 28%; margin-left: 20px;float: left">片数</a>
-
-        <select name="court_num" style="width: 60%;" id="court_num" class="calc">
-            <option value="1">1片</option>
-            <option value="2">2片</option>
-            <option value="3">3片</option>
-            <option value="4">4片</option>
-        </select>
-
-        <a style="width: 28%; margin-left: 20px;float: left">金额（元）</a>
-        <input style="width: 35%;font-size:15px;"
-               type="text" name="price" class="pull-left" placeholder="自动生成" readonly="readonly"
-               id="order_cost">
-        <input type="button" id="cost" style="width: 22%; margin-left: 10px;" class="btn btn-primary" value="计算金额">
+            <select name="court_num" class="calc input-normal" id="court_num">
+                <option value="1">1片</option>
+                <option value="2">2片</option>
+                <option value="3">3片</option>
+                <option value="4">4片</option>
+            </select>
+        </div>
+        <div class="form-controller">
+            <a class="label">金额(元)</a>
+            <input style="width: 35%;font-size:15px;"
+                   type="text" name="price" class="pull-left" placeholder="自动生成" readonly="readonly"
+                   id="order_cost">
+            <input type="button" id="cost" style="width: 22%; margin-left: 10px;" class="btn btn-primary" value="计算金额">
+        </div>
         <br/><br/>
         <input type="button" id="ok2" style="width: 40%; margin-left: 30%;" class="btn btn-primary btn-block"
                value="预订">
