@@ -13,6 +13,7 @@ class WeiXinController extends \BaseController
         //生成自定义菜单
         $menu = Config::get('/packages/cooper/wechat/menu.WeChatMenu');
         $client = new \Cooper\Wechat\WeChatClient();
+        //Log::info($menu[0]);
         $client->setMenu($menu[0]);
 
         //获取微信消息
@@ -51,7 +52,7 @@ class WeiXinController extends \BaseController
 
             if ($Event == 'click') { //CLICK事件
 
-                $key = $message['key']; //获取当前菜单key
+               // $key = $message['eventkey']; //获取当前菜单key
                 $isBond = $this->getUser($appUserID);
                 if($isBond){
                     $res = array_merge(Config::get('/packages/cooper/wechat/message.WeChatMsg'),Config::get('/packages/cooper/wechat/message.bondMember'));
