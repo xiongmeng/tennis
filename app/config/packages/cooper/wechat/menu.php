@@ -4,21 +4,48 @@ return array(
 
      "button":[
      {
-           "type":"click",
-           "name":"预订场地",
-           "key":"Reserve",
+           "name":"订场服务",
+           "sub_button":[
+           {
+               "type":"click",
+               "name":"推荐场馆",
+               "key":"Recommend_Court"
 
+            },
+            {
+               "type":"click",
+               "name":"附近场馆",
+               "key":"Nearby_Court"
+            },
+            {
+               "type":"click",
+               "name":"常订场馆",
+               "key":"Ordered_Court"
+            },
+            {
+               "type":"click",
+               "name":"搜索场馆",
+               "key":"Search_Court"
+            }]
        },
        {
-           "type":"click",
-           "name":"即时订场",
-           "key":"Instant"
-
+           "name":"会员中心",
+           "sub_button":[
+           {
+               "type":"click",
+               "name":"注册/绑定",
+               "key":"Add_Bond"
+            },
+            {
+               "type":"click",
+               "name":"会员服务",
+               "key":"Member_Sever"
+            }]
        },
      {
           "type":"click",
-          "name":"活动资讯",
-          "key":"Active"
+          "name":"即时订场",
+          "key":"Instant_Order"
       }]
 
  }'
