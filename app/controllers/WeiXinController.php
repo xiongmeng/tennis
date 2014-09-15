@@ -112,7 +112,7 @@ class WeiXinController extends \BaseController
     function WeChatMsg($appUserID,$isBond){
         if($isBond){
             return array(
-                'WeChatMsg'=> array(
+
                     0 => array(
                         'title' => '订场就找网球通',
                         'desc' => '订场就找网球通',
@@ -143,12 +143,12 @@ class WeiXinController extends \BaseController
                         'pic' => "http://www.wangqiuer.com/assets/img/logo.jpg",
                         'url' => "http://www.gotennis.cn/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
                     ),
-                )
+
             );
         }
         else{
             return array(
-                'WeChatMsg'=> array(
+
                     0 => array(
                         'title' => '订场就找网球通',
                         'desc' => '订场就找网球通',
@@ -185,7 +185,7 @@ class WeiXinController extends \BaseController
                         'pic' => "http://www.wangqiuer.com/assets/img/logo.jpg",
                         'url' => "http://www.gotennis.cn/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
                     ),
-                )
+
             );
         }
 
