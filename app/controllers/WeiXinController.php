@@ -55,20 +55,14 @@ class WeiXinController extends \BaseController
 
                // $key = $message['key']; //获取当前菜单key
                 $isBond = $this->getUser($appUserID);
-                if($isBond){
-                    $res = array_merge(Config::get('/packages/cooper/wechat/message.WeChatMsg',$appUserID),Config::get('/packages/cooper/wechat/message.bondMember',$appUserID));
+                $res = WeChatMsg($appUserID,$isBond);
                     $reply = $server->getXml4RichMsgByArray($res);
                     echo $reply;
-                }
-                else{
-                    $res = array_merge(Config::get('/packages/cooper/wechat/message.WeChatMsg',$appUserID),Config::get('/packages/cooper/wechat/message.guest',$appUserID));
-                    $reply = $server->getXml4RichMsgByArray($res);
-                    echo $reply;
-                }
 
 
 
             }
+        }
 
 
         if ($type === 'text') { //文本输入
@@ -96,7 +90,7 @@ class WeiXinController extends \BaseController
         }
 
     }
-    }
+
 
     /**
      * return userID by appUserID
