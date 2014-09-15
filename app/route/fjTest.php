@@ -133,7 +133,7 @@ Route::group(array('prefix' => 'fj'), function () {
         Sms::sendASync('18611367408', 'hello', -1);
     });
 });
-Route::any('weixin_access', 'WeiXinController@index');
+Route::any('/weixin_access', 'WeiXinController@index');
 
 
 
