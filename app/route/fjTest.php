@@ -135,7 +135,12 @@ Route::group(array('prefix' => 'fj'), function () {
 });
 Route::any('/weixin_access', 'WeiXinController@index');
 
-
+Route::get('/setMenu',function(){
+    $menu = Config::get('/packages/cooper/wechat/menu.WeChatMenu');
+    $client = new \Cooper\Wechat\WeChatClient();
+//Log::info($menu[0]);
+    $client->setMenu($menu[0]);
+});
 
 
 
