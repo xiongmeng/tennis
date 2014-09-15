@@ -61,7 +61,7 @@ class WeiXinController extends \BaseController
                     echo $reply;
                 }
                 else{
-                    $res = array_merge(Config::get('/packages/cooper/wechat/message.WeChatMsg'),Config::get('/packages/cooper/wechat/message.guest'));
+                    $res = array_merge(Config::get('/packages/cooper/wechat/message.WeChatMsg',$appUserID),Config::get('/packages/cooper/wechat/message.guest',$appUserID));
                     $reply = $server->getXml4RichMsgByArray($res);
                     echo $reply;
                 }
