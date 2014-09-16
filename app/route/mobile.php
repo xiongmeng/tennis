@@ -158,9 +158,13 @@ Route::get('/mobile_buyer', array('before' => 'weixin', function () {
 
 
 Route::get('/mobile_bond', function () {
+    $queries = Input::all();
+    $app = RelationUserApp::where('app_user_id','=',$queries['app_user_id'])->first();
+    if($app){
+        return Redirect::to(url_wrapper('/mobile_buyer'));
+    }else{
     MobileLayout::$activeService = 'center';
     MobileLayout::$title = '绑定';
-    $queries = Input::all();
 
     if (isset($queries['nickname']) && isset($queries['password'])) {
 
@@ -192,13 +196,18 @@ Route::get('/mobile_bond', function () {
 
         return View::make('mobile_layout')->nest('content', 'mobile.bond', array('queries' => $queries));
     }
+    }
 });
 
 Route::get('/mobile_register', function () {
-    MobileLayout::$activeService = 'center';
     $queries = Input::all();
+    $app = RelationUserApp::where('app_user_id','=',$queries['app_user_id'])->first();
+    if($app){
+        return Redirect::to(url_wrapper('/mobile_buyer'));
+    }else{
+    MobileLayout::$activeService = 'center';
     return View::make('mobile_layout')->nest('content', 'mobile.register', array('queries' => $queries));
-
+    }
 });
 
 Route::post('/mobile_register', function(){
@@ -256,6 +265,8 @@ Route::post('/mobile_register', function(){
         return View::make('mobile_layout')->nest('content', 'mobile.reg_success',array('user'=>$user));
 
     }
+
+
 });
 
 
