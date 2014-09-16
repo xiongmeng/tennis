@@ -24,7 +24,7 @@
                 <li class="table-view-cell media notice"><p>您还没有同意上传地理位置信息哦！</p></li>
             <?php }?>
         <?php }elseif ($curType != 'nearby' && $Halls->count() <= 0) {?>
-            <li class="table-view-cell media notice"><p>未找到有合适场地的场馆！</p></li>
+            <li class="table-view-cell media notice"><p>您还没有预定过场地哦！</p></li>
         <?php } else { ?>
         <?php foreach($halls as $key =>$hall){?>
         <li class="table-view-cell media">
