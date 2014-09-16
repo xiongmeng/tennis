@@ -36,7 +36,7 @@ Route::filter('auth', function () {
     if (Input::get('app_user_id') && Input::get('app_id')) {
         $appUserID = Input::get('app_user_id');
         $appID = Input::get('app_id');
-        $app = RelationUserApp::find($appUserID);
+        $app = RelationUserApp::where('app_user_id','=',$appUserID)->first();
         if (!$app) {
             Auth::logout();
             return Redirect::to(url_wrapper('bond'));
@@ -109,7 +109,7 @@ Route::filter('weixin', function () {
 
         $appUserID = Input::get('app_user_id');
         $appID = Input::get('app_id');
-        $app = RelationUserApp::find($appUserID);
+        $app = RelationUserApp::where('app_user_id','=',$appUserID)->first();
         if (!$app) {
             Auth::logout();
             return Redirect::to(url_wrapper('/mobile_bond'));
