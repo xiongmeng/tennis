@@ -7,5 +7,8 @@
         'Alipay_PARNTER' => '2088701652722366',
         'Alipay_KEY' => 'w583cpkexgrbw9xh0oc62pie9rbl6bq0',
         'Alipay_SELLER_EMAIL' => 'tennis@100.com.cn',
+        'WECHAT_TOKEN'     => '2576677678tyxcjxy51021',
+        'WECHAT_APP_ID'     => 'wx6fc5f1d06a994987',
+        'WECHAT_APP_SECRET' => 'c1d5e91094b5705a645fbfdee84fad38',
     );
 ?>
