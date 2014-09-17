@@ -459,3 +459,18 @@ Route::post('/telephoneValid',function(){
         echo 'true';
     }
 });
+
+Route::post('/bondValid',function(){
+    $nickname = Input::get('nickname');
+    $password = Input::get('password');
+
+    $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
+    $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
+    if ($isNickLog || $isTeleLog) {
+        echo 'true';
+    }
+    else{
+        echo 'false';
+    }
+});
+

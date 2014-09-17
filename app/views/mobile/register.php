@@ -90,8 +90,8 @@
     </form>
 
 
-    <div style="text-align: center;padding: 10px">已经有网球通帐号？
-        <a href="<?= url_wrapper('/mobile_bond') ?>" data-ignore="push">去绑定</a></div>
+    <div style="text-align: center;padding: 10px"><P>已经有网球通帐号？</P>
+       <p style="text-align: center;padding: 10px"> <a href="<?= url_wrapper('/mobile_bond') ?>" data-ignore="push"><font size="6px">去绑定</font></a></p></div>
 
 </div>
 <script>
