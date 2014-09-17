@@ -78,7 +78,7 @@ Route::get('/mobile_home/reserve/{curType?}', function ($curType) {
         if ($location) {
             $lat = $location -> lat;
             $lon = $location -> lon;
-            $Halls = DB::select('select `hall_id`,`long`,`lat`,ACOS(SIN((" . $lat . " * 3.1415) / 180 ) * SIN((`lat` * 3.1415) / 180 ) + COS((' . $lat . '* 3.1415) / 180 ) * COS((`lat` * 3.1415) / 180 ) * COS((' . $lon . ' * 3.1415) / 180 - (`long` * 3.1415) / 180 ) ) * 6380 as description from `gt_hall_tiny` as a join `gt_hall_map` as b on a.id=b.`hall_id` where
+            $Halls = DB::select('select `hall_id`,`long`,`lat`,ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) * SIN((`lat` * 3.1415) / 180 ) + COS((' . $lat . '* 3.1415) / 180 ) * COS((`lat` * 3.1415) / 180 ) * COS((' . $lon . ' * 3.1415) / 180 - (`long` * 3.1415) / 180 ) ) * 6380 as description from `gt_hall_tiny` as a join `gt_hall_map` as b on a.id=b.`hall_id` where
                           a.`stat` =2 and
                           b.`lat` > ' . $lat . '-1 and
                           b.`lat` < ' . $lat . '+1 and
