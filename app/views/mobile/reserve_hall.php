@@ -9,7 +9,8 @@
 <div class="bar bar-standard bar-header-secondary tab">
     <div class="segmented-control worktable">
         <?php foreach($types as $typekey =>$type){?>
-            <a class="date <?php if($typekey==$curType){echo 'active';}?>" href="<?= url_wrapper($type['url'])?>" >
+            <a class="date <?php if($typekey==$curType){echo 'active';}?>"
+               onclick="window.location.href='<?= url_wrapper($type['url'])?>'" data-ignore="push">
                 <?= $type['label']?>
             </a>
         <?php }?>
@@ -19,11 +20,9 @@
 <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
 <div class="content" style="margin-bottom: 50px; padding-top: 66px">
     <ul class="table-view hall-on-sale">
-        <?php if($curType == 'nearby'){?>
-            <?php if(!$Halls){?>
-                <li class="table-view-cell media notice"><p>您还没有同意上传地理位置信息哦！</p></li>
-            <?php }?>
-        <?php }elseif ($curType != 'nearby' && $Halls->count() <= 0) {?>
+        <?php if($curType == 'nearby' && count($halls) <= 0){?>
+            <li class="table-view-cell media notice"><p>您还没有同意上传地理位置信息哦！</p></li>
+        <?php }elseif ($curType != 'nearby' && count($halls) <= 0) {?>
             <li class="table-view-cell media notice"><p>您还没有预定过场地哦！</p></li>
         <?php } else { ?>
         <?php foreach($halls as $key =>$hall){?>

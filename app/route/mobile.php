@@ -96,7 +96,7 @@ Route::get('/mobile_home/reserve/{curType?}', function ($curType) {
 
         }
         else{
-            //跳转绑定
+            return Redirect::to(url_wrapper('/mobile_bond'));
         }
     }
     $hallIds = array();

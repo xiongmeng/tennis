@@ -192,3 +192,23 @@ Route::group(array('prefix' => 'xm'), function(){
 //    sasas
     });
 });
+
+Route::group(array('domain' => 'homestead1.app'), function()
+{
+
+    Route::get('/', function()
+    {
+        return "I am homestead1";
+    });
+
+});
+
+Route::group(array('domain' => 'homestead2.app'), function()
+{
+
+    Route::get('/', function()
+    {
+        return "I am homestead2";
+    });
+
+});
