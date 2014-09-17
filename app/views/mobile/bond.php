@@ -66,6 +66,9 @@
 
 
                     },
+                    error:function(){
+                        alert('网络错误,请稍候重试');
+                    },
                     complete: function (data) {
 
 
