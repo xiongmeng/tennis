@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" style="margin-bottom: 50px">
 
     <form style="margin-top: 10px" id="form_reg" action="<?= url_wrapper('/mobile_register') ?>" method="post">
         <input type="hidden" name="app_id" value="<?= Input::get('app_id') ?>">
