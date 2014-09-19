@@ -128,11 +128,18 @@ class InstantOrderManager
                 $instantOrderIds[] = $instant->id;
             }
 
-            $result['adviseForwardUrl'] = url_wrapper(sprintf('/recharge/alipay/%s/%s/%s',
-                $result['needRecharge'], RECHARGE_CALLBACK_PAY_INSTANT_ORDER, implode(',', $instantOrderIds)));
+            //预先生成recharge表
+            $recharge = new Recharge();
+            $recharge->user_id = $payUserId;
+            $recharge->money = $result['needRecharge'];
+            $recharge->stat = 1; //初始化
+            $recharge->createtime = time();
+            $recharge->callback_action_token = implode(',', $instantOrderIds);
+            $recharge->callback_action_type = RECHARGE_CALLBACK_PAY_INSTANT_ORDER; //购买即时订单
+            $recharge->save();
 
-            $result['weChatPayUrl'] = sprintf('/recharge/wechatpay?money=%s&action_type=%s&action_token=%s',
-                $result['needRecharge'], RECHARGE_CALLBACK_PAY_INSTANT_ORDER, implode(',', $instantOrderIds));
+            $result['adviseForwardUrl'] = url_wrapper(sprintf('/recharge/alipay?recharge_id=%s', $recharge->id));
+            $result['weChatPayUrl'] = sprintf('/recharge/wechatpay?recharge_id=%s', $recharge->id);
 
             $result['status'] = 'no_money';
         } else {

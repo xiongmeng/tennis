@@ -2,7 +2,7 @@
 require_once 'WeChatPay/WxPayHelper.php';
 
 class WeChatPayService{
-    function getJsApiParams($money, $outTradeId){
+    function getJsApiParameters($money, $outTradeId){
         //使用jsapi接口
         $jsApi = new JsApi();
 
@@ -12,13 +12,14 @@ class WeChatPayService{
         {
             //触发微信返回code码
             $url = $jsApi->createOauthUrlForCode(URL::current());
-            Header("Location: $url");
+            Header("Location: $url");exit;
+//            Redirect::to($url);exit;
         }else
         {
             //获取code码，以获取openid
             $code = $_GET['code'];
             $jsApi->setCode($code);
-            $openid = $jsApi->getOpenId();
+            $openId = $jsApi->getOpenId();
         }
 
         //=========步骤2：使用统一支付接口，获取prepay_id============
@@ -32,10 +33,10 @@ class WeChatPayService{
         //noncestr已填,商户无需重复填写
         //spbill_create_ip已填,商户无需重复填写
         //sign已填,商户无需重复填写
-        $unifiedOrder->setParameter("openid","$openid");//商品描述
+        $unifiedOrder->setParameter("openid","$openId");//商品描述
         $unifiedOrder->setParameter("body","贡献一分钱");//商品描述
         //自定义订单号，此处仅作举例
-        $unifiedOrder->setParameter("out_trade_no", $money);//商户订单号
+        $unifiedOrder->setParameter("out_trade_no", $outTradeId);//商户订单号
         $unifiedOrder->setParameter("total_fee", intval($money * 100));//总金额
         $unifiedOrder->setParameter("notify_url", WxPayConf::NOTIFY_URL);//通知地址
         $unifiedOrder->setParameter("trade_type","JSAPI");//交易类型

@@ -1,38 +1,26 @@
 <?php
-Route::get('/recharge/alipay/{money?}/{actionType?}/{actionToken}',
-    array('before' => 'auth', function ($money, $actionType, $actionToken) {
-        $user = Auth::getUser();
-        $appID = Input::get('app_id');
-        $appUserID = Input::get('app_user_id');
-        //添加一条充值记录
+Route::get('/recharge/alipay', function () {
+    $rechargeId = Input::get('recharge_id');
+    $recharge = Recharge::findOrFail($rechargeId);
 
-        $aRecharge = new Recharge();
-        if($appID && $appUserID){
-            $aRecharge->app_user_id = $appUserID;
-            $aRecharge->app_id = $appID;
+    $appID = Input::get('app_id');
+    $appUserID = Input::get('app_user_id');
+    if ($appID && $appUserID) {
+        $recharge->app_user_id = $appUserID;
+        $recharge->app_id = $appID;
 
-        }
-        $aRecharge->user_id = $user->user_id;
-        $aRecharge->money = $money;
-        $aRecharge->type = 1; //支付方式
-        $aRecharge->stat = 1; //初始化
-        $aRecharge->createtime = time();
-        $aRecharge->callback_action_token = $actionToken;
-        $aRecharge->callback_action_type = $actionType; //购买即时订单
-        $aRecharge->save();
-        $iRechargeID = $aRecharge->id;
+    }
+    $recharge->type = PAY_TYPE_ALI; //支付方式
+    $recharge->save();
 
-        if (!is_numeric($money) || $money < 0) {
-            return sprintf('充值额度必须为大于零的数字（%s）', $money);
-        }
+    $money = $recharge->money;
+    $isDeBug = Config::get('app.debug');
+    $isDeBug && $money = 0.01;
 
-        $isDeBug = Config::get('app.debug');
-        $isDeBug && $money = 0.01;
-
-        //执行支付宝支付
-        $sHtmlText = Alipay::Payment($money, sprintf("%08d", $iRechargeID), null, null, "付款", "付款");
-        return $sHtmlText;
-    }));
+    //执行支付宝支付
+    $sHtmlText = Alipay::Payment($money, sprintf("%08d", $rechargeId), null, null, "付款", "付款");
+    return $sHtmlText;
+});
 
 Route::get('/alipay_notify', function () {
     $aParams = $aError = array();
@@ -68,28 +56,28 @@ Route::get('/alipay_return', function () {
         $rechargeId = intval($sTradeNo);
         $recharge = Recharge::findOrFail($rechargeId);
 
-        if($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER){
+        if ($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER) {
             $instantOrderString = $recharge->callback_action_token;
             $instantOrderIds = explode(',', $instantOrderString);
             $appUserID = $recharge->app_user_id;
             $appID = $recharge->app_id;
 
             DB::beginTransaction();
-            try{
+            try {
                 $manager = new InstantOrderManager();
                 $result = $manager->batchPay($instantOrderIds, $recharge->user_id);
                 DB::commit();
-                if($result['status'] == 'pay_success'){
-                    if($appID == 2 && $appUserID){
-                        return Redirect::to('/pay_success?app_id='.$appID.'&app_user_id='.$appUserID);
+                if ($result['status'] == 'pay_success') {
+                    if ($appID == 2 && $appUserID) {
+                        return Redirect::to('/pay_success?app_id=' . $appID . '&app_user_id=' . $appUserID);
 
                     }
 
                     return '支付成功';
-                }else{
+                } else {
                     return '支付失败';
                 }
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 DB::rollBack();
                 throw $e;
             }
@@ -100,46 +88,78 @@ Route::get('/alipay_return', function () {
     }
 });
 
-Route::get('/recharge/wechatpay', function () {
-        $money = Input::get('money');
-        $actionType = Input::get('action_type');
-        $actionToken = Input::get('action_token');
-        $user = Auth::getUser();
-        $appID = Input::get('app_id');
-        $appUserID = Input::get('app_user_id');
-        //添加一条充值记录
+Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
+    Route::get('/recharge/wechatpay', function () {
+        //使用jsapi接口
+        $jsApi = new JsApi();
 
-        $aRecharge = new Recharge();
-        if($appID && $appUserID){
-            $aRecharge->app_user_id = $appUserID;
-            $aRecharge->app_id = $appID;
-
-        }
-        $aRecharge->user_id = $user->user_id;
-        $aRecharge->money = $money;
-        $aRecharge->type = PAY_TYPE_WE_CHAT; //支付方式-微信支付
-        $aRecharge->stat = 1; //初始化
-        $aRecharge->createtime = time();
-        $aRecharge->callback_action_token = $actionToken;
-        $aRecharge->callback_action_type = $actionType; //购买即时订单
-        $aRecharge->save();
-        $iRechargeID = $aRecharge->id;
-
-        if (!is_numeric($money) || $money < 0) {
-            return sprintf('充值额度必须为大于零的数字（%s）', $money);
+        //=========步骤1：网页授权获取用户openid============
+        //通过code获得openid
+        if (!isset($_GET['code']))
+        {
+            //触发微信返回code码
+            $url = $jsApi->createOauthUrlForCode(URL::current());
+            Header("Location: $url");exit;
+        }else
+        {
+            //获取code码，以获取openid
+            $code = $_GET['code'];
+            $jsApi->setCode($code);
+            $openId = $jsApi->getOpenId();
         }
 
+        $rechargeId = Input::get('recharge_id');
+        $recharge = Recharge::findOrFail($rechargeId);
+
+        $recharge->type = PAY_TYPE_WE_CHAT; //支付方式
+        $recharge->save();
+
+        $money = $recharge->money;
         $isDeBug = Config::get('app.debug');
         $isDeBug && $money = 0.01;
 
-        $weChatPayService = new WeChatPayService();
-        //执行支付宝支付
-        $jsApiParams = $weChatPayService->getJsApiParams($money, $iRechargeID);
-        return View::make('mobile.wechat_pay', array('jsApiParams' => $jsApiParams));
-    });
+        //=========步骤2：使用统一支付接口，获取prepay_id============
+        //使用统一支付接口
+        $unifiedOrder = new UnifiedOrder();
 
-Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function(){
-    Route::get('/wechatpay_notify', function(){
+        //设置统一支付接口参数
+        //设置必填参数
+        //appid已填,商户无需重复填写
+        //mch_id已填,商户无需重复填写
+        //noncestr已填,商户无需重复填写
+        //spbill_create_ip已填,商户无需重复填写
+        //sign已填,商户无需重复填写
+        $unifiedOrder->setParameter("openid","$openId");//商品描述
+        $unifiedOrder->setParameter("body","贡献一分钱");//商品描述
+        //自定义订单号，此处仅作举例
+        $unifiedOrder->setParameter("out_trade_no", $rechargeId);//商户订单号
+        $unifiedOrder->setParameter("total_fee", intval($money * 100));//总金额
+        $unifiedOrder->setParameter("notify_url", WxPayConf::NOTIFY_URL);//通知地址
+        $unifiedOrder->setParameter("trade_type","JSAPI");//交易类型
+        //非必填参数，商户可根据实际情况选填
+        //$unifiedOrder->setParameter("sub_mch_id","XXXX");//子商户号
+        //$unifiedOrder->setParameter("device_info","XXXX");//设备号
+        $unifiedOrder->setParameter("attach","终于尼玛调通了");//附加数据
+        //$unifiedOrder->setParameter("time_start","XXXX");//交易起始时间
+        //$unifiedOrder->setParameter("time_expire","XXXX");//交易结束时间
+        //$unifiedOrder->setParameter("goods_tag","XXXX");//商品标记
+        //$unifiedOrder->setParameter("openid","XXXX");//用户标识
+        //$unifiedOrder->setParameter("product_id","XXXX");//商品ID
+
+        $prepay_id = $unifiedOrder->getPrepayId();
+        //=========步骤3：使用jsapi调起支付============
+        $jsApi->setPrepayId($prepay_id);
+
+        $jsApiParameters = $jsApi->getParameters();
+        Log::debug($jsApiParameters);
+
+        return View::make('mobile.wechat_pay', array('jsApiParameters' => $jsApiParameters));
+    });
+});
+
+
+Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
+    Route::get('/wechatpay_notify', function () {
 
     });
 });
