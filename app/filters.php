@@ -120,11 +120,48 @@ Route::filter('weixin', function () {
 });
 
 Route::filter('weChatAuth', function(){
-    Log::debug('weChat');
+    Log::debug('weChatAuth');
+
+    if(!Auth::guest()){
+        return ;
+    }
+
     $weChatClient = new \Cooper\Wechat\WeChatClient($_ENV['WECHAT_PAY_APP_ID'], $_ENV['WECHAT_PAY_APP_SECRET']);
+
+    //查找是否有code，如果没有，则获取code
     $code = Input::get('code');
+    if(empty($code)){
+        $url = $weChatClient->getOAuthConnectUri(URL::current());
+        return Redirect::to($url);
+    }
+
+    //获取accessToken和OpenId
     $accessTokenResult = $weChatClient->getAccessTokenByCode($code);
-    $userInfo = $weChatClient->getUserInfoByAuth($accessTokenResult['access_token'], $accessTokenResult['openid']);
+    $openid = $accessTokenResult['openid'];
+
+    $appId = APP_WE_CHAT;
+    $app = RelationUserApp::whereAppUserId($openid)->whereAppId($appId)->first();
+
+    //如果用户不存在，则获取微信用户信息，并自动注册功能
+    if(!$app){
+        $accessToken = $accessTokenResult['access_token'];
+        $userInfo = $weChatClient->getUserInfoByAuth($accessToken, $openid);
+        DB::transaction(function() use($userInfo, $appId, $openid){
+            $user = new User;
+            $user->nickname = 'wx_' . $userInfo['nickname'];
+            $user->save();
+
+            $app = new RelationUserApp;
+            $app->user_id = $user->user_id;
+            $app->app_id = $appId;
+            $app->app_user_id = $openid;
+            $app->save();
+        });
+
+        $app = RelationUserApp::whereAppUserId($openid)->whereAppId($appId)->first();
+    }
+
+    Auth::loginUsingId($app->user_id);
 
 
 });

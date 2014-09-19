@@ -123,7 +123,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             ));
     });
 
-    Route::get('/mobile_buyer', array('before' => 'weixin', function () {
+    Route::get('/mobile_buyer', function () {
         MobileLayout::$activeService = 'center';
 
         $user = Auth::getUser();
@@ -158,7 +158,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         return View::make('mobile_layout_hall')->nest('content', 'mobile.mobile_buyer',
             array('user' => $user, 'insPaying' => $insPaying, 'payed' => $payed ,'resPaying'=>$resPaying,'pending'=>$pending));
 
-    }));
+    });
 
 
     Route::get('/mobile_bond', function () {
@@ -275,7 +275,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
 
 
-    Route::get('/mobile_buyer_order', array('before' => 'weixin', function () {
+    Route::get('/mobile_buyer_order', function () {
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = "我的即时订单";
         MobileLayout::$previousUrl = '/mobile_buyer';
@@ -298,9 +298,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         return View::make('mobile_layout')->nest('content', 'mobile.order_buyer',
             array('user' => $user, 'instants' => $instants,'label'=>$label));
 
-    }));
+    });
 
-    Route::get('/hall_reserve',array('before'=>'weixin',function(){
+    Route::get('/hall_reserve', function(){
         MobileLayout::$activeService = 'reserve';
         MobileLayout::$title = '填写订单';
         MobileLayout::$previousUrl = URL::previous();
@@ -322,9 +322,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve',
             array('hall'=>$hall,'user'=>$user,'dates'=>$dates, 'hours' => $hours));
-    }));
+    });
 
-    Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'weixin', function($hallID){
+    Route::get('/mobile_court_buyer/{hallID?}', function($hallID){
         MobileLayout::$activeService = 'instant';
         MobileLayout::$previousUrl = URL::previous();
 
@@ -360,9 +360,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 'needPay'=>0, 'balance'=>0, 'needRecharge'=>0,'adviseForwardUrl'=>''
             )
         ));
-    }));
+    });
 
-    Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
+    Route::post('/submit_reserve_order',function(){
         $queries = Input::all();
         $order = new ReserveOrder;
         $order->hall_id = $queries['hall_id'];
@@ -379,9 +379,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         Notify::doNotify('mgr_reserve_order_created', $order->id);
 
         return Redirect::to(url_wrapper('/reserve_order_buyer'));
-    }));
+    });
 
-    Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
+    Route::get('/reserve_order_buyer', function(){
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = '我的预约订单';
         MobileLayout::$previousUrl = '/mobile_buyer';
@@ -405,9 +405,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',
             array('reserves'=>$reserves,'stat'=>$stat));
-    }));
+    });
 
-    Route::get('/pay_success',array('before'=>'weixin',function(){
+    Route::get('/pay_success', function(){
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = '支付成功';
         MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
@@ -416,7 +416,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         return View::make('mobile_layout')->nest('content','mobile.pay_success');
 
-    }));
+    });
 
     Route::post('/telValidCodeMake',function(){
         $telephone = Input::get('telephone');
