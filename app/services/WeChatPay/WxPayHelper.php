@@ -81,8 +81,7 @@ class Common_util_
 //            $buff .= strtolower($k) . "=" . $v . "&";
             $buff .= $k . "=" . $v . "&";
 		}
-		$reqPar;
-		if (strlen($buff) > 0) 
+		if (strlen($buff) > 0)
 		{
 			$reqPar = substr($buff, 0, strlen($buff)-1);
 		}
@@ -837,13 +836,13 @@ class JsApi extends Common_util_
 	/**
 	 * 	作用：生成可以获得code的url
 	 */
-	function createOauthUrlForCode($redirectUrl)
+	function createOauthUrlForCode($redirectUrl, $state)
 	{
 		$urlObj["appid"] = WxPayConf::APPID;
 		$urlObj["redirect_uri"] = "$redirectUrl";
 		$urlObj["response_type"] = "code";
 		$urlObj["scope"] = "snsapi_base";
-		$urlObj["state"] = "SATE"."#wechat_redirect";
+		$urlObj["state"] = "$state"."#wechat_redirect";
 		$bizString = $this->formatBizQueryParaMap($urlObj, false);
 		return "https://open.weixin.qq.com/connect/oauth2/authorize?".$bizString;
 	}

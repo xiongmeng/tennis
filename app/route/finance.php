@@ -90,6 +90,7 @@ Route::get('/alipay_return', function () {
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     Route::get('/recharge/wechatpay', function () {
+
         //使用jsapi接口
         $jsApi = new JsApi();
 
@@ -97,8 +98,10 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         //通过code获得openid
         if (!isset($_GET['code']))
         {
+            $rechargeId = Input::get('recharge_id');
             //触发微信返回code码
-            $url = $jsApi->createOauthUrlForCode(URL::current());
+            $url = $jsApi->createOauthUrlForCode(URL::current(), $rechargeId);
+            Log::debug($url);
             Header("Location: $url");exit;
         }else
         {
@@ -108,7 +111,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
             $openId = $jsApi->getOpenId();
         }
 
-        $rechargeId = Input::get('recharge_id');
+        $rechargeId = Input::get('state');
         $recharge = Recharge::findOrFail($rechargeId);
 
         $recharge->type = PAY_TYPE_WE_CHAT; //支付方式
