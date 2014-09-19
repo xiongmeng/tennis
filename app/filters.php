@@ -146,9 +146,10 @@ Route::filter('weChatAuth', function(){
     if(!$app){
         $accessToken = $accessTokenResult['access_token'];
         $userInfo = $weChatClient->getUserInfoByAuth($accessToken, $openid);
+
         DB::transaction(function() use($userInfo, $appId, $openid){
             $user = new User;
-            $user->nickname = 'wx_' . $userInfo['nickname'];
+            $user->nickname = 'wx_' . (isset($userInfo['nickname']) ? $userInfo['nickname'] : time());
             $user->save();
 
             $app = new RelationUserApp;
