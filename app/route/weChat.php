@@ -1,12 +1,15 @@
 <?php
-
-Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
+Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'), function(){
     View::creator('mobile_layout', function (\Illuminate\View\View $view) {
         $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
     });
 
     View::creator('mobile_layout_hall', function (\Illuminate\View\View $view) {
         $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
+    });
+
+    Route::get('/', function(){
+        return 'hello world!';
     });
 
     Route::get('/mobile_home/instant', function () {
@@ -77,26 +80,26 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
             $time = strtotime(date('Y-m-d', time()));
             $location = WXLocation::where('openid', '=', $appUserID)->where('creattime', '<', $time)->orderBy('creattime', 'desc')->first();
             if ($location) {
-                $lat = $location->lat;
-                $lon = $location->lon;
+                $lat = $location -> lat;
+                $lon = $location -> lon;
                 $Halls = DB::select('select `hall_id`,`long`,`lat`,ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) * SIN((`lat` * 3.1415) / 180 ) + COS((' . $lat . '* 3.1415) / 180 ) * COS((`lat` * 3.1415) / 180 ) * COS((' . $lon . ' * 3.1415) / 180 - (`long` * 3.1415) / 180 ) ) * 6380 as description from `gt_hall_tiny` as a join `gt_hall_map` as b on a.id=b.`hall_id` where
                           a.`stat` =2 and
                           b.`lat` > ' . $lat . '-1 and
                           b.`lat` < ' . $lat . '+1 and
                           b.`long` > ' . $lon . '-1 and
                           b.`long` <  ' . $lon . '+1 order by description asc limit 7');
-            } else {
-                $Halls = array();
             }
+            else{$Halls =array();}
         } elseif ($curType == 'ordered') {
             $appUserID = Input::get('app_user_id');
             $app = RelationUserApp::where('app_user_id', '=', $appUserID)->first();
             if ($app) {
                 $userID = $app->user_id;
-                $Halls = ReserveOrder::where('user_id', '=', $userID)->orderBy('event_date', 'desc')->select('hall_id')->distinct()->get();
+                $Halls = ReserveOrder::where('user_id', '=', $userID)->orderBy('event_date', 'desc')->select( 'hall_id')->distinct()->get();
 
 
-            } else {
+            }
+            else{
                 return Redirect::to(url_wrapper('/mobile_bond'));
             }
         }
@@ -114,8 +117,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
         }
 
 
+
         return View::make('mobile_layout_hall')->nest('content', 'mobile.reserve_hall',
-            array('curType' => $curType, 'types' => $types, 'Halls' => $Halls, 'halls' => $halls
+            array('curType' => $curType, 'types' => $types,'Halls'=>$Halls,'halls' => $halls
             ));
     });
 
@@ -127,48 +131,42 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
 
         $instantModel = new InstantOrder();
 
-        $instant = $instantModel->select(array('state', DB::raw('COUNT(1) AS count')))->where('buyer', '=', $userID)->groupBy('state')->get();
-        foreach ($instant as $ins) {
-            if ($ins->state == 'paying') {
+        $instant = $instantModel->select(array('state',DB::raw('COUNT(1) AS count')))->where('buyer','=',$userID)->groupBy('state')->get();
+        foreach($instant as $ins){
+            if($ins->state == 'paying'){
                 $insPaying = $ins->count;
-            } elseif ($ins->state == 'payed') {
+            }
+            elseif($ins->state == 'payed'){
                 $payed = $ins->count;
             }
         }
 
-        $reserve = ReserveOrder::where('user_id', '=', $user->user_id)->select(array('stat', DB::raw('COUNT(1) AS count')))->groupBy('stat')->get();
-        foreach ($reserve as $res) {
-            if ($res->stat == '0') {
+        $reserve = ReserveOrder::where('user_id','=',$user->user_id)->select(array('stat',DB::raw('COUNT(1) AS count')))->groupBy('stat')->get();
+        foreach($reserve as $res){
+            if($res->stat == '0'){
                 $pending = $res->count;
-            } elseif ($res->stat == '1') {
+            }
+            elseif($res->stat == '1'){
                 $resPaying = $res->count;
             }
         }
-        if (empty($pending)) {
-            $pending = 0;
-        }
-        if (empty($resPaying)) {
-            $resPaying = 0;
-        }
-        if (empty($insPaying)) {
-            $insPaying = 0;
-        }
-        if (empty($payed)) {
-            $payed = 0;
-        }
+        if(empty($pending)){$pending=0;}
+        if(empty($resPaying)){$resPaying=0;}
+        if(empty($insPaying)){$insPaying=0;}
+        if(empty($payed)){$payed=0;}
 
         return View::make('mobile_layout_hall')->nest('content', 'mobile.mobile_buyer',
-            array('user' => $user, 'insPaying' => $insPaying, 'payed' => $payed, 'resPaying' => $resPaying, 'pending' => $pending));
+            array('user' => $user, 'insPaying' => $insPaying, 'payed' => $payed ,'resPaying'=>$resPaying,'pending'=>$pending));
 
     }));
 
 
     Route::get('/mobile_bond', function () {
         $queries = Input::all();
-        $app = RelationUserApp::where('app_user_id', '=', $queries['app_user_id'])->first();
-        if ($app) {
+        $app = RelationUserApp::where('app_user_id','=',$queries['app_user_id'])->first();
+        if($app){
             return Redirect::to(url_wrapper('/mobile_buyer'));
-        } else {
+        }else{
             MobileLayout::$activeService = 'center';
             MobileLayout::$title = '绑定';
 
@@ -207,42 +205,43 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
 
     Route::get('/mobile_register', function () {
         $queries = Input::all();
-        $app = RelationUserApp::where('app_user_id', '=', $queries['app_user_id'])->first();
-        if ($app) {
+        $app = RelationUserApp::where('app_user_id','=',$queries['app_user_id'])->first();
+        if($app){
             return Redirect::to(url_wrapper('/mobile_buyer'));
-        } else {
+        }else{
             MobileLayout::$activeService = 'center';
             return View::make('mobile_layout')->nest('content', 'mobile.register', array('queries' => $queries));
         }
     });
 
-    Route::post('/mobile_register', function () {
+    Route::post('/mobile_register', function(){
 
         $rules = array(
-            'nickname' => 'required|unique:gt_user_tiny,nickname',
-            'realname' => 'required',
-            'password' => 'required|between:6,20|confirmed',
+            'nickname'              => 'required|unique:gt_user_tiny,nickname',
+            'realname'              => 'required',
+            'password'              => 'required|between:6,20|confirmed',
             'password_confirmation' => 'required|between:6,20',
-            'telephone' => 'required|digits:11|unique:gt_user_tiny,telephone',
-            'validcode' => 'required|digits:4',
+            'telephone'             => 'required|digits:11|unique:gt_user_tiny,telephone',
+            'validcode'             => 'required|digits:4',
         );
         $messages = array(
-            'required' => '请确保每项都填入了您的信息',
+            'required'        => '请确保每项都填入了您的信息',
             'nickname.unique' => '昵称已经被注册，换个昵称试试',
-            'confirmed' => '两次输入的密码不相同',
-            'between' => '密码需要在6-20位之间',
-            'telephone.digits' => '请输入有效的电话号码',
-            'telephone.unique' => '该电话号码已经注册过网球通帐号',
-            'validcode.digits' => '请输入正确的验证码',
+            'confirmed'       => '两次输入的密码不相同',
+            'between'         => '密码需要在6-20位之间',
+            'telephone.digits'=> '请输入有效的电话号码',
+            'telephone.unique'=> '该电话号码已经注册过网球通帐号',
+            'validcode.digits'=> '请输入正确的验证码',
         );
 
-        $validator = Validator::make(Input::all(), $rules, $messages);
+        $validator = Validator::make(Input::all(), $rules,$messages);
 
-        if ($validator->fails()) {
+        if ($validator->fails())
+        {
 
             MobileLayout::$title = '注册';
             return Redirect::to(url_wrapper('/mobile_register'))->withErrors($validator);
-        } else {
+        }else{
 
             MobileLayout::$title = '注册成功';
             $user = new User;
@@ -267,12 +266,13 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
             }
 
 
-            return View::make('mobile_layout')->nest('content', 'mobile.reg_success', array('user' => $user));
+            return View::make('mobile_layout')->nest('content', 'mobile.reg_success',array('user'=>$user));
 
         }
 
 
     });
+
 
 
     Route::get('/mobile_buyer_order', array('before' => 'weixin', function () {
@@ -287,7 +287,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
         $instantModel = new InstantOrder();
         $queries['buyer'] = $userID;
         $label = Input::get('state');
-        if (!$label) {
+        if(!$label){
             $label = 'all';
         }
 
@@ -296,11 +296,11 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
 
 
         return View::make('mobile_layout')->nest('content', 'mobile.order_buyer',
-            array('user' => $user, 'instants' => $instants, 'label' => $label));
+            array('user' => $user, 'instants' => $instants,'label'=>$label));
 
     }));
 
-    Route::get('/hall_reserve', array('before' => 'weixin', function () {
+    Route::get('/hall_reserve',array('before'=>'weixin',function(){
         MobileLayout::$activeService = 'reserve';
         MobileLayout::$title = '填写订单';
         MobileLayout::$previousUrl = URL::previous();
@@ -316,22 +316,22 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
             $dates[date('Y-m-d', $time)] = sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]);
         }
         $hours = array('不限');
-        for ($i = 7; $i <= 24; $i++) {
-            $hours[$i] = sprintf('%s时', $i, $i + 1);
+        for($i=7; $i<=24; $i++){
+            $hours[$i] = sprintf('%s时', $i, $i +1);
         }
 
         return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve',
-            array('hall' => $hall, 'user' => $user, 'dates' => $dates, 'hours' => $hours));
+            array('hall'=>$hall,'user'=>$user,'dates'=>$dates, 'hours' => $hours));
     }));
 
-    Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'weixin', function ($hallID) {
+    Route::get('/mobile_court_buyer/{hallID?}', array('before' => 'weixin', function($hallID){
         MobileLayout::$activeService = 'instant';
         MobileLayout::$previousUrl = URL::previous();
 
         $hall = Hall::findOrFail($hallID);
 
         $activeDate = Input::get('date');
-        $activeDateTimeStamp = empty($activeDate) ? time() : strtotime($activeDate);
+        $activeDateTimeStamp =  empty($activeDate) ? time() : strtotime($activeDate);
         $activeDate = date('Y-m-d', $activeDateTimeStamp);
 
         $dates = array();
@@ -353,16 +353,16 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
         $courts = Court::where('hall_id', '=', $hallID)->get();
 
         MobileLayout::$title = $hall->name;
-        return View::make('mobile_layout')->nest('content', 'mobile.court_buyer', array(
-            'halls' => array($hall), 'dates' => $dates, 'hallID' => $hallID, 'weekdayOption' => weekday_option(),
-            'activeDate' => $activeDate, 'courts' => $courts, 'formattedInstants' => $formattedInstants,
-            'loginUserId' => Auth::getUser()->user_id, 'instantOrders' => $instantOrders, 'noMoney' => array(
-                'needPay' => 0, 'balance' => 0, 'needRecharge' => 0, 'adviseForwardUrl' => ''
+        return View::make('mobile_layout')->nest('content', 'mobile.court_buyer',array(
+            'halls' => array($hall), 'dates' => $dates, 'hallID'=>$hallID, 'weekdayOption' => weekday_option(),
+            'activeDate' => $activeDate, 'courts' => $courts,  'formattedInstants' => $formattedInstants,
+            'loginUserId' => Auth::getUser()->user_id, 'instantOrders'=>$instantOrders, 'noMoney'=>array(
+                'needPay'=>0, 'balance'=>0, 'needRecharge'=>0,'adviseForwardUrl'=>''
             )
         ));
     }));
 
-    Route::post('/submit_reserve_order', array('before' => 'weixin', function () {
+    Route::post('/submit_reserve_order',array('before'=>'weixin',function(){
         $queries = Input::all();
         $order = new ReserveOrder;
         $order->hall_id = $queries['hall_id'];
@@ -381,7 +381,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
         return Redirect::to(url_wrapper('/reserve_order_buyer'));
     }));
 
-    Route::get('/reserve_order_buyer', array('before' => 'weixin', function () {
+    Route::get('/reserve_order_buyer',array('before'=>'weixin',function(){
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = '我的预约订单';
         MobileLayout::$previousUrl = '/mobile_buyer';
@@ -390,10 +390,11 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
         //展示预定订单
         $user = Auth::getUser();
         $stat = Input::get('stat');
-        if (isset($stat)) {
-            $orderDbResults = ReserveOrder::with('Hall')->where('user_id', '=', $user->user_id)->where('stat', '=', $stat)->orderBy('event_date', 'desc')->get();
-        } else {
-            $orderDbResults = ReserveOrder::with('Hall')->where('user_id', '=', $user->user_id)->orderBy('event_date', 'desc')->get();
+        if(isset($stat)){
+            $orderDbResults = ReserveOrder::with('Hall')->where('user_id','=',$user->user_id)->where('stat','=',$stat)->orderBy('event_date','desc')->get();
+        }
+        else{
+            $orderDbResults = ReserveOrder::with('Hall')->where('user_id','=',$user->user_id)->orderBy('event_date','desc')->get();
             $stat = '7';
         }
 
@@ -403,62 +404,67 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
         }
 
         return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',
-            array('reserves' => $reserves, 'stat' => $stat));
+            array('reserves'=>$reserves,'stat'=>$stat));
     }));
 
-    Route::get('/pay_success', array('before' => 'weixin', function () {
+    Route::get('/pay_success',array('before'=>'weixin',function(){
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = '支付成功';
         MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
 
 
-        return View::make('mobile_layout')->nest('content', 'mobile.pay_success');
+
+        return View::make('mobile_layout')->nest('content','mobile.pay_success');
 
     }));
 
-    Route::post('/telValidCodeMake', function () {
+    Route::post('/telValidCodeMake',function(){
         $telephone = Input::get('telephone');
-        $iCode = rand(1000, 9999);
-        if (Cache::has($telephone)) {
+        $iCode = rand(1000,9999);
+        if (Cache::has($telephone))
+        {
             Cache::forget($telephone);
         }
-        Cache::put($telephone, $iCode, 3600 * 6);
-        Sms::sendASync($telephone, '您的手机验证码为' . $iCode . '感谢您对网球通的支持。以后打球不办卡，办卡就找【网球通】。', '');
+        Cache::put($telephone,$iCode, 3600*6);
+        Sms::sendASync($telephone, '您的手机验证码为'.$iCode.'感谢您对网球通的支持。以后打球不办卡，办卡就找【网球通】。', '');
         echo 'true';
     });
 
-    Route::post('/telValidCodeValid', function () {
+    Route::post('/telValidCodeValid',function(){
         $telephone = Input::get('telephone');
         $validcode = Input::get('validcode');
 
-        if (Cache::has($telephone) && (Cache::get($telephone) == $validcode)) {
+        if (Cache::has($telephone) && (Cache::get($telephone) == $validcode))
+        {
             echo 'true';
-        } else {
+        }else{
             echo 'false';
         }
     });
 
-    Route::post('/nicknameValid', function () {
+    Route::post('/nicknameValid',function(){
         $nickname = Input::get('nickname');
-        $user = User::where('nickname', '=', $nickname)->first();
-        if ($user) {
+        $user = User::where('nickname','=',$nickname)->first();
+        if($user){
             echo 'false';
-        } else {
+        }
+        else{
             echo 'true';
         }
     });
 
-    Route::post('/telephoneValid', function () {
+    Route::post('/telephoneValid',function(){
         $telephone = Input::get('telephone');
-        $user = User::where('telephone', '=', $telephone)->first();
-        if ($user) {
+        $user = User::where('telephone','=',$telephone)->first();
+        if($user){
             echo 'false';
-        } else {
+        }
+        else{
             echo 'true';
         }
     });
 
-    Route::post('/bondValid', function () {
+    Route::post('/bondValid',function(){
         $nickname = Input::get('nickname');
         $password = Input::get('password');
 
@@ -466,10 +472,12 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
         $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
         if ($isNickLog || $isTeleLog) {
             echo 'true';
-        } else {
+        }
+        else{
             echo 'false';
         }
     });
 });
+
 
 

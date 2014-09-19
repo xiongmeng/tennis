@@ -105,8 +105,6 @@ Route::filter('csrf', function () {
 */
 
 Route::filter('weixin', function () {
-
-
         $appUserID = Input::get('app_user_id');
         $appID = Input::get('app_id');
         $app = RelationUserApp::where('app_user_id','=',$appUserID)->first();
@@ -119,6 +117,14 @@ Route::filter('weixin', function () {
                 Auth::login($user);
             }
         }
+});
+
+Route::filter('weChatAuth', function(){
+    Log::debug('weChat');
+    $weChatClient = new \Cooper\Wechat\WeChatClient('wxd443d79e0d69a2b8', '7d7fcb8090fb61366bf4c4534e4f66dc');
+    $code = Input::get('code');
+    $accessTokenResult = $weChatClient->getAccessTokenByCode($code);
+    $userInfo = $weChatClient->getUserInfoByAuth($accessTokenResult['access_token'], $accessTokenResult['openid']);
 
 
 });
