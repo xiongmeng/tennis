@@ -357,7 +357,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
             'halls' => array($hall), 'dates' => $dates, 'hallID' => $hallID, 'weekdayOption' => weekday_option(),
             'activeDate' => $activeDate, 'courts' => $courts, 'formattedInstants' => $formattedInstants,
             'loginUserId' => Auth::getUser()->user_id, 'instantOrders' => $instantOrders, 'noMoney' => array(
-                'needPay' => 0, 'balance' => 0, 'needRecharge' => 0, 'adviseForwardUrl' => ''
+                'needPay' => 0, 'balance' => 0, 'needRecharge' => 0, 'adviseForwardUrl' => '', 'weChatPayUrl' => ''
             )
         ));
     }));

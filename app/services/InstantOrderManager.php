@@ -131,6 +131,9 @@ class InstantOrderManager
             $result['adviseForwardUrl'] = url_wrapper(sprintf('/recharge/alipay/%s/%s/%s',
                 $result['needRecharge'], RECHARGE_CALLBACK_PAY_INSTANT_ORDER, implode(',', $instantOrderIds)));
 
+            $result['weChatPayUrl'] = sprintf('/recharge/wechatpay?money=%s&action_type=%s&action_token=%s',
+                $result['needRecharge'], RECHARGE_CALLBACK_PAY_INSTANT_ORDER, implode(',', $instantOrderIds));
+
             $result['status'] = 'no_money';
         } else {
             foreach ($instants as $instant) {

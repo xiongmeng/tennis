@@ -99,3 +99,47 @@ Route::get('/alipay_return', function () {
         return 'fail';
     }
 });
+
+Route::get('/recharge/wechatpay', function () {
+        $money = Input::get('money');
+        $actionType = Input::get('action_type');
+        $actionToken = Input::get('action_token');
+        $user = Auth::getUser();
+        $appID = Input::get('app_id');
+        $appUserID = Input::get('app_user_id');
+        //添加一条充值记录
+
+        $aRecharge = new Recharge();
+        if($appID && $appUserID){
+            $aRecharge->app_user_id = $appUserID;
+            $aRecharge->app_id = $appID;
+
+        }
+        $aRecharge->user_id = $user->user_id;
+        $aRecharge->money = $money;
+        $aRecharge->type = PAY_TYPE_WE_CHAT; //支付方式-微信支付
+        $aRecharge->stat = 1; //初始化
+        $aRecharge->createtime = time();
+        $aRecharge->callback_action_token = $actionToken;
+        $aRecharge->callback_action_type = $actionType; //购买即时订单
+        $aRecharge->save();
+        $iRechargeID = $aRecharge->id;
+
+        if (!is_numeric($money) || $money < 0) {
+            return sprintf('充值额度必须为大于零的数字（%s）', $money);
+        }
+
+        $isDeBug = Config::get('app.debug');
+        $isDeBug && $money = 0.01;
+
+        $weChatPayService = new WeChatPayService();
+        //执行支付宝支付
+        $jsApiParams = $weChatPayService->getJsApiParams($money, $iRechargeID);
+        return View::make('mobile.wechat_pay', array('jsApiParams' => $jsApiParams));
+    });
+
+Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function(){
+    Route::get('/wechatpay_notify', function(){
+
+    });
+});
