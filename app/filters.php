@@ -121,7 +121,7 @@ Route::filter('weixin', function () {
 
 Route::filter('weChatAuth', function(){
     Log::debug('weChat');
-    $weChatClient = new \Cooper\Wechat\WeChatClient('wxd443d79e0d69a2b8', '7d7fcb8090fb61366bf4c4534e4f66dc');
+    $weChatClient = new \Cooper\Wechat\WeChatClient($_ENV['WECHAT_PAY_APP_ID'], $_ENV['WECHAT_PAY_APP_SECRET']);
     $code = Input::get('code');
     $accessTokenResult = $weChatClient->getAccessTokenByCode($code);
     $userInfo = $weChatClient->getUserInfoByAuth($accessTokenResult['access_token'], $accessTokenResult['openid']);
