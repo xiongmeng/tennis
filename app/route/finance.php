@@ -185,34 +185,45 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         //==商户根据实际情况设置相应的处理流程，此处仅作举例=======
 
         //以log文件形式记录回调信息
-        Log::info('weChatPay-【接收到的notify通知】', $xml);
+        Log::info('weChatPay-【接收到的notify通知】', array('xml' =>$xml));
 
         if($notify->checkSign() == TRUE)
         {
             if ($notify->data["return_code"] == "FAIL") {
-                Log::info('weChatPay-【通信出错】', $xml);
+                Log::info('weChatPay-【通信出错】', array('xml' =>$xml));
             }
             elseif($notify->data["result_code"] == "FAIL"){
-                Log::info('weChatPay-【业务出错】', $xml);
+                Log::info('weChatPay-【业务出错】', array('xml' =>$xml));
             }
             else{
-                Log::info('weChatPay-【支付成功】', $xml);
+                Log::info('weChatPay-【支付成功】', array('xml' =>$xml));
             }
 
-            $rechargeId = intval($notify->out_trade_no);
-            $recharge = Recharge::findOrFail($rechargeId);
+            $rechargeId = intval($notify->data['out_trade_no']);
 
-            if ($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER) {
-                $instantOrderString = $recharge->callback_action_token;
-                $instantOrderIds = explode(',', $instantOrderString);
+            $isDeBug = Config::get('app.debug');
+            //修改充值结果
+            $affectedRows = Recharge::where('id','=',$rechargeId)->where('stat' ,'=',1)->update(array('stat' =>2,
+                'sToken'=>$notify->data['openid'],'pay_money'=>$isDeBug ? 1000 : $notify->data['total_fee'],'edittime'=>time()));
 
-                DB::beginTransaction();
-                try {
-                    $manager = new InstantOrderManager();
-                    $manager->batchPay($instantOrderIds, $recharge->user_id);
-                    DB::commit();
-                } catch (Exception $e) {
-                    DB::rollBack();
+            if($affectedRows == 1){
+                $recharge = Recharge::findOrFail($rechargeId);
+                //执行一次充值
+                $userFiance = new UserFinance();
+                $userFiance->addbalancefromrecharge($recharge);
+
+                if ($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER) {
+                    $instantOrderString = $recharge->callback_action_token;
+                    $instantOrderIds = explode(',', $instantOrderString);
+
+                    DB::beginTransaction();
+                    try {
+                        $manager = new InstantOrderManager();
+                        $manager->batchPay($instantOrderIds, $recharge->user_id);
+                        DB::commit();
+                    } catch (Exception $e) {
+                        DB::rollBack();
+                    }
                 }
             }
         }
