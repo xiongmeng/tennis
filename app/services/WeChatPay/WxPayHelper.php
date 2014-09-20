@@ -730,7 +730,7 @@ class Wxpay_server_ extends Common_util_
 /**
  * 通用通知接口
  */
-class Notify extends Wxpay_server_ 
+class WeChatNotify extends Wxpay_server_
 {
 
 }
@@ -826,7 +826,7 @@ class NativeLink  extends Common_util_
 /**
 * JSAPI支付——H5网页端调起支付接口
 */
-class JsApi extends Common_util_
+class WeChatJsApi extends Common_util_
 {
 	var $code;//code码，用以获取openid
 	var $openid;//用户的openid

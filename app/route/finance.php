@@ -92,7 +92,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     Route::get('/recharge/wechatpay', function () {
 
         //使用jsapi接口
-        $jsApi = new JsApi();
+        $jsApi = new WeChatJsApi();
 
         //=========步骤1：网页授权获取用户openid============
         //通过code获得openid
@@ -162,9 +162,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
 
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
-    Route::get('/wechatpay_notify', function () {
+    Route::any('/wechatpay_notify', function () {
         //使用通用通知接口
-        $notify = new Notify();
+        $notify = new WeChatNotify();
 
         //存储微信的回调
         $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
