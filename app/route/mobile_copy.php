@@ -519,8 +519,8 @@ Route::group(array('domain' => $_ENV['DOMAIN_MOBILE']), function () {
         $validcode = Input::get('validcode');
         $user = Auth::getUser();
         if ((Cache::get($telephone) == $validcode)){
-            $user->telephone = $telephone;
-            $user->save();
+        $user->telephone = $telephone;
+        $user->save();
             return View::make('mobile_layout')->nest('content', 'mobile.change_telephone_success',array('user'=> $user));
         }else{
             echo '';

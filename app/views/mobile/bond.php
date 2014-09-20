@@ -14,16 +14,18 @@
                    type="password" name="password" class="pull-left" placeholder=""
                    value="" onblur="pwdcheck()" id="password">
             <p id="pwd" style="width: 60%;font-size:15px;margin-left: 30%;color:red "></p>
+                <a style="width: 40%; margin-left: 30%;float: left;margin-bottom: 18px" href="<?= url_wrapper('/get_password')?>" data-ignore="push">忘记密码？</a>
             <br/><br/>
-            <input type="button" id="bond" name="bond" style="width: 40%; margin-left: 30%;" class="btn btn-primary btn-block"
+            <input type="button" id="bond" name="bond" style="width: 50%; margin-left: 30%;" class="btn btn-primary btn-block"
                    value="绑定">
         </form>
-        <p style="text-align: center;padding: 10px;">还没有网球通帐号？</p>
-         <p style="text-align: center;padding: 10px">   <a  href="<?= url_wrapper('/mobile_register')?>" data-ignore="push"><font size=6px>去注册</font></a></p>
-    </div>
+<!--        <p style="text-align: center;padding: 10px;">还没有网球通帐号？</p>-->
+<!--         <p style="text-align: center;padding: 10px">   <a  href="--><?//= url_wrapper('/mobile_register')?><!--" data-ignore="push"><font size=6px>去注册</font></a></p>-->
+<!--    </div>-->
     <script>
         $('#bond').click(function(){
-
+            nickcheck();
+            pwdcheck();
             if(!nick.innerText && !pwd.innerText && $('#nickname').val() && $('#password').val()){
                 $('#form1').submit();}
             else{

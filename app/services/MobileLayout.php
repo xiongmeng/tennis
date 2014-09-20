@@ -5,7 +5,7 @@ class MobileLayout{
     public static $previousUrl = null;
 
     public static $activeService = null;
-
+    public static $setUrl = null;
     public static $services = array(
         'instant' => array(
             'url' => '/mobile_home/instant',
