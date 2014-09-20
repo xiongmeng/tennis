@@ -163,6 +163,61 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     Route::get('/wechatpay_notify', function () {
+        //使用通用通知接口
+        $notify = new Notify();
 
+        //存储微信的回调
+        $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+        $notify->saveData($xml);
+
+        //验证签名，并回应微信。
+        //对后台通知交互时，如果微信收到商户的应答不是成功或超时，微信认为通知失败，
+        //微信会通过一定的策略（如30分钟共8次）定期重新发起通知，
+        //尽可能提高通知的成功率，但微信不保证通知最终能成功。
+        if($notify->checkSign() == FALSE){
+            $notify->setReturnParameter("return_code","FAIL");//返回状态码
+            $notify->setReturnParameter("return_msg","签名失败");//返回信息
+        }else{
+            $notify->setReturnParameter("return_code","SUCCESS");//设置返回码
+        }
+
+
+        //==商户根据实际情况设置相应的处理流程，此处仅作举例=======
+
+        //以log文件形式记录回调信息
+        Log::info('weChatPay-【接收到的notify通知】', $xml);
+
+        if($notify->checkSign() == TRUE)
+        {
+            if ($notify->data["return_code"] == "FAIL") {
+                Log::info('weChatPay-【通信出错】', $xml);
+            }
+            elseif($notify->data["result_code"] == "FAIL"){
+                Log::info('weChatPay-【业务出错】', $xml);
+            }
+            else{
+                Log::info('weChatPay-【支付成功】', $xml);
+            }
+
+            $rechargeId = intval($notify->out_trade_no);
+            $recharge = Recharge::findOrFail($rechargeId);
+
+            if ($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER) {
+                $instantOrderString = $recharge->callback_action_token;
+                $instantOrderIds = explode(',', $instantOrderString);
+
+                DB::beginTransaction();
+                try {
+                    $manager = new InstantOrderManager();
+                    $manager->batchPay($instantOrderIds, $recharge->user_id);
+                    DB::commit();
+                } catch (Exception $e) {
+                    DB::rollBack();
+                }
+            }
+        }
+
+        $returnXml = $notify->returnXml();
+        echo $returnXml;
     });
 });

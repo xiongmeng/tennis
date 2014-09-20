@@ -418,6 +418,16 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
     });
 
+    Route::get('/pay_fail', array('before' => 'weixin', function () {
+        MobileLayout::$activeService = 'center';
+        MobileLayout::$title = '支付失败';
+        MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
+
+
+        return View::make('mobile_layout')->nest('content', 'mobile.pay_fail');
+
+    }));
+
     Route::post('/telValidCodeMake',function(){
         $telephone = Input::get('telephone');
         $iCode = rand(1000,9999);
