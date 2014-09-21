@@ -78,6 +78,10 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
     });
 
+    Route::get('/', function(){
+        return Redirect::to('/mobile_home/reserve/recommend');
+    });
+
     Route::get('/mobile_home/instant', function () {
         MobileLayout::$activeService = 'instant';
 
