@@ -161,17 +161,8 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             }
             else{$Halls =array();}
         } elseif ($curType == 'ordered') {
-            $appUserID = Input::get('app_user_id');
-            $app = RelationUserApp::where('app_user_id', '=', $appUserID)->first();
-            if ($app) {
-                $userID = $app->user_id;
-                $Halls = ReserveOrder::where('user_id', '=', $userID)->orderBy('event_date', 'desc')->select( 'hall_id')->distinct()->get();
-
-
-            }
-            else{
-                return Redirect::to(url_wrapper('/mobile_bond'));
-            }
+            $user = Auth::getUser();
+            $Halls = ReserveOrder::whereUserId($user->user_id)->orderBy('event_date', 'desc')->select('hall_id')->distinct()->get();
         }
         $hallIds = array();
         foreach ($Halls as $Hall) {
