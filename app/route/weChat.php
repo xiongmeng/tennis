@@ -1,4 +1,74 @@
 <?php
+
+Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function(){
+    Route::get('/auto_register', function(){
+        $appUserId = Input::get('app_user_id');
+        $appId = APP_WE_CHAT;
+        $app = RelationUserApp::where('app_user_id', '=', $appUserId)->first();
+        if(!$app){
+            $weChatUserProfile = weChatUserProfile::findOrFail($appUserId);
+            DB::beginTransaction();
+
+            $user = new User;
+            $user->nickname = 'wx_' . $weChatUserProfile->nickname;
+            $user->save();
+
+            $app = new RelationUserApp;
+            $app->user_id = $user->user_id;
+            $app->app_id = $appId;
+            $app->app_user_id = $appUserId;
+            $app->save();
+
+            DB::commit();
+        }
+
+        Auth::loginUsingId($app->user_id, true);
+        return Redirect::to(url_wrapper('/mobile_buyer'));
+    });
+
+    Route::get('/mobile_bond', function(){
+        $queries = Input::all();
+        $app = RelationUserApp::where('app_user_id','=',$queries['app_user_id'])->first();
+        if($app){
+            return Redirect::to(url_wrapper('/mobile_buyer'));
+        }else{
+            MobileLayout::$activeService = 'center';
+            MobileLayout::$title = '绑定';
+
+            if (isset($queries['nickname']) && isset($queries['password'])) {
+
+                $nickname = $queries['nickname'];
+                $password = $queries['password'];
+                $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password), true);
+                $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password), true);
+                if ($isNickLog | $isTeleLog) {
+                    if (Auth::check()) {
+                        $user = Auth::getUser();
+                        $userID = $user->user_id;
+                        $app = RelationUserApp::whereUserId($userID)->whereAppId(APP_WE_CHAT)->first();
+                        if (!$app) {
+                            $app = new RelationUserApp;
+                            $app->user_id = $userID;
+                            $app->app_id = $queries['app_id'];
+                            $app->app_user_id = $queries['app_user_id'];
+                            $app->save();
+                        } else {
+                            if ($app instanceof RelationUserApp) {
+                                $app->app_user_id = $queries['app_user_id'];
+                                $app->save();
+                            }
+                        }
+                    }
+                    return View::make('mobile_layout')->nest('content', 'mobile.bond_success', array('user' => $user));
+                }
+            } else {
+
+                return View::make('mobile_layout')->nest('content', 'mobile.bond', array('queries' => $queries));
+            }
+        }
+    });
+});
+
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'), function(){
     View::creator('mobile_layout', function (\Illuminate\View\View $view) {
         $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
@@ -9,7 +79,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
     });
 
     Route::get('/', function(){
-        return 'hello world!';
+        return Redirect::to('/mobile_home/reserve/recommend');
     });
 
     Route::get('/mobile_home/instant', function () {
@@ -91,17 +161,8 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             }
             else{$Halls =array();}
         } elseif ($curType == 'ordered') {
-            $appUserID = Input::get('app_user_id');
-            $app = RelationUserApp::where('app_user_id', '=', $appUserID)->first();
-            if ($app) {
-                $userID = $app->user_id;
-                $Halls = ReserveOrder::where('user_id', '=', $userID)->orderBy('event_date', 'desc')->select( 'hall_id')->distinct()->get();
-
-
-            }
-            else{
-                return Redirect::to(url_wrapper('/mobile_bond'));
-            }
+            $user = Auth::getUser();
+            $Halls = ReserveOrder::whereUserId($user->user_id)->orderBy('event_date', 'desc')->select('hall_id')->distinct()->get();
         }
         $hallIds = array();
         foreach ($Halls as $Hall) {
@@ -158,49 +219,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         return View::make('mobile_layout_hall')->nest('content', 'mobile.mobile_buyer',
             array('user' => $user, 'insPaying' => $insPaying, 'payed' => $payed ,'resPaying'=>$resPaying,'pending'=>$pending));
 
-    });
-
-
-    Route::get('/mobile_bond', function () {
-        $queries = Input::all();
-        $app = RelationUserApp::where('app_user_id','=',$queries['app_user_id'])->first();
-        if($app){
-            return Redirect::to(url_wrapper('/mobile_buyer'));
-        }else{
-            MobileLayout::$activeService = 'center';
-            MobileLayout::$title = '绑定';
-
-            if (isset($queries['nickname']) && isset($queries['password'])) {
-
-                $nickname = $queries['nickname'];
-                $password = $queries['password'];
-                $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
-                $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
-                if ($isNickLog | $isTeleLog) {
-                    if (Auth::check()) {
-                        $user = Auth::getUser();
-                        $userID = $user->user_id;
-                        $app = RelationUserApp::where('user_id', '=', $userID)->first();
-                        if (!$app) {
-                            $app = new RelationUserApp;
-                            $app->user_id = $userID;
-                            $app->app_id = $queries['app_id'];
-                            $app->app_user_id = $queries['app_user_id'];
-                            $app->save();
-                        } else {
-                            if ($app instanceof RelationUserApp) {
-                                $app->app_user_id = $queries['app_user_id'];
-                                $app->save();
-                            }
-                        }
-                    }
-                    return View::make('mobile_layout')->nest('content', 'mobile.bond_success', array('user' => $user));
-                }
-            } else {
-
-                return View::make('mobile_layout')->nest('content', 'mobile.bond', array('queries' => $queries));
-            }
-        }
     });
 
     Route::get('/mobile_register', function () {

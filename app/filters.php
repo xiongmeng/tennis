@@ -120,7 +120,7 @@ Route::filter('weixin', function () {
 });
 
 Route::filter('weChatAuth', function(){
-    Log::debug('weChatAuth');
+    Log::debug('wxAuthTest');
 
     if(!Auth::guest()){
         return ;
@@ -131,38 +131,36 @@ Route::filter('weChatAuth', function(){
     //查找是否有code，如果没有，则获取code
     $code = Input::get('code');
     if(empty($code)){
-        $url = $weChatClient->getOAuthConnectUri(URL::current());
+        $url = $weChatClient->getOAuthConnectUri(URL::current(), '', 'snsapi_userinfo');
         return Redirect::to($url);
     }
 
     //获取accessToken和OpenId
     $accessTokenResult = $weChatClient->getAccessTokenByCode($code);
     $openid = $accessTokenResult['openid'];
+    Log::debug($openid);
 
-    $appId = APP_WE_CHAT;
-    $app = RelationUserApp::whereAppUserId($openid)->whereAppId($appId)->first();
+    //获取用户信息
+    $accessToken = $accessTokenResult['access_token'];
+    $userInfo = $weChatClient->getUserInfoByAuth($accessToken, $openid);
 
-    //如果用户不存在，则获取微信用户信息，并自动注册功能
-    if(!$app){
-        $accessToken = $accessTokenResult['access_token'];
-        $userInfo = $weChatClient->getUserInfoByAuth($accessToken, $openid);
-
-        DB::transaction(function() use($userInfo, $appId, $openid){
-            $user = new User;
-            $user->nickname = 'wx_' . (isset($userInfo['nickname']) ? $userInfo['nickname'] : time());
-            $user->save();
-
-            $app = new RelationUserApp;
-            $app->user_id = $user->user_id;
-            $app->app_id = $appId;
-            $app->app_user_id = $openid;
-            $app->save();
-        });
-
-        $app = RelationUserApp::whereAppUserId($openid)->whereAppId($appId)->first();
+    //存储微信用户信息
+    $profiles = array_only($userInfo, array('nickname', 'open_id', 'sex', 'province','city','country','headimgurl', 'privilege'));
+    $userProfile = weChatUserProfile::find($openid);
+    if($userProfile){
+        $userProfile->update($profiles);
+    }else{
+        weChatUserProfile::create(array_add($profiles, 'openid' , $openid));
     }
 
-    Auth::loginUsingId($app->user_id);
+    Log::debug($userInfo);
 
-
+    //如果用户存在，则直接登录
+    $appId = APP_WE_CHAT;
+    $app = RelationUserApp::whereAppUserId($openid)->whereAppId($appId)->first();
+    if($app){
+        Auth::loginUsingId($app->user_id, true);
+    }else{
+        return Redirect::to("/mobile_bond?app_user_id=$openid&app_id=$appId");
+    }
 });
