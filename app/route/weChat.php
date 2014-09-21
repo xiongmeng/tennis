@@ -22,7 +22,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function(){
             DB::commit();
         }
 
-        Auth::loginUsingId($app->user_id);
+        Auth::loginUsingId($app->user_id, true);
         return Redirect::to(url_wrapper('/mobile_buyer'));
     });
 
@@ -39,13 +39,13 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function(){
 
                 $nickname = $queries['nickname'];
                 $password = $queries['password'];
-                $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
-                $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
+                $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password), true);
+                $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password), true);
                 if ($isNickLog | $isTeleLog) {
                     if (Auth::check()) {
                         $user = Auth::getUser();
                         $userID = $user->user_id;
-                        $app = RelationUserApp::where('user_id', '=', $userID)->first();
+                        $app = RelationUserApp::whereUserId($userID)->whereAppId(APP_WE_CHAT)->first();
                         if (!$app) {
                             $app = new RelationUserApp;
                             $app->user_id = $userID;
