@@ -17,7 +17,6 @@ class RecordWecharUserProfileTable extends Migration {
         Schema::create('gt_wechat_user_profile', function(Blueprint $table){
 
             //billing表info
-            $table->integer('id');
             $table->string('openid');
             $table->string('nickname');
             $table->integer('sex');
@@ -27,7 +26,9 @@ class RecordWecharUserProfileTable extends Migration {
             $table->string('headimgurl');
             $table->string('privilege', 1024);
 
-            $table->primary('id');
+            $table->timestamps();
+
+            $table->primary('openid');
         });
 	}
 

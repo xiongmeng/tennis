@@ -17,9 +17,9 @@
             <br/><br/>
             <input type="button" id="bond" name="bond" style="width: 40%; margin-left: 30%;" class="btn btn-primary btn-block"
                    value="绑定">
+            <a type="button" style="width: 40%; margin-left: 30%;" class="btn btn-primary btn-block"
+               href="<?= url_wrapper('/auto_register')?>" data-ignore="push">用微信账号登录</a>
         </form>
-        <p style="text-align: center;padding: 10px;">还没有网球通帐号？</p>
-         <p style="text-align: center;padding: 10px">   <a  href="<?= url_wrapper('/mobile_register')?>" data-ignore="push"><font size=6px>去注册</font></a></p>
     </div>
     <script>
         $('#bond').click(function(){
