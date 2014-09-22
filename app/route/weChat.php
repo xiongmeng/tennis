@@ -108,10 +108,12 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
             } else {
                 $user = User::where('telephone', '=', $telephone)->first();
                 if ($user) {
-                    Sms::sendASync($telephone, '您的网球通账户密码已被重置为' . $iCode . '感谢您对网球通的支持。以后打球不办卡，办卡就找【网球通】。', '');
+                    try{
+                        Sms::sendSync($telephone, '您的网球通账户密码已被重置为' . $iCode . '感谢您对网球通的支持。以后打球不办卡，办卡就找【网球通】。', '');
+                    }catch (Exception $e){}
                     $user->password = Hash::make($iCode);
                     $user->save();
-                    return Redirect::to('/password_reset_success');
+                    return Redirect::to(url_wrapper('/password_reset_success'));
                 } else {
                     $error = '手机号未被注册';
                 }
@@ -427,14 +429,14 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         return View::make('mobile_layout')->nest('content', 'mobile.pay_success');
     });
 
-    Route::get('/pay_fail', array('before' => 'weixin', function () {
+    Route::get('/pay_fail', function () {
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = '支付失败';
         MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
 
 
         return View::make('mobile_layout')->nest('content', 'mobile.pay_fail');
-    }));
+    });
 
     Route::post('/telValidCodeMake', function () {
         $telephone = Input::get('telephone');

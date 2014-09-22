@@ -146,6 +146,7 @@ Route::filter('weChatAuth', function(){
 
     //存储微信用户信息
     $profiles = array_only($userInfo, array('nickname', 'open_id', 'sex', 'province','city','country','headimgurl', 'privilege'));
+    isset($profiles['privilege']) && $profiles['privilege'] = json_encode($profiles['privilege']);
     $userProfile = weChatUserProfile::find($openid);
     if($userProfile){
         $userProfile->update($profiles);
