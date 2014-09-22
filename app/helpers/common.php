@@ -4,6 +4,10 @@ function rest_success($data)
     return array('code' => 1000, 'data' => $data);
 }
 
+function rest_fail($data, $code = 500){
+    return array('code' => $code, 'data' => $data);
+}
+
 function weekday_option()
 {
     return array('周日', '周一', '周二', '周三', '周四', '周五', '周六');

@@ -317,3 +317,7 @@ header.bar .title {
     font-size: 14px;
     color: red;
 }
+
+.from-button {
+    width:90%; margin: 5px auto ;
+}

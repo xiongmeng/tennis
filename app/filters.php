@@ -164,3 +164,8 @@ Route::filter('weChatAuth', function(){
         return Redirect::to("/mobile_bond?app_user_id=$openid&app_id=$appId");
     }
 });
+
+Validator::extend('telephone_not_exist', function($attribute, $value, $parameters)
+{
+    return !User::whereTelephone($value)->exists();
+});
