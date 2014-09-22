@@ -1,19 +1,24 @@
-
-
 <div class="content user-center">
     <ul class="table-view">
         <li class="table-view-cell media">
             <a>
                 <?php
                 $head = $user->head;
-                if(empty($head)){
-                    $head = ($user->sexy==1 ? '/Images/page/head_girl.jps' : '/Images/page/head_boy.jpg');
+                if (empty($head)) {
+                    if (!empty($wxUserProfile->headimgurl)) {
+                        $head = str_replace('/0', '/64', $wxUserProfile->headimgurl);
+                    } else {
+                        $head = 'http://wangqiuer.com' . ($wxUserProfile->sexy == 1 ? '/Images/page/head_girl.jps' : '/Images/page/head_boy.jpg');
+                    }
+                } else {
+                    $head = 'http://wangqiuer.com' . $head;
                 }
                 ?>
-                <img width="42px" class="media-object pull-left" src="http://wangqiuer.com<?=$head?>">
+                <img width="60px" class="media-object pull-left" src="<?= $head ?>">
 
                 <div class="media-body">
-                    <?= $user->nickname ?>
+                    <p><?= $wxUserProfile->nickname ?></p>
+                    <hr style="border: none; border-top: solid 1px #DDDDDD">
                     <p>余额：<?= balance() ?>&nbsp;&nbsp;&nbsp;积分：<?= points() ?></p>
                 </div>
             </a>
@@ -32,18 +37,20 @@
     </ul>
     <div class="segmented-control">
 
-        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=0')?>'" data-ignore="push">
+        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=0') ?>'"
+           data-ignore="push">
             <span class="icon icon-info"></span><br/>
             待处理
             <?php if ($pending != 0) { ?>
                 <span class="badge badge-negative "><?= $pending ?></span>
             <?php } ?>
         </a>
-        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=1')?>'" data-ignore="push">
+        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=1') ?>'"
+           data-ignore="push">
             <span class="icon icon-check"></span><br/>
             待支付
             <?php if ($resPaying != 0) { ?>
-                <span class="badge badge-negative"><?=$resPaying ?></span>
+                <span class="badge badge-negative"><?= $resPaying ?></span>
             <?php } ?>
         </a>
 
@@ -59,14 +66,16 @@
         </li>
     </ul>
     <div class="segmented-control">
-        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=paying')?>'" data-ignore="push">
+        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=paying') ?>'"
+           data-ignore="push">
             <span class="icon icon-info"></span><br/>
             待支付
             <?php if ($insPaying != 0) { ?>
                 <span class="badge badge-negative "><?= $insPaying ?></span>
             <?php } ?>
         </a>
-        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=payed')?>'" data-ignore="push">
+        <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=payed') ?>'"
+           data-ignore="push">
             <span class="icon icon-check"></span><br/>
             已支付
             <?php if ($payed != 0) { ?>
@@ -74,22 +83,23 @@
             <?php } ?>
         </a>
     </div>
-<!--    <ul class="table-view">-->
-<!--        <li class="table-view-cell media">-->
-<!--            <a class="navigate-right" href="--><?//= url_wrapper('mobile_buyer_account_balancee') ?><!--" data-ignore="push">-->
-<!---->
-<!--                <div class="media-body">-->
-<!--                    收支明细-->
-<!--                </div>-->
-<!--            </a>-->
-<!--        </li></ul><ul class="table-view">-->
-<!--        <li class="table-view-cell media">-->
-<!--            <a class="navigate-right" href="--><?//= url_wrapper('mobile_buyer_points_balance') ?><!--" data-ignore="push">-->
-<!---->
-<!--                <div class="media-body">-->
-<!--                    积分明细-->
-<!--                </div>-->
-<!--            </a>-->
-<!--        </li>-->
-<!--    </ul>-->
+    <ul class="table-view">
+        <li class="table-view-cell media">
+            <a class="navigate-right" href="<?= url_wrapper('/mobile_change_user') ?>" data-ignore="push">
+                <div class="media-body">切换绑定账号</div>
+            </a>
+        </li>
+    </ul>
+    <ul class="table-view">
+        <li class="table-view-cell media">
+            <a class="navigate-right" href="<?= url_wrapper('/mobile_change_telephone') ?>" data-ignore="push">
+                <div class="media-body"><?php if ($user->telephone) {
+                        echo '更换绑定手机号';
+                    } else {
+                        echo '绑定手机号';
+                    } ?>
+                </div>
+            </a>
+        </li>
+    </ul>
 </div>

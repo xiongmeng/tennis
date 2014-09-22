@@ -1,8 +1,5 @@
 <div class="content" style="margin-top: 20px">
     <form style="display: inline" id="form1" name="form1" action="<?= url_wrapper('/mobile_change_telephone') ?>" method="post">
-        <input type="hidden" name="app_id" value="<?= $queries['app_id'] ?>">
-        <input type="hidden" name="app_user_id" value="<?= $queries['app_user_id'] ?>">
-
 <!--        显示已绑定手机号-->
         <?php if ($user->telephone) { ?>
             <div class="form-controller">

@@ -1,8 +1,8 @@
 <?php
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
-    Route::get('/login', function(){
-        Auth::attempt();
+    Route::get('/login/{nickname}', function($nickname){
+        Auth::login(User::whereNickname($nickname)->first());
     });
 
     Route::get('/logout', function(){
@@ -99,7 +99,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     Route::any('/get_password', function () {
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = '找回密码';
-        MobileLayout::$previousUrl = url_wrapper('/mobile_bond');
+        MobileLayout::$previousUrl = url_wrapper(Input::get('redirect', '/mobile_bond'));
         $queries = Input::all();
 
         $error = '';
@@ -116,7 +116,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
                     }catch (Exception $e){}
                     $user->password = Hash::make($iCode);
                     $user->save();
-                    return Redirect::to(url_wrapper('/password_reset_success'));
+                    return View::make('mobile_layout')->nest('content', 'mobile.password_reset_success');
                 } else {
                     $error = '手机号未被注册';
                 }
@@ -243,13 +243,13 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
     Route::get('/mobile_buyer', function () {
         MobileLayout::$activeService = 'center';
-        MobileLayout::$title = '个人中心';
-        MobileLayout::$setUrl = url_wrapper('/mobile_set');
         $user = Auth::getUser();
+        MobileLayout::$title = $user->nickname;
         $userID = $user['user_id'];
 
         $instantModel = new InstantOrder();
 
+        $pending = $resPaying = $insPaying = $payed = 0;
         $instant = $instantModel->select(array('state', DB::raw('COUNT(1) AS count')))->where('buyer', '=', $userID)->groupBy('state')->get();
         foreach ($instant as $ins) {
             if ($ins->state == 'paying') {
@@ -267,21 +267,12 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 $resPaying = $res->count;
             }
         }
-        if (empty($pending)) {
-            $pending = 0;
-        }
-        if (empty($resPaying)) {
-            $resPaying = 0;
-        }
-        if (empty($insPaying)) {
-            $insPaying = 0;
-        }
-        if (empty($payed)) {
-            $payed = 0;
-        }
 
-        return View::make('mobile_layout')->nest('content', 'mobile.mobile_buyer',
-            array('user' => $user, 'insPaying' => $insPaying, 'payed' => $payed, 'resPaying' => $resPaying, 'pending' => $pending));
+        $app = RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->first();
+        $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
+
+        return View::make('mobile_layout')->nest('content', 'mobile.mobile_buyer', array('user' => $user, 'wxUserProfile' => $wxUserProfile,
+            'insPaying' => $insPaying, 'payed' => $payed, 'resPaying' => $resPaying, 'pending' => $pending));
 
     });
 
@@ -480,20 +471,11 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         }
     });
 
-    Route::get('/mobile_set', function () {
-        MobileLayout::$activeService = 'center';
-        MobileLayout::$title = '设置';
-        MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
-        $user = Auth::getUser();
-        $telephone = $user->telephone;
-        return View::make('mobile_layout')->nest('content', 'mobile.set', array('telephone' => $telephone));
-    });
-
     Route::any('/mobile_change_telephone', function () {
         $queries = Input::all();
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = '手机绑定';
-        MobileLayout::$previousUrl = url_wrapper('/mobile_set');
+        MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
         $user = Auth::getUser();
 
         $telephone = Input::get('telephone');
@@ -533,41 +515,41 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             array('user' => $user, 'queries' => $queries, 'validCode' => array_except($validCode, 'code')));
     });
 
-    Route::get('/mobile_change_user', function () {
+    Route::any('/mobile_change_user', function () {
+        $queries = Input::all();
         MobileLayout::$activeService = 'center';
-        MobileLayout::$title = '更换绑定账户';
-        MobileLayout::$previousUrl = url_wrapper('/mobile_set');
-        if (isset($queries['nickname']) && isset($queries['password'])) {
+        MobileLayout::$title = '切换绑定账号';
+        MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
 
-            $nickname = $queries['nickname'];
-            $password = $queries['password'];
-            $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
-            $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
-            if ($isNickLog | $isTeleLog) {
-                if (Auth::check()) {
-                    $user = Auth::getUser();
-                    $userID = $user->user_id;
-                    $app = RelationUserApp::where('user_id', '=', $userID)->first();
-                    if (!$app) {
-                        $app = new RelationUserApp;
-                        $app->user_id = $userID;
-                        $app->app_id = $queries['app_id'];
-                        $app->app_user_id = $queries['app_user_id'];
-                        $app->save();
-                    } else {
-                        if ($app instanceof RelationUserApp) {
-                            $app->app_user_id = $queries['app_user_id'];
-                            $app->save();
-                        }
-                    }
-                }
-                return View::make('mobile_layout')->nest('content', 'mobile.bond_success', array('user' => $user));
+        $user = Auth::getUser();
+        $app = RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->first();
+
+        if (Request::isMethod('post')) {
+            $rules = array(
+                'nickname' => "required|user_auth:" . (isset($queries['password']) ? $queries['password'] : ''),
+                'password' => 'required|between:6,20',
+            );
+            $messages = array(
+                'required' => '请确保每项都填入了您的信息',
+                'nickname.user_auth' => '账号或者密码错误',
+                'between' => '密码需要在6-20位之间',
+            );
+
+            $validator = Validator::make(Input::all(), $rules, $messages);
+            if (!$validator->fails()) {
+                $user = Auth::getUser();
+                $app->user_id = $user->user_id;
+                $app->save();
+
+                $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
+                return View::make('mobile_layout')->nest('content', 'mobile.change_user_success',
+                    array('user' => $user, 'wxUserProfile' => $wxUserProfile));
             }
-        } else {
-
-            return View::make('mobile_layout')->nest('content', 'mobile.bond', array('queries' => $queries));
+            return View::make('mobile_layout')->nest('content', 'mobile.change_user',
+                array('queries' => $queries, 'app' => $app, 'errors' => $validator->messages()));
         }
-        return View::make('mobile_layout')->nest('content', 'mobile.set', array('telephone' => ''));
+        return View::make('mobile_layout')->nest('content', 'mobile.change_user',
+            array('queries' => $queries, 'app' => $app));
     });
 });
 

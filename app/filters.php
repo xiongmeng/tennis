@@ -166,7 +166,15 @@ Route::filter('weChatAuth', function(){
     }
 });
 
-Validator::extend('telephone_not_exist', function($attribute, $value, $parameters)
-{
+Validator::extend('telephone_not_exist', function($attribute, $value, $parameters){
     return !User::whereTelephone($value)->exists();
+});
+
+Validator::extend('user_auth', function ($attribute, $value, $parameters) {
+    $password = $parameters[0];
+    if ($password) {
+        return Auth::attempt(array('nickname' => $value, 'password' => $password), true) ||
+        Auth::attempt(array('telephone' => $value, 'password' => $password), true);
+    }
+    return false;
 });

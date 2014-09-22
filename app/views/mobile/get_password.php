@@ -1,7 +1,8 @@
 <div class="content" style="margin-top: 50px">
     <form style="display: inline" id="from" name="form1" action="<?= url_wrapper('/get_password') ?>" method="post">
-        <input type="hidden" name="app_id" value="<?= $queries['app_id']?>">
-        <input type="hidden" name="app_user_id" value="<?= $queries['app_user_id']?>">
+        <input type="hidden" name="app_id" value="<?= isset($queries['app_id']) ? $queries['app_id'] : ''?>">
+        <input type="hidden" name="app_user_id" value="<?= isset($queries['app_user_id']) ? $queries['app_user_id'] : ''?>">
+        <input type="hidden" name="redirect" value="<?= isset($queries['redirect']) ? $queries['redirect'] : ''?>">
 
         <div class="form-controller">
             <div class="item">
