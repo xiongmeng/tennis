@@ -16,10 +16,13 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         if (!$app) {
             $weChatUserProfile = weChatUserProfile::findOrFail($appUserId);
             DB::beginTransaction();
-
-            $user = new User;
-            $user->nickname = 'wx_' . $weChatUserProfile->nickname;
-            $user->save();
+            $nickname = 'wx_' . $weChatUserProfile->nickname;
+            $user =User::whereNickname($nickname)->first();
+            if(empty($user)){
+                $user = new User;
+                $user->nickname = $nickname;
+                $user->save();
+            }
 
             $app = new RelationUserApp;
             $app->user_id = $user->user_id;
