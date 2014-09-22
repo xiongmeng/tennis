@@ -24,7 +24,7 @@
     <ul class="table-view hall-on-sale" style="padding-top: 10px">
         <?php if ($instants->count() <= 0) { ?>
             <?php $stateTexts = array('all' =>'预订过', 'paying' => '待支付', 'payed' => '已支付');?>
-            <li class="table-view-cell media notice"><p>您目前没有<?= $stateTexts[$label]?>的场地哦！</p></li>
+            <li class="notice"><p>您目前没有<?= $stateTexts[$label]?>的场地哦！</p></li>
         <?php } else { ?>
             <?php foreach ($instants as $instant) { ?>
 

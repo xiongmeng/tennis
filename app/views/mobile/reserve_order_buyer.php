@@ -21,7 +21,7 @@
     <ul class="table-view hall-on-sale" style="padding-top: 35px ;margin-bottom: 2px;">
         <?php if (count($reserves) <= 0) { ?>
             <?php $stateTexts = array('7' =>'您还没有在网球通预订过场地哦', '0' => '您目前没有待处理的订单哦！', '1' => '您目前没有待支付的订单哦！');?>
-            <li class="table-view-cell media notice"><p><?= $stateTexts[$stat]?></p></li>
+            <li class="notice"><p><?= $stateTexts[$stat]?></p></li>
         <?php }else { ?>
             <?php foreach ($reserves as $reserve) { ?>
 

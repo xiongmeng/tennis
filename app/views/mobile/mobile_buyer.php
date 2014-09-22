@@ -79,7 +79,7 @@
             <span class="icon icon-check"></span><br/>
             已支付
             <?php if ($payed != 0) { ?>
-                <span class="badge badge-negative"><?= $payed ?></span>
+                <span class="badge badge-positive"><?= $payed ?></span>
             <?php } ?>
         </a>
     </div>

@@ -21,9 +21,9 @@
 <div class="content" style="margin-bottom: 50px; padding-top: 66px">
     <ul class="table-view hall-on-sale">
         <?php if($curType == 'nearby' && count($halls) <= 0){?>
-            <li class="table-view-cell media notice"><p>您还没有同意上传地理位置信息哦！</p></li>
+            <li class="notice"><p>您还没有同意上传地理位置信息哦！</p></li>
         <?php }elseif ($curType != 'nearby' && count($halls) <= 0) {?>
-            <li class="table-view-cell media notice"><p>您还没有预定过场地哦！</p></li>
+            <li class="notice"><p>您还没有预订过场地哦！</p></li>
         <?php } else { ?>
         <?php foreach($halls as $key =>$hall){?>
         <li class="table-view-cell media">
@@ -33,6 +33,7 @@
                 <div class="media-body description" style="width: 70%; float: left">
                     <p class="name"><?= $hall['name'] ?></p>
                     <p><span class="header">地址：</span><?= $hall['area_text'] ?></p>
+                    <p><span class="header">电话：</span><?= $hall['telephone']?></p>
                 </div>
             </a>
             <a style="padding: 10px" href="<?= url_wrapper('/hall_reserve?hall_id='.$hall['id'])?>"  data-ignore="push">
