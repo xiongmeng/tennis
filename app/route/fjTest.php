@@ -139,7 +139,7 @@ Route::get('/setMenu',function(){
     $menu = Config::get('/packages/cooper/wechat/menu.WeChatMenu');
     $client = new \Cooper\Wechat\WeChatClient();
 //Log::info($menu[0]);
-    $client->setMenu($menu[0]);
+    return ' ' . $client->setMenu($menu[0]);
 });
 
 

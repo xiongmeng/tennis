@@ -1,4 +1,11 @@
 <?php
+View::creator('mobile_layout', function (\Illuminate\View\View $view) {
+    $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
+});
+
+View::creator('mobile_layout_hall', function (\Illuminate\View\View $view) {
+    $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
+});
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     Route::get('/login/{nickname}', function ($nickname) {
@@ -128,14 +135,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
 });
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'), function () {
-    View::creator('mobile_layout', function (\Illuminate\View\View $view) {
-        $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
-    });
-
-    View::creator('mobile_layout_hall', function (\Illuminate\View\View $view) {
-        $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
-    });
-
     Route::get('/', function () {
         return Redirect::to('/mobile_home/reserve/recommend');
     });
@@ -253,9 +252,8 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
     });
 
     Route::get('/mobile_buyer', function () {
-        MobileLayout::$activeService = 'center';
         $user = Auth::getUser();
-        MobileLayout::$title = $user->nickname;
+        MobileLayout::$activeService = 'center';
         $userID = $user['user_id'];
 
         $instantModel = new InstantOrder();
@@ -282,7 +280,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         $app = RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->first();
         $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
 
-        return View::make('mobile_layout')->nest('content', 'mobile.mobile_buyer', array('user' => $user, 'wxUserProfile' => $wxUserProfile,
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.mobile_buyer', array('user' => $user, 'wxUserProfile' => $wxUserProfile,
             'insPaying' => $insPaying, 'payed' => $payed, 'resPaying' => $resPaying, 'pending' => $pending));
 
     });

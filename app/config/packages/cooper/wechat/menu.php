@@ -4,24 +4,19 @@ return array(
 
      "button":[
      {
-           "type":"click",
-           "name":"预订场地",
-           "key":"Reserve",
-           "sub_button": [ ]
-
+           "type":"view",
+           "name":"预约订场",
+           "url":"http://wechat.gotennis.cn/mobile_home/reserve/recommend"
        },
        {
-           "type":"click",
+           "type":"view",
            "name":"即时订场",
-           "key":"Instant",
-             "sub_button": [ ]
-
+           "url":"http://wechat.gotennis.cn/mobile_home/instant"
        },
      {
           "type":"click",
           "name":"活动资讯",
-          "key":"Active",
-            "sub_button": [ ]
+          "key":"Active"
       }]
 
  }'

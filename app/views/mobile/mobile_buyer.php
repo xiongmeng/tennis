@@ -6,7 +6,7 @@
                 $head = $user->head;
                 if (empty($head)) {
                     if (!empty($wxUserProfile->headimgurl)) {
-                        $head = str_replace('/0', '/64', $wxUserProfile->headimgurl);
+                        $head = str_replace('/0', '/132', $wxUserProfile->headimgurl);
                     } else {
                         $head = 'http://wangqiuer.com' . ($wxUserProfile->sexy == 1 ? '/Images/page/head_girl.jps' : '/Images/page/head_boy.jpg');
                     }
@@ -17,7 +17,7 @@
                 <img width="60px" class="media-object pull-left" src="<?= $head ?>">
 
                 <div class="media-body">
-                    <p><?= $wxUserProfile->nickname ?></p>
+                    <p><?= $wxUserProfile->nickname ?>（<?=$user->nickname?>）</p>
                     <hr style="border: none; border-top: solid 1px #DDDDDD">
                     <p>余额：<?= balance() ?>&nbsp;&nbsp;&nbsp;积分：<?= points() ?></p>
                 </div>

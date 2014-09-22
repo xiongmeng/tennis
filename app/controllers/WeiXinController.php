@@ -52,12 +52,12 @@ class WeiXinController extends \BaseController
             }
 
             if ($Event == 'click') { //CLICK事件
-
+                echo $server->getXml4Txt('精彩内容，敬请期待.......');
                // $key = $message['key']; //获取当前菜单key
-                $isBond = $this->getUser($appUserID);
-                $res = $this->WeChatMsg($appUserID,$isBond);
-                    $reply = $server->getXml4RichMsgByArray($res);
-                    echo $reply;
+//                $isBond = $this->getUser($appUserID);
+//                $res = $this->WeChatMsg($appUserID,$isBond);
+//                    $reply = $server->getXml4RichMsgByArray($res);
+//                    echo $reply;
 
 
 
