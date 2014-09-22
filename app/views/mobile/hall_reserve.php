@@ -2,7 +2,7 @@
     <form style="display: inline" id="form1" action="<?= url_wrapper('/submit_reserve_order') ?>" method="post">
         <div class="form-controller">
             <div class="item">
-                <a class="label">预定人</a>
+                <a class="label">预订人</a>
                 <input class="input-normal"
                        type="text" name="nickname" placeholder="" readonly="readonly" class="calc"
                        id="mynickname"
@@ -13,7 +13,7 @@
 
         <div class="form-controller">
             <div class="item">
-                <a class="label">场馆名称</a>
+                <a class="label">场馆</a>
                 <input class="input-normal"
                        type="text" name="hallname" placeholder="" readonly="readonly"
                        value="<?= $hall->name ?>">
@@ -72,8 +72,7 @@
                    id="order_cost">
             <input type="button" id="cost" style="width: 22%; margin-left: 10px;" class="btn btn-primary" value="计算金额">
         </div>
-        <br/><br/>
-        <input type="button" id="ok2" style="width: 40%; margin-left: 30%;" class="btn btn-primary btn-block"
+        <input type="button" id="ok2" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
                value="预订">
 
 </div>

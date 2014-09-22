@@ -1,5 +1,5 @@
 <header class="bar bar-nav">
-    <form style="display: inline" class="search">
+    <form style="display: inline" class="search" action="/mobile_home/reserve/recommend">
         <input style="width: 65%;font-size:15px;"
                type="search" name="hall_name" class="pull-left" placeholder="请输入场馆名" value="<?=isset($queries['hall_name']) ? $queries['hall_name'] : ''?>">
         <input type="submit" class="btn btn-primary" value="search">
