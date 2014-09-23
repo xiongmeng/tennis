@@ -178,3 +178,12 @@ Validator::extend('user_auth', function ($attribute, $value, $parameters) {
     }
     return false;
 });
+
+Validator::extend('user_unique', function($attribute, $value, $parameters){
+    //参数1为user_id，有用于修改的情况
+    $user = User::where($attribute, '=', $value)->first();
+    if($user){
+        return (count($parameters) > 0) ? ($user->user_id == $parameters[0]) : false;
+    }
+    return true;
+});

@@ -25,6 +25,23 @@
         </li>
     </ul>
 
+    <?php if(!$user->telephone){?>
+        <ul class="table-view">
+            <li class="table-view-cell media">
+                <a class="navigate-right" href="<?= url_wrapper('/mobile_change_user') ?>" data-ignore="push">
+                    <div class="media-body">已有网球通账号，请绑定。</div>
+                </a>
+            </li>
+        </ul>
+        <ul class="table-view">
+            <li class="table-view-cell media">
+                <a class="navigate-right" href="<?= url_wrapper('/mobile_register') ?>" data-ignore="push">
+                    <div class="media-body">没有网球通账号，请注册。</div>
+                </a>
+            </li>
+        </ul>
+    <?php }?>
+
     <ul class="table-view reserve">
         <li class="table-view-cell media">
             <a class="navigate-right" href="<?= url_wrapper('reserve_order_buyer') ?>" data-ignore="push">
@@ -36,7 +53,6 @@
         </li>
     </ul>
     <div class="segmented-control">
-
         <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=0') ?>'"
            data-ignore="push">
             <span class="icon icon-info"></span><br/>
@@ -53,7 +69,6 @@
                 <span class="badge badge-negative"><?= $resPaying ?></span>
             <?php } ?>
         </a>
-
     </div>
     <ul class="table-view instant">
         <li class="table-view-cell media">
@@ -83,23 +98,21 @@
             <?php } ?>
         </a>
     </div>
-    <ul class="table-view">
-        <li class="table-view-cell media">
-            <a class="navigate-right" href="<?= url_wrapper('/mobile_change_user') ?>" data-ignore="push">
-                <div class="media-body">切换绑定账号</div>
-            </a>
-        </li>
-    </ul>
-    <ul class="table-view">
-        <li class="table-view-cell media">
-            <a class="navigate-right" href="<?= url_wrapper('/mobile_change_telephone') ?>" data-ignore="push">
-                <div class="media-body"><?php if ($user->telephone) {
-                        echo '更换绑定手机号';
-                    } else {
-                        echo '绑定手机号';
-                    } ?>
-                </div>
-            </a>
-        </li>
-    </ul>
+
+    <?php if($user->telephone){ ?>
+        <ul class="table-view">
+            <li class="table-view-cell media">
+                <a class="navigate-right" href="<?= url_wrapper('/mobile_change_user') ?>" data-ignore="push">
+                    <div class="media-body">更换绑定的账号</div>
+                </a>
+            </li>
+        </ul>
+        <ul class="table-view">
+            <li class="table-view-cell media">
+                <a class="navigate-right" href="<?= url_wrapper('/mobile_change_telephone') ?>" data-ignore="push">
+                    <div class="media-body">更换绑定的手机</div>
+                </a>
+            </li>
+        </ul>
+    <?php }?>
 </div>

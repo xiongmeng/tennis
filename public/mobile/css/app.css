@@ -313,11 +313,47 @@ header.bar .title {
 }
 
 .form-controller .error{
-    padding-left: 22%;
+    padding-left: 25%;
     font-size: 14px;
     color: red;
 }
 
 .from-button {
     width:90%; margin: 5px auto ;
+}
+
+.page-notice {
+    margin-top: 50px;
+}
+
+.page-notice .notice-large{
+    font-size: 20px;
+    color: #428bca;
+    text-align: center;
+}
+
+.page-notice .head{
+    font-size: 18px;
+    color: #428bca;
+    text-align: left;
+    width: 90%;
+    margin: 5px auto;
+    line-height: 26px;
+    letter-spacing: 3px;
+    text-indent: 42px;
+}
+
+.page-notice .description{
+    font-size: 18px;
+    color: #428bca;
+    text-align: left;
+    width: 90%;
+    margin: 5px auto;
+    line-height: 26px;
+    letter-spacing: 3px;
+    text-indent: 42px;
+}
+
+.page-notice .btn{
+    width:90%; margin: 20px auto ;
 }

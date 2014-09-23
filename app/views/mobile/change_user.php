@@ -27,6 +27,6 @@
                     } ?></div>
             </div>
             <input type="submit" id="bond" name="bond" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
-                   value="切换绑定账号">
+                   value="<?=$user->telephone ? '更换账号' : '绑定账号'?>">
         </form>
     </div>

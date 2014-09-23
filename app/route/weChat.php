@@ -91,7 +91,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
                         $app->save();
                     }
                 }
-                return View::make('mobile_layout')->nest('content', 'mobile.bond_success', array('user' => $user));
+                $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
+                return View::make('mobile_layout')->nest('content', 'mobile.bond_success',
+                    array('user' => $user, 'wxUserProfile' => $wxUserProfile));
             }
             return View::make('mobile_layout')->nest('content', 'mobile.bond',
                 array('queries' => $queries, 'errors' => $validator->messages()));
@@ -425,20 +427,11 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
     });
 
     Route::get('/pay_success', function () {
-        MobileLayout::$activeService = 'center';
-        MobileLayout::$title = '支付成功';
-        MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
-
-        return View::make('mobile_layout')->nest('content', 'mobile.pay_success');
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.pay_success');
     });
 
     Route::get('/pay_fail', function () {
-        MobileLayout::$activeService = 'center';
-        MobileLayout::$title = '支付失败';
-        MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
-
-
-        return View::make('mobile_layout')->nest('content', 'mobile.pay_fail');
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.pay_fail');
     });
 
     Route::post('/telValidCodeMake', function () {
@@ -483,7 +476,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
     Route::any('/mobile_change_telephone', function () {
         $queries = Input::all();
         MobileLayout::$activeService = 'center';
-        MobileLayout::$title = '手机绑定';
+        MobileLayout::$title = '更换绑定的手机';
         MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
         $user = Auth::getUser();
 
@@ -526,11 +519,12 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
     Route::any('/mobile_change_user', function () {
         $queries = Input::all();
+        $user = Auth::getUser();
+
         MobileLayout::$activeService = 'center';
-        MobileLayout::$title = '切换绑定账号';
+        MobileLayout::$title = $user->telephone ? '更换绑定的账号' : '绑定网球通账号';
         MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
 
-        $user = Auth::getUser();
         $app = RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->first();
 
         if (Request::isMethod('post')) {
@@ -551,14 +545,71 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 $app->save();
 
                 $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
-                return View::make('mobile_layout')->nest('content', 'mobile.change_user_success',
+                return View::make('mobile_layout')->nest('content', 'mobile.bond_success',
                     array('user' => $user, 'wxUserProfile' => $wxUserProfile));
             }
             return View::make('mobile_layout')->nest('content', 'mobile.change_user',
-                array('queries' => $queries, 'app' => $app, 'errors' => $validator->messages()));
+                array('queries' => $queries, 'app' => $app, 'user' => $user, 'errors' => $validator->messages()));
         }
         return View::make('mobile_layout')->nest('content', 'mobile.change_user',
-            array('queries' => $queries, 'app' => $app));
+            array('queries' => $queries, 'app' => $app, 'user' => $user));
+    });
+
+    Route::any('/mobile_register', function () {
+        $queries = Input::all();
+
+        MobileLayout::$activeService = 'center';
+        MobileLayout::$title = '注册网球通账号';
+        MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
+
+        $user = Auth::getUser();
+        empty($queries['nickname']) && $queries['nickname'] = $user->nickname;
+
+        $app = RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->first();
+
+        $telephone = Input::get('telephone');
+        $validCode = array('ttl' => 0);
+        if ($telephone) {
+            $cacheKey = CACHE_PREFIX_VALID_CODE . $telephone;
+            $validCode = Cache::get($cacheKey, array('ttl' => 0));
+            if (isset($validCode['expire'])) {
+                $validCode['ttl'] = $validCode['expire'] - time();
+            }
+        }
+
+        if (Request::isMethod('post')) {
+            $rules = array(
+                'nickname' => "required|user_unique:" . $user->user_id,
+                'password' => 'required|between:6,20',
+                'telephone' => 'required|digits:11|telephone_not_exist',
+                'validcode' => 'required|in:' . (isset($validCode['code']) ? $validCode['code'] : '')
+            );
+            $messages = array(
+                'required' => '请确保每项都填入了您的信息',
+                'nickname.user_unique' => '该昵称已经注册过网球通帐号',
+                'password.between' => '密码需要在6-20位之间',
+                'telephone.digits' => '请输入有效的电话号码',
+                'telephone.telephone_not_exist' => '该电话号码已经注册过网球通帐号',
+                'validcode.in' => '验证码不正确',
+            );
+
+            $validator = Validator::make(Input::all(), $rules, $messages);
+            if (!$validator->fails()) {
+                $user->nickname = $queries['nickname'];
+                $user->telephone = $queries['telephone'];
+                $user->password = Hash::make($queries['password']);
+                $user->save();
+
+                $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
+                return View::make('mobile_layout')->nest('content', 'mobile.register_success',
+                    array('user' => $user, 'wxUserProfile' => $wxUserProfile));
+            }
+            return View::make('mobile_layout')->nest('content', 'mobile.register',
+                array('queries' => $queries, 'app' => $app, 'user' => $user,
+                    'errors' => $validator->messages(), 'validCode' => $validCode));
+        }
+        return View::make('mobile_layout')->nest('content', 'mobile.register',
+            array('queries' => $queries, 'app' => $app, 'user' => $user, 'validCode' => $validCode));
     });
 });
 
