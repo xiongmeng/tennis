@@ -102,7 +102,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
             //触发微信返回code码
             $url = $jsApi->createOauthUrlForCode(URL::current(), $rechargeId);
             Log::debug($url);
-            Header("Location: $url");exit;
+            return Redirect::to($url);
         }else
         {
             //获取code码，以获取openid
