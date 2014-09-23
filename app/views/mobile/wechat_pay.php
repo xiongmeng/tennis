@@ -41,6 +41,6 @@
 <body>
 </body>
 <script>
-    document.getElementById('current_url').innerText = window.location.href;
+    callpay();
 </script>
 </html>

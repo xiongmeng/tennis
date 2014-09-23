@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/mobile/js/manage.js?201409231748"></script>
+
 <!-- Block button in standard bar fixed below top bar -->
 <div class="bar bar-standard bar-header-secondary" style="padding: 1px;border: none">
     <div class="segmented-control worktable" style="height: 100%;top: 0;margin-bottom: 2px; border: none">
@@ -117,7 +119,7 @@
         <p class="content-padded">您还需要支付<mark data-bind="text: needRecharge"></mark>元</p>
         <div class="content-padded">
             <a class="btn btn-positive btn-block" data-bind="attr:{href: adviseForwardUrl}" data-ignore="push">支付宝支付</a>
-            <a class="btn btn-positive btn-block" data-bind="click:$root.goToWXPay,text:$root.wxPayText" data-ignore="push">微信支付</a>
+            <a class="btn btn-positive btn-block" data-bind="click:$root.goToWXPay,text:$root.wxPayText,enable:$root.ttl()<=0" data-ignore="push">微信支付</a>
         </div>
     </div>
 </div><!--==end nav==-->

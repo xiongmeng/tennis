@@ -107,7 +107,7 @@ define(function (require) {
 
         self.ttl = ko.observable(0);
         self.wxPayText = ko.computed(function(){
-            return self.ttl() > 0 ? ('接口比较慢，请再等待' + self.ttl() + '秒') : '微信支付';
+            return self.ttl() > 0 ? ('接口比较慢，请耐心等待' + self.ttl() + '秒') : '微信支付';
         });
 
         self.ttl.subscribe(function(newValue) {
@@ -119,8 +119,10 @@ define(function (require) {
         });
 
         self.goToWXPay = function(){
-            window.location.href = self.noMoney.weChatPayUrl;
-            self.ttl(5);
+            if(self.ttl() <= 0){
+                window.location.href = self.noMoney.weChatPayUrl();
+                self.ttl(5);
+            }
         };
 
         function getQueryString(name) {
