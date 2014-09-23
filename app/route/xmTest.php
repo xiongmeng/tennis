@@ -189,7 +189,7 @@ Route::group(array('prefix' => 'xm'), function(){
     });
 
     Route::get('log', function(){
-//    sasas
+        return View::make('mobile.wechat_pay', array('jsApiParameters' => '{}'));
     });
 });
 
@@ -198,7 +198,7 @@ Route::group(array('domain' => 'homestead1.app'), function()
 
     Route::get('/', function()
     {
-        return "I am homestead1";
+        return View::make('mobile.wechat_pay', array('jsApiParameters' => '{}'));
     });
 
 });
