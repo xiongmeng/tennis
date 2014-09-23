@@ -16,3 +16,5 @@ const PAY_TYPE_MGR=4;//后台手工充值
 const PAY_TYPE_WE_CHAT = 8; //微信支付
 
 const CACHE_PREFIX_VALID_CODE = 'valid_code_';
+
+const ROLE_USER = 1;//用户会员角色

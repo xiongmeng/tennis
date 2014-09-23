@@ -8,6 +8,15 @@ View::creator('mobile_layout_hall', function (\Illuminate\View\View $view) {
 });
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
+    Route::get('/jcbd', function(){
+        if(Auth::check()){
+            $user = Auth::getUser();
+
+            RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->delete();
+            Auth::logout();
+        }
+    });
+
     Route::get('/login/{nickname}', function ($nickname) {
         Auth::login(User::whereNickname($nickname)->first());
     });

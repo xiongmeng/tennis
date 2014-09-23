@@ -18,8 +18,7 @@ require_once 'route/weChat.php';
 
 Route::get('/', function () {
     if (Auth::check()) {
-        $user = Auth::getUser();
-        $roles = $user->roles;
+        $roles = user_roles();
         $role = $roles[0]->role_id;
         if ($role == 1) {
             return Redirect::to('hall_on_sale');
@@ -38,7 +37,7 @@ Route::get('/', function () {
 View::creator('format.header', function ($view) {
     if (Auth::check()) {
         $user = Auth::getUser();
-        $roles = $user->roles;
+        $roles = user_roles();
         $roleIds = array();
         foreach ($roles as $role) {
             $roleIds[] = $role->role_id;

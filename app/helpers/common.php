@@ -93,3 +93,19 @@ function option_user_privilege($sLanguage='cn'){
     else
         return array(1 => "普通会员", 2 => "vip会员");
 }
+
+function user_roles(User $user = null){
+    static $roles = null;
+    if($roles === null){
+        empty($user) && $user = Auth::getUser();
+        if(!empty($user)){
+            $roles = $user->roles;
+            if(count($roles) <=0 ){
+                $role = new Role();
+                $role->role_id = ROLE_USER;
+                $roles[] = $role;
+            }
+        }
+    }
+    return $roles;
+}
