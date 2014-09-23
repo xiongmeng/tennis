@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?= require_once 'js_css_header.php'?>
+    <?php require_once 'js_css_header.php'?>
 </head>
 <body>
-
 <!--==content==-->
 <?php echo $content; ?>
 <!--==end content==-->
