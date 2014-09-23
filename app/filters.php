@@ -32,28 +32,11 @@ App::after(function ($request, $response) {
 */
 
 Route::filter('auth', function () {
-
-    if (Input::get('app_user_id') && Input::get('app_id')) {
-        $appUserID = Input::get('app_user_id');
-        $appID = Input::get('app_id');
-        $app = RelationUserApp::where('app_user_id','=',$appUserID)->first();
-        if (!$app) {
-            Auth::logout();
-            return Redirect::to(url_wrapper('bond'));
+    if (Auth::guest()) {
+        if (Request::ajax()) {
+            return Response::make('Unauthorized', 401);
         } else {
-            $user = User::find($app['user_id']);
-            if ($user instanceof User) {
-                Auth::login($user);
-            }
-        }
-    }
-    else{
-        if (Auth::guest()) {
-            if (Request::ajax()) {
-                return Response::make('Unauthorized', 401);
-            } else {
-                return Redirect::guest('login');
-            }
+            return Redirect::guest('login');
         }
     }
 });
@@ -93,30 +76,6 @@ Route::filter('csrf', function () {
     if (Session::token() != Input::get('_token')) {
         throw new Illuminate\Session\TokenMismatchException;
     }
-});
-
-/*
-|--------------------------------------------------------------------------
-|  WeiXin Filter
-|--------------------------------------------------------------------------
-|
-
-|
-*/
-
-Route::filter('weixin', function () {
-        $appUserID = Input::get('app_user_id');
-        $appID = Input::get('app_id');
-        $app = RelationUserApp::where('app_user_id','=',$appUserID)->first();
-        if (!$app) {
-            Auth::logout();
-            return Redirect::to(url_wrapper('/mobile_bond'));
-        } else {
-            $user = User::find($app['user_id']);
-            if ($user instanceof User) {
-                Auth::login($user);
-            }
-        }
 });
 
 Route::filter('weChatAuth', function(){
