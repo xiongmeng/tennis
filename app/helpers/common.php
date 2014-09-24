@@ -109,3 +109,19 @@ function user_roles(User $user = null){
     }
     return $roles;
 }
+
+/**
+ * @param Hall $hall
+ * @return HallImage|mixed|null
+ */
+function hall_head(Hall $hall){
+    $hallImage = null;
+    if ($hall instanceof Hall) {
+        if ($hall->Envelope) {
+            $hallImage = $hall->Envelope;
+        } else if ($hall->HallImages->count() > 0) {
+            $hallImage = $hall->HallImages->first();
+        }
+    }
+    return $hallImage;
+}

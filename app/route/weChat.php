@@ -213,6 +213,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         $queries = Input::all();
         $hallDbResults = array();
+        $halls = array();
 
         if ($curType == 'recommend') {
             $hallDbResults = Hall::with('HallPrices')->whereStat(2)
@@ -248,7 +249,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 $hallIds[$Hall->hall_id] = $Hall->hall_id;
             }
 
-            $halls = array();
             if (count($hallIds) > 0) {
                 $hallDbResults = Hall::with('HallPrices')->whereIn('id', $hallIds)->get();
             }

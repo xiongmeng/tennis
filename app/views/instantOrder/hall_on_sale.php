@@ -29,14 +29,7 @@
         <?php foreach ($hallPriceAggregates as $hallPriceAggregate) { ?>
             <?php
             $hall = $halls[$hallPriceAggregate->hall_id];
-            $hallImage = null;
-            if ($hall instanceof Hall) {
-                if ($hall->Envelope) {
-                    $hallImage = $hall;
-                } else if ($hall->HallImages->count() > 0) {
-                    $hallImage = $hall->HallImages->first();
-                }
-            }
+            $hallImage = hall_head($hall);
             ?>
             <div class="row col-md-11 hall">
 
