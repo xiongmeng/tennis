@@ -296,17 +296,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
     });
 
-    Route::get('/mobile_register', function () {
-        $queries = Input::all();
-        $app = RelationUserApp::where('app_user_id', '=', $queries['app_user_id'])->first();
-        if ($app) {
-            return Redirect::to(url_wrapper('/mobile_buyer'));
-        } else {
-            MobileLayout::$activeService = 'center';
-            return View::make('mobile_layout')->nest('content', 'mobile.register', array('queries' => $queries));
-        }
-    });
-
     Route::get('/mobile_buyer_order', function () {
         MobileLayout::$activeService = 'center';
         MobileLayout::$title = "我的即时订单";
@@ -576,8 +565,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
 
         $user = Auth::getUser();
-        empty($queries['nickname']) && $queries['nickname'] = $user->nickname;
-
         $app = RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->first();
 
         $telephone = Input::get('telephone');

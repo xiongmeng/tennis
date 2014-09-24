@@ -17,7 +17,12 @@
                 <img width="60px" class="media-object pull-left" src="<?= $head ?>">
 
                 <div class="media-body">
-                    <p><?= $wxUserProfile->nickname ?>（<?=$user->nickname?>）</p>
+                    <p><?php
+                        echo $wxUserProfile->nickname;
+                        if($user->telephone){
+                            echo "（" . $user->nickname . "）";
+                        }?>
+                    </p>
                     <hr style="border: none; border-top: solid 1px #DDDDDD">
                     <p>余额：<?= balance() ?>&nbsp;&nbsp;&nbsp;积分：<?= points() ?>
                         <button class="btn btn-primary"

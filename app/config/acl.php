@@ -46,6 +46,13 @@ return array(
             'children' => array()
 
         ),
+        '12' => array(
+            'label' => '预订信息短信通知手机号码设定',
+            'name' => 'instant_order_seller',
+            'url' => '/set_telephone',
+            'children' => array()
+
+        ),
     ),
 
     'roles' => array(
@@ -71,7 +78,7 @@ return array(
             '8','6'
         ),
         '3' => array(
-             '11', '9'
+              '11', '9', '12'
         )
     )
 );

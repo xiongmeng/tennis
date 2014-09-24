@@ -404,3 +404,30 @@ Route::any('reserveOrder/pay', array('before' => 'auth', function(){
         throw $e;
     }
 }));
+
+Route::any('set_telephone', array('before' => 'auth', function(){
+    $user = Auth::getUser();
+    $queries = Input::all();
+    isset($queries['telephone']) && $queries['telephone'] = $user->telephone;
+    if(Request::isMethod('post')){
+        $rules = array(
+            'telephone' => 'required|digits:11|telephone_not_exist',
+        );
+        $messages = array(
+            'required' => '请确保每项都填入了您的信息',
+            'telephone.digits' => '请输入有效的电话号码',
+            'telephone.telephone_not_exist' => '该电话号码已经注册过网球通帐号',
+        );
+
+        $validator = Validator::make(Input::all(), $rules, $messages);
+        if ($validator->fails()) {
+            return View::make('layout')->nest('content', 'user.set_telephone',
+                array('user' => $user, 'queries' => $queries, 'errors' => $validator->messages()));
+        }
+
+        $user->telephone = $queries['telephone'];
+        $user->save();
+        return Redirect::to('order_court_manage');
+    }
+    return View::make('layout')->nest('content', 'user.set_telephone', array('user' => $user, 'queries' => $queries));
+}));

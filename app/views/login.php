@@ -14,26 +14,17 @@
                 </div>
                 <div class="input-group margin-bottom-20">
                     <span class="input-group-addon"><i class="icon-lock"></i></span>
-                    <input type="text" name="password" placeholder="密码" class="form-control">
+                    <input type="password" name="password" placeholder="密码" class="form-control">
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <label class="checkbox"><input type="checkbox">记住登录</label>
-                    </div>
-                    <div class="col-md-6">
-                        <input class="btn-u pull-right" type="submit" value="登录">
+<!--                    <div class="col-md-6">-->
+<!--                        <label class="checkbox"><input type="checkbox">记住登录</label>-->
+<!--                    </div>-->
+                    <div class="col-md-12">
+                        <input class="btn-u pull-right btn-block" type="submit" value="登录">
                     </div>
                 </div>
-
-                <hr>
-
-<!--                <h4><a href="http://www.wangqiuer.com/user_passwordReset.html">忘记密码 ?</h4>-->
-<!--                <p>不用担心，点击<a class="color-green" href="http://www.wangqiuer.com/user_passwordReset.html">这里</a>返回网球通订场网站去重置密码</p>-->
-                <p>测试账号：</p>
-                <p>场馆：test_hall/666666</p>
-                <p>管理员：test_mgr/666666</p>
-                <p>用户：test_user/666666[有10000块钱预存]</p>
             </form>
         </div>
     </div><!--/row-->
