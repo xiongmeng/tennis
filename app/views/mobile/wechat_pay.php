@@ -41,7 +41,7 @@
     </script>
 </head>
 <body>
-    <p style="text-align: center;margin: 50px auto; font-size: 25px">请耐心等待。。。</p>
+    <p style="text-align: center;margin: 50px auto; font-size: 25px">请稍候••••••</p>
 </body>
 <script>
     callpay();

@@ -30,7 +30,7 @@
                     } ?></div>
             </div>
             <input type="submit" id="bond" name="bond" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
-                   value="绑定">
+                   value="绑定网球通账号">
             <a type="button" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
                href="<?= url_wrapper('/auto_register')?>" data-ignore="push">不绑定，直接用微信账号登录</a>
         </form>

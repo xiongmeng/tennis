@@ -344,8 +344,12 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             $time = strtotime("+$i day");
             $dates[date('Y-m-d', $time)] = sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]);
         }
+
+        $businesses = explode('-', $hall->business);
+        $start = count($businesses) > 0 ? max(intval(str_replace(':00', '', $businesses[0])), 0): 7;
+        $end = count($businesses) > 1 ? min(intval(str_replace(':00', '', $businesses[1])), 24): 24;
         $hours = array('不限');
-        for ($i = 7; $i <= 24; $i++) {
+        for ($i = $start; $i <= $end; $i++) {
             $hours[$i] = sprintf('%s时', $i, $i + 1);
         }
 
@@ -420,7 +424,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         $user = Auth::getUser();
         $stat = Input::get('stat');
         if (isset($stat)) {
-            $orderDbResults = ReserveOrder::with('Hall')->where('user_id', '=', $user->user_id)->where('stat', '=', $stat)->orderBy('event_date', 'desc')->get();
+            $orderDbResults = ReserveOrder::with('Hall')->where('user_id', '=', $user->user_id)->where('stat', '=', $stat)->orderBy('event_date', 'asc')->get();
         } else {
             $orderDbResults = ReserveOrder::with('Hall')->where('user_id', '=', $user->user_id)->orderBy('event_date', 'desc')->get();
             $stat = '7';
