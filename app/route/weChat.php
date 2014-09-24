@@ -389,9 +389,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         return View::make('mobile_layout')->nest('content', 'mobile.court_buyer', array(
             'halls' => array($hall), 'dates' => $dates, 'hallID' => $hallID, 'weekdayOption' => weekday_option(),
             'activeDate' => $activeDate, 'courts' => $courts, 'formattedInstants' => $formattedInstants,
-            'loginUserId' => Auth::getUser()->user_id, 'instantOrders' => $instantOrders, 'noMoney' => array(
-                'needPay' => 0, 'balance' => 0, 'needRecharge' => 0, 'adviseForwardUrl' => '', 'weChatPayUrl' => ''
-            )
+            'loginUserId' => Auth::getUser()->user_id, 'instantOrders' => $instantOrders, 'noMoney' => no_money_array()
         ));
     });
 
@@ -430,13 +428,15 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             $stat = '7';
         }
 
+        adjustTimeStamp($orderDbResults);
+
         $reserves = array();
         foreach ($orderDbResults as $orderDbResult) {
             $reserves[$orderDbResult->id] = $orderDbResult;
         }
 
         return View::make('mobile_layout')->nest('content', 'mobile.reserve_order_buyer',
-            array('reserves' => $reserves, 'stat' => $stat));
+            array('reserves' => $reserves, 'stat' => $stat, 'noMoney' => no_money_array()));
     });
 
     Route::get('/pay_success', function () {

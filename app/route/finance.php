@@ -57,15 +57,40 @@ Route::get('/alipay_return', function () {
         $recharge = Recharge::findOrFail($rechargeId);
 
         if ($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER) {
-            $instantOrderString = $recharge->callback_action_token;
-            $instantOrderIds = explode(',', $instantOrderString);
+            $reserveOrderString = $recharge->callback_action_token;
+            $reserveOrderIds = explode(',', $reserveOrderString);
             $appUserID = $recharge->app_user_id;
             $appID = $recharge->app_id;
 
             DB::beginTransaction();
             try {
                 $manager = new InstantOrderManager();
-                $result = $manager->batchPay($instantOrderIds, $recharge->user_id);
+                $result = $manager->batchPay($reserveOrderIds, $recharge->user_id);
+                DB::commit();
+                if ($result['status'] == 'pay_success') {
+                    if ($appID == 2 && $appUserID) {
+                        return Redirect::to('/pay_success?app_id=' . $appID . '&app_user_id=' . $appUserID);
+
+                    }
+
+                    return '支付成功';
+                } else {
+                    return '支付失败';
+                }
+            } catch (Exception $e) {
+                DB::rollBack();
+                throw $e;
+            }
+        }else if($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_RESERVE_ORDER){
+            $reserveOrderString = $recharge->callback_action_token;
+            $reserveOrderIds = explode(',', $reserveOrderString);
+            $appUserID = $recharge->app_user_id;
+            $appID = $recharge->app_id;
+
+            DB::beginTransaction();
+            try {
+                $manager = new ReserveOrderManager();
+                $result = $manager->batchPay($reserveOrderIds, $recharge->user_id);
                 DB::commit();
                 if ($result['status'] == 'pay_success') {
                     if ($appID == 2 && $appUserID) {
@@ -223,6 +248,19 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
                         DB::commit();
                     } catch (Exception $e) {
                         DB::rollBack();
+                    }
+                }else if($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_RESERVE_ORDER){
+                    $reserveOrderIdString = $recharge->callback_action_token;
+                    $reserveOrderIds = explode(',', $reserveOrderIdString);
+
+                    DB::beginTransaction();
+                    try{
+                        $manager = new ReserveOrderManager();
+                        $manager->batchPay($reserveOrderIds);
+                        DB::commit();
+                    }catch (Exception $e){
+                        DB::rollBack();
+                        throw $e;
                     }
                 }
             }

@@ -248,5 +248,46 @@ return array(
                 ),
             )
         )
+    ),
+
+    'reserve_order' => array(
+        'states' => array(
+            RESERVE_STAT_INIT => array( //初始化 - 草稿 - 待处理
+                'type' => Finite\State\StateInterface::TYPE_INITIAL,
+                'properties' => array(),
+            ),
+            RESERVE_STAT_UNPAY => array( //待支付
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+                'properties' => array(),
+            ),
+            RESERVE_STAT_PAYED => array( //已支付
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+                'properties' => array(),
+            )
+        ),
+        'transitions' => array(
+            'pay_success' => array('from' => array(RESERVE_STAT_UNPAY), 'to' => RESERVE_STAT_PAYED), //buyer
+            'book_success' => array('from' => array(RESERVE_STAT_INIT), 'to' => RESERVE_STAT_UNPAY),
+        ),
+        'callbacks' => array(
+            'before' => array(
+                array( //待支付->已支付
+                    'from' => RESERVE_STAT_UNPAY,
+                    'to' => RESERVE_STAT_PAYED,
+                    'do' => function (ReserveOrder $reserve, \Finite\Event\TransitionEvent $e) {
+                            Log::debug('reserve order pay before');
+                        }
+                )
+            ),
+            'after' => array(
+                array( //待支付->已支付
+                    'from' => 'paying',
+                    'to' => 'payed',
+                    'do' => function (ReserveOrder $reserve, \Finite\Event\TransitionEvent $e) {
+                            Log::debug('reserve order pay after');
+                        }
+                )
+            )
+        )
     )
 );

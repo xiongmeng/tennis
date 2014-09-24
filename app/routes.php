@@ -380,3 +380,27 @@ Route::post('/instantOrder/batchPay', array('before' => 'auth',function(){
         throw $e;
     }
 }));
+
+Route::get('/reserveOrder/operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
+    $reserveOrder = ReserveOrder::findOrFail($id);
+    $fsm = new ReserveOrderFsm($reserveOrder);
+    $result = $fsm->apply($operate);
+    return rest_success($result);
+
+}));
+
+Route::any('reserveOrder/pay', array('before' => 'auth', function(){
+    $reserveOrderIdString = Input::get('reserve_order_ids');
+    $reserveOrderIds = explode(',', $reserveOrderIdString);
+
+    DB::beginTransaction();
+    try{
+        $manager = new ReserveOrderManager();
+        $result = $manager->batchPay($reserveOrderIds);
+        DB::commit();
+        return rest_success($result);
+    }catch (Exception $e){
+        DB::rollBack();
+        throw $e;
+    }
+}));

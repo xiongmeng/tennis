@@ -79,11 +79,6 @@ define(function (require) {
             });
 
             var params = {'instant_order_ids': selectedIds.join(',')};
-            var appUserId = getQueryString('app_user_id');
-            var appId = getQueryString('app_id');
-            appUserId && (params.app_user_id = appUserId);
-            appId && (params.app_id = appId);
-
             var defer = $.restPost(url, params);
 
             defer.done(function (res, data) {
@@ -125,6 +120,19 @@ define(function (require) {
             }
         };
 
+        self.payReservationOrder = function(reservationOrder){
+            var defer = $.restPost('/reserveOrder/pay' ,{'reserve_order_ids' : reservationOrder.id} );
+
+            defer.done(function (res, data) {
+                if (data.status == 'no_money') {
+                    mapping.fromJS({'noMoney' :data},self);
+                    $('#noMoneyModal').addClass('active');
+                } else if (data.status == 'pay_success') {
+                    $('#paySuccessModal').addClass('active');
+                }
+            });
+        };
+
         function getQueryString(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
             var r = window.location.search.substr(1).match(reg);
@@ -139,16 +147,6 @@ define(function (require) {
 
         var list = new ListModel(mapping.fromJS(worktableData));
         ko.applyBindings(list, dom);
-
-//        var defer = $.restGet('/xm/instantOrder/view/8935/2014-08-18/');
-//
-//        defer.done(function(res, data){
-//            if(!list){
-//                list = new ListModel(mapping.fromJS(data));
-//            }else{
-//                mapping.fromJS(data, list);
-//            }
-//        });
     }
 
     return {

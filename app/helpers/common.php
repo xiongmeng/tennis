@@ -125,3 +125,16 @@ function hall_head(Hall $hall){
     }
     return $hallImage;
 }
+
+function no_money_array(){
+    return array(
+        'needPay' => 0, 'balance' => 0, 'needRecharge' => 0, 'adviseForwardUrl' => '', 'weChatPayUrl' => ''
+    );
+}
+
+function adjustTimeStamp($models){
+    foreach($models as $model){
+        empty($model->updated_at) && $model->updated_at = \Carbon\Carbon::now();
+        empty($model->created_at) && $model->created_at = \Carbon\Carbon::now();
+    }
+}
