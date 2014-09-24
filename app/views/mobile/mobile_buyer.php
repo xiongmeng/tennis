@@ -1,7 +1,7 @@
 <div class="content user-center">
     <ul class="table-view">
         <li class="table-view-cell media">
-            <a>
+            <a style="padding: 10px 5px">
                 <?php
                 $head = $user->head;
                 if (empty($head)) {
@@ -19,7 +19,11 @@
                 <div class="media-body">
                     <p><?= $wxUserProfile->nickname ?>（<?=$user->nickname?>）</p>
                     <hr style="border: none; border-top: solid 1px #DDDDDD">
-                    <p>余额：<?= balance() ?>&nbsp;&nbsp;&nbsp;积分：<?= points() ?></p>
+                    <p>余额：<?= balance() ?>&nbsp;&nbsp;&nbsp;积分：<?= points() ?>
+                        <button class="btn btn-primary"
+                                onclick="window.location.href='<?= url_wrapper('/recharge') ?>'"
+                                style="float: right; font-size: 15px">充值</button>
+                    </p>
                 </div>
             </a>
         </li>

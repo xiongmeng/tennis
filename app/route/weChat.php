@@ -8,8 +8,8 @@ View::creator('mobile_layout_hall', function (\Illuminate\View\View $view) {
 });
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
-    Route::get('/jcbd', function(){
-        if(Auth::check()){
+    Route::get('/jcbd', function () {
+        if (Auth::check()) {
             $user = Auth::getUser();
 
             RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->delete();
@@ -346,8 +346,8 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         }
 
         $businesses = explode('-', $hall->business);
-        $start = count($businesses) > 0 ? max(intval(str_replace(':00', '', $businesses[0])), 0): 7;
-        $end = count($businesses) > 1 ? min(intval(str_replace(':00', '', $businesses[1])), 24): 24;
+        $start = count($businesses) > 0 ? max(intval(str_replace(':00', '', $businesses[0])), 0) : 7;
+        $end = count($businesses) > 1 ? min(intval(str_replace(':00', '', $businesses[1])), 24) : 24;
         $hours = array('不限');
         for ($i = $start; $i <= $end; $i++) {
             $hours[$i] = sprintf('%s时', $i, $i + 1);
@@ -623,6 +623,48 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         }
         return View::make('mobile_layout')->nest('content', 'mobile.register',
             array('queries' => $queries, 'app' => $app, 'user' => $user, 'validCode' => $validCode));
+    });
+
+    Route::any('recharge', function () {
+        MobileLayout::$title = '充值';
+        MobileLayout::$activeService = 'center';
+        MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
+
+        $user = Auth::getUser();
+        $noMoney = no_money_array();
+        if (Request::isMethod('post')) {
+            $rules = array(
+                'money' => "required|integer|min:1|max:100000",
+            );
+            $messages = array(
+                'money.required' => '请确保每项都填入了您的信息',
+                'money.integer' => '额度必须为整数',
+                'money.min' => '额度最小为1',
+                'money.max' => '额度最大为100000',
+            );
+
+            $validator = Validator::make(Input::all(), $rules, $messages);
+            if (!$validator->fails()) {
+                //预先生成recharge表
+                $recharge = new Recharge();
+                $recharge->user_id = $user->user_id;
+                $recharge->money = Input::get('money');
+                $recharge->stat = 1; //初始化
+                $recharge->createtime = time();
+                $recharge->save();
+
+                $noMoney['adviseForwardUrl'] = url_wrapper(sprintf('/recharge/alipay?recharge_id=%s', $recharge->id));
+                $noMoney['weChatPayUrl'] = sprintf('/recharge/wechatpay?recharge_id=%s', $recharge->id);
+
+                return View::make('mobile_layout')->nest('content', 'mobile.recharge',
+                    array('recharge' => $recharge, 'noMoney' => $noMoney));
+            }
+            return View::make('mobile_layout')->nest('content', 'mobile.recharge',
+                array('errors' => $validator->messages(), 'noMoney' => $noMoney));
+        }
+
+
+        return View::make('mobile_layout')->nest('content', 'mobile.recharge', array('noMoney' => $noMoney));
     });
 });
 
