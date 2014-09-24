@@ -41,7 +41,7 @@
                 <input class="input-normal" style="width: 28%;" name="validcode" id="validcode"
                        type="text" value="<?= isset($queries['validcode']) ? $queries['validcode'] : '' ?>">
                 <label>&nbsp;</label>
-                <input class="btn btn-positive input-normal" type="button" id="tel_valid_code" style="width: 38%;"
+                <input class="btn btn-positive input-normal" type="button" id="tel_valid_code" style="width: 38%;height: 35px;font-size: 15px"
                        data-bind="click:getValidCode,value:validCodeText,enable:ttl()<=0">
             </div>
 
