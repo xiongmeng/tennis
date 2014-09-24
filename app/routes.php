@@ -27,7 +27,8 @@ Route::get('/', function () {
             return Redirect::to('instant_order_mgr');
         }
         if ($role == 3) {
-            return Redirect::to('order_court_manage');
+//            return Redirect::to('order_court_manage');
+            return Redirect::to('set_telephone');
         }
     } else {
         return View::make('layout')->nest('content', 'login');
@@ -407,8 +408,6 @@ Route::any('reserveOrder/pay', array('before' => 'auth', function(){
 
 Route::any('set_telephone', array('before' => 'auth', function(){
     $user = Auth::getUser();
-    $queries = Input::all();
-    isset($queries['telephone']) && $queries['telephone'] = $user->telephone;
     if(Request::isMethod('post')){
         $rules = array(
             'telephone' => 'required|digits:11|telephone_not_exist',
@@ -422,12 +421,12 @@ Route::any('set_telephone', array('before' => 'auth', function(){
         $validator = Validator::make(Input::all(), $rules, $messages);
         if ($validator->fails()) {
             return View::make('layout')->nest('content', 'user.set_telephone',
-                array('user' => $user, 'queries' => $queries, 'errors' => $validator->messages()));
+                array('user' => $user, 'errors' => $validator->messages()));
         }
 
-        $user->telephone = $queries['telephone'];
+        $user->telephone = Input::get('telephone');
         $user->save();
         return Redirect::to('order_court_manage');
     }
-    return View::make('layout')->nest('content', 'user.set_telephone', array('user' => $user, 'queries' => $queries));
+    return View::make('layout')->nest('content', 'user.set_telephone', array('user' => $user));
 }));
