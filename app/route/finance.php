@@ -256,11 +256,11 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
                     DB::beginTransaction();
                     try{
                         $manager = new ReserveOrderManager();
-                        $manager->batchPay($reserveOrderIds);
+                        $manager->batchPay($reserveOrderIds, $recharge->user_id);
                         DB::commit();
                     }catch (Exception $e){
                         DB::rollBack();
-                        throw $e;
+                        Log::warning('pay_failed_when_recharge_success', array('trace' => $e->getTraceAsString()));
                     }
                 }
             }
