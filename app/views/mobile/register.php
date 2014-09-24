@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/mobile/js/changeTelephone.js?201409242323"></script>
+
 <div class="content" style="margin-bottom: 50px">
 
     <form style="margin-top: 10px" id="form_reg" action="<?= url_wrapper('/mobile_register') ?>" method="post">

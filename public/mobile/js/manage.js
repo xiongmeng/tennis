@@ -69,7 +69,7 @@ define(function (require) {
             doBatch('cancel_buy');
         };
 
-        function doPay(url) {
+        function doPay(url, payCallback) {
             var selectedIds = [];
             var selectedMoney = 0;
 
@@ -88,16 +88,20 @@ define(function (require) {
                 } else if (data.status == 'pay_success') {
                     $('#paySuccessModal').addClass('active');
                 }
+
+                payCallback();
             });
         }
 
         self.batchBuy = function () {
-            $('#confirmingBuyModal').removeClass('active');
-            doPay('/instantOrder/batchBuy');
+            doPay('/instantOrder/batchBuy', function(){
+                $('#confirmingBuyModal').removeClass('active');
+            });
         };
         self.batchPay = function () {
-            $('#confirmingPayModal').removeClass('active');
-            doPay('/instantOrder/batchPay');
+            doPay('/instantOrder/batchPay', function(){
+                $('#confirmingPayModal').removeClass('active');
+            });
         };
 
         self.ttl = ko.observable(0);

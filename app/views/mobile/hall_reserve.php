@@ -25,7 +25,7 @@
             <div class="item">
                 <a class="label">日期</a>
 
-                <select name="event_date" style="width: 60%;" id="stimestart">
+                <select name="event_date" class="input-normal" id="stimestart">
                     <?php foreach ($dates as $key => $date) { ?>
 
                         <option class="calc" value="<?= $key ?>"><?= $date ?></option>
@@ -38,14 +38,14 @@
             <div class="item">
                 <a class="label">时段</a>
 
-                <select name="start_time" id="start_time" style="width: 25%;">
+                <select name="start_time" id="start_time" style="width: 31%;">
                     <?php foreach ($hours as $key => $hour) { ?>
                         <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
                     <?php } ?>
                 </select>
                 <a style="width: 15%;font-size:15px;">&nbsp;-&nbsp;</a>
 
-                <select name="end_time" id="end_time" style="width: 25%;">
+                <select name="end_time" id="end_time" style="width: 32%;">
 
                     <?php foreach ($hours as $key => $hour) { ?>
                         <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
@@ -67,10 +67,10 @@
         </div>
         <div class="form-controller">
             <a class="label">金额(元)</a>
-            <input style="width: 35%;font-size:15px;"
+            <input style="width: 36%;font-size:15px;"
                    type="text" name="price" class="pull-left" placeholder="自动生成" readonly="readonly"
                    id="order_cost">
-            <input type="button" id="cost" style="width: 22%; margin-left: 10px;" class="btn btn-primary" value="计算金额">
+            <input type="button" id="cost" style="width: 31%; margin-left: 10px;font-size: 15px;height: 35px" class="btn btn-primary" value="计算金额">
         </div>
         <input type="button" id="ok2" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
                value="预订">
