@@ -165,7 +165,7 @@ function app_id(){
 /**
  * @return \Illuminate\Database\Eloquent\Model|mixed|null|static
  */
-function app(){
+function user_app(){
     static $app = null;
     $appId = app_id();
     if(($app === null) && !Auth::guest() && ($appId != APP_WEB_PC)){
@@ -176,6 +176,6 @@ function app(){
 }
 
 function app_user_id(){
-    $app = app();
+    $app = user_app();
     return $app ? $app->app_user_id : '';
 }
