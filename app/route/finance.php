@@ -105,7 +105,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         //spbill_create_ip已填,商户无需重复填写
         //sign已填,商户无需重复填写
         $unifiedOrder->setParameter("openid","$openId");//商品描述
-        $unifiedOrder->setParameter("body","网球儿");//商品描述
+        $unifiedOrder->setParameter("body","网球场地");//商品描述
         //自定义订单号，此处仅作举例
         $unifiedOrder->setParameter("out_trade_no", $rechargeId);//商户订单号
         $unifiedOrder->setParameter("total_fee", intval($money * 100));//总金额
