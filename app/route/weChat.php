@@ -224,8 +224,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 })->get();
         } else {
             if ($curType == 'nearby') {
-                $appUserID = Input::get('app_user_id');
-                $location = WXLocation::where('openid', '=', $appUserID)->orderBy('created_at', 'desc')->first();
+                $location = WXLocation::where('openid', '=', app_user_id())->orderBy('created_at', 'desc')->first();
                 if ($location) {
                     $lat = $location->lat;
                     $lon = $location->lon;

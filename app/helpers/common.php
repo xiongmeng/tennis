@@ -161,3 +161,21 @@ function app_id(){
         return APP_WEB_PC;
     }
 }
+
+/**
+ * @return \Illuminate\Database\Eloquent\Model|mixed|null|static
+ */
+function app(){
+    static $app = null;
+    $appId = app_id();
+    if(($app === null) && !Auth::guest() && ($appId != APP_WEB_PC)){
+        $user = Auth::getUser();
+        $app = RelationUserApp::whereAppId($appId)->whereUserId($user->user_id)->first();
+    }
+    return $app;
+}
+
+function app_user_id(){
+    $app = app();
+    return $app ? $app->app_user_id : '';
+}
