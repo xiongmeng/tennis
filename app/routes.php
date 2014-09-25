@@ -28,7 +28,7 @@ Route::get('/', function () {
         }
         if ($role == 3) {
 //            return Redirect::to('order_court_manage');
-            return Redirect::to('set_telephone');
+            return Redirect::to('/set_receive_sms_telephone');
         }
     } else {
         return View::make('layout')->nest('content', 'login');
@@ -406,27 +406,26 @@ Route::any('reserveOrder/pay', array('before' => 'auth', function(){
     }
 }));
 
-Route::any('set_telephone', array('before' => 'auth', function(){
+Route::any('/set_receive_sms_telephone', array('before' => 'auth', function(){
     $user = Auth::getUser();
     if(Request::isMethod('post')){
         $rules = array(
-            'telephone' => 'required|digits:11|telephone_not_exist',
+            'telephone' => 'required|digits:11',
         );
         $messages = array(
             'required' => '请确保每项都填入了您的信息',
             'telephone.digits' => '请输入有效的电话号码',
-            'telephone.telephone_not_exist' => '该电话号码已经注册过网球通帐号',
         );
 
         $validator = Validator::make(Input::all(), $rules, $messages);
         if ($validator->fails()) {
-            return View::make('layout')->nest('content', 'user.set_telephone',
+            return View::make('layout')->nest('content', 'user.set_receive_sms_telephone',
                 array('user' => $user, 'errors' => $validator->messages()));
         }
 
-        $user->telephone = Input::get('telephone');
+        $user->receive_sms_telephone = Input::get('telephone');
         $user->save();
         return Redirect::to('order_court_manage');
     }
-    return View::make('layout')->nest('content', 'user.set_telephone', array('user' => $user));
+    return View::make('layout')->nest('content', 'user.set_receive_sms_telephone', array('user' => $user));
 }));

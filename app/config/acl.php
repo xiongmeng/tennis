@@ -49,7 +49,7 @@ return array(
         '12' => array(
             'label' => '预订信息短信通知手机号码设定',
             'name' => 'instant_order_seller',
-            'url' => '/set_telephone',
+            'url' => '/set_receive_sms_telephone',
             'children' => array()
 
         ),
