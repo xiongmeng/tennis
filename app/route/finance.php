@@ -22,7 +22,7 @@ Route::get('/recharge/alipay', function () {
     return $sHtmlText;
 });
 
-Route::get('/alipay_notify', function () {
+Route::any('/alipay_notify', function () {
     $oAlipay = new AlipayNotify(Config::get('alipay.aAlipay'));//构造通知函数信息
     $bBes = $oAlipay->verifyNotify();
 
