@@ -4,7 +4,7 @@ class Recharge extends Eloquent {
     protected $table = 'gt_recharge';
 
     function generate($money, $payUserId=null, $actionType='', $actionToken='', $appUserId='', $appId=''){
-        debug() && $this->id = time();
+        APP::environment('local') && $this->id = time();
         //预先生成recharge表
         $this->user_id = (empty($payUserId) ? user_id() : $payUserId);
         $this->money = $money;
