@@ -96,28 +96,14 @@ class Alipay{
      * @return  bool
      */
 
-    public function notifyVerify($eCBType,$iID,$iMoney,$sPayNo,$sBuyer){
+    public function notifyVerify(){
         $aAlipay = Config::get('alipay.aAlipay');
         require_once('AlipayNotify.php');
 
         $oAlipay = new AlipayNotify($aAlipay);//构造通知函数信息
         $sVerifyResult = $oAlipay->verifyNotify();
 
-        if($sVerifyResult){//验证成功
-            $bStatus = true;
-        }
-        else{
-            $bStatus = false;
-        }
-
-        $aParams = array("status"=>$bStatus,"iToken"=>$iID,"buyer"=>$sBuyer,"money"=>$iMoney,"trade_no"=>$sPayNo);
-        //"status"=>$bStatus,"iToken"=>$iID,"money"=>$iMoney,"trade_no"=>$aReturn['trade_no']
-        if($eCBType==0x1002){//支付宝的服务器通知页面
-            return doApiNotifyAndReturn($eCBType, $aParams);
-
-        }else if($eCBType==0x1003){//支付宝的服务器返回页面
-            return doApiNotifyAndReturn($eCBType, $aParams);
-        }
+        return $sVerifyResult;
     }
 
     /*

@@ -8,7 +8,7 @@ return array(
                 'type' => Finite\State\StateInterface::TYPE_INITIAL,
                 'properties' => array('deletable' => true, 'editable' => true),
             ),
-            'waste' =>array( //废弃的，在草稿状态超过了当前时间的订单，-这个操作有脚本批量处理
+            'waste' => array( //废弃的，在草稿状态超过了当前时间的订单，-这个操作有脚本批量处理
                 'type' => Finite\State\StateInterface::TYPE_FINAL,
             ),
             'on_sale' => array( //待售
@@ -55,7 +55,7 @@ return array(
             'expire' => array('from' => array('on_sale'), 'to' => 'expired'),
             'pay_expire' => array('from' => array('paying'), 'to' => 'on_sale'),
             'pay_success' => array('from' => array('paying'), 'to' => 'payed'), //buyer
-            'cancel_buy' => array('from' => array('paying'), 'to' => 'on_sale'),//buyer
+            'cancel_buy' => array('from' => array('paying'), 'to' => 'on_sale'), //buyer
             'event_start' => array('from' => array('payed'), 'to' => 'playing'),
             'cancel' => array('from' => array('payed'), 'to' => 'on_sale'), //mgr
             'event_end' => array('from' => array('playing'), 'to' => 'confirming'),
@@ -275,7 +275,9 @@ return array(
                     'from' => RESERVE_STAT_UNPAY,
                     'to' => RESERVE_STAT_PAYED,
                     'do' => function (ReserveOrder $reserve, \Finite\Event\TransitionEvent $e) {
-                            Log::debug('reserve order pay before');
+                            //冻结会员相应金额
+                            $reserveOrderFinance = new ReserveOrderFinance($reserve);
+                            $reserveOrderFinance->buy();
                         }
                 )
             ),

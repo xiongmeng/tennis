@@ -47,24 +47,14 @@ class ReserveOrderManager
 
             //预先生成recharge表
             $recharge = new Recharge();
-            $recharge->user_id = $payUserId;
-            $recharge->money = $result['needRecharge'];
-            $recharge->stat = 1; //初始化
-            $recharge->createtime = time();
-            $recharge->callback_action_token = implode(',', $reserveOrderIds);
-            $recharge->callback_action_type = RECHARGE_CALLBACK_PAY_RESERVE_ORDER; //购买预约订单
-            $recharge->save();
+            $recharge->generate($result['needRecharge'], $payUserId,
+                RECHARGE_CALLBACK_PAY_RESERVE_ORDER, implode(',', $reserveOrderIds));
 
-            $result['adviseForwardUrl'] = url_wrapper(sprintf('/recharge/alipay?recharge_id=%s', $recharge->id));
-            $result['weChatPayUrl'] = sprintf('/recharge/wechatpay?recharge_id=%s', $recharge->id);
+            no_money_generate_url($result, $recharge);
 
             $result['status'] = 'no_money';
         } else {
-            foreach ($reserves as $reserve) {
-                $this->fsm->resetObject($reserve);
-                $this->fsm->apply('pay_success');
-            }
-
+            $this->fsm->batchPay($reserves);
             $result['adviseForwardUrl'] = '/instant_order_buyer';
 
             $result['status'] = 'pay_success';

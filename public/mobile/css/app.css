@@ -330,7 +330,7 @@ header.bar .title {
 }
 
 .page-notice {
-    margin-top: 50px;
+    margin-top: 10px;
 }
 
 .page-notice .notice-large{
@@ -363,4 +363,14 @@ header.bar .title {
 
 .page-notice .btn{
     width:90%; margin: 20px auto ;
+}
+
+
+.table-view-cell  .item{
+    position: relative;
+    display: block;
+    padding: inherit;
+    margin: -11px -65px -11px -15px;
+    overflow: hidden;
+    color: inherit;
 }

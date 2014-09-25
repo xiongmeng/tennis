@@ -617,7 +617,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         MobileLayout::$activeService = 'center';
         MobileLayout::$previousUrl = url_wrapper('/mobile_buyer');
 
-        $user = Auth::getUser();
         $noMoney = no_money_array();
         if (Request::isMethod('post')) {
             $rules = array(
@@ -634,14 +633,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             if (!$validator->fails()) {
                 //预先生成recharge表
                 $recharge = new Recharge();
-                $recharge->user_id = $user->user_id;
-                $recharge->money = Input::get('money');
-                $recharge->stat = 1; //初始化
-                $recharge->createtime = time();
-                $recharge->save();
+                $recharge->generate(Input::get('money'));
 
-                $noMoney['adviseForwardUrl'] = url_wrapper(sprintf('/recharge/alipay?recharge_id=%s', $recharge->id));
-                $noMoney['weChatPayUrl'] = sprintf('/recharge/wechatpay?recharge_id=%s', $recharge->id);
+                no_money_generate_url($noMoney, $recharge);
 
                 return View::make('mobile_layout')->nest('content', 'mobile.recharge',
                     array('recharge' => $recharge, 'noMoney' => $noMoney));
@@ -652,6 +646,22 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
 
         return View::make('mobile_layout')->nest('content', 'mobile.recharge', array('noMoney' => $noMoney));
+    });
+
+    Route::get('/upgrade', function(){
+        MobileLayout::$activeService = 'center';
+        MobileLayout::$previousUrl = '/mobile_buyer';
+        MobileLayout::$title = '升级成为金卡会员';
+
+        //预先生成recharge表
+        $recharge = new Recharge();
+        $recharge->generate(UPGRADE_TO_GOLD_MONEY);
+
+        $noMoney = array();
+        no_money_generate_url($noMoney, $recharge);
+
+        return View::make('mobile_layout')->nest('content', 'mobile.upgrade',
+            array('recharge' => $recharge, 'noMoney' => $noMoney));
     });
 });
 

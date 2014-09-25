@@ -191,6 +191,11 @@ Route::group(array('prefix' => 'xm'), function(){
     Route::get('log', function(){
         return View::make('mobile.wechat_pay', array('jsApiParameters' => '{}'));
     });
+
+    Route::get('test', function(){
+        $userFinanceService = new UserFinance();
+        $userFinanceService->doPaySuccess(1411621305, 'test', 360);
+    });
 });
 
 Route::group(array('domain' => 'homestead1.app'), function()

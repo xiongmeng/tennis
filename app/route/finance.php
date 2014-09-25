@@ -23,17 +23,13 @@ Route::get('/recharge/alipay', function () {
 });
 
 Route::get('/alipay_notify', function () {
-    $aParams = $aError = array();
-    $sTradeNo = Input::get('out_trade_no'); //获取支付宝传递过来的订单号
-    $iMoney = Input::get('total_fee'); //获取支付宝传递过来的总价格
-    $sPayNo = Input::get('trade_no'); //支付宝交易号
-    $sTradeStatus = Input::get('trade_status'); //交易状态
-    $sBuyer = Input::get('buyer_email');
-    $notify = new Alipay;
-    $isDeBug = Config::get('app.debug');
+    $oAlipay = new AlipayNotify(Config::get('alipay.aAlipay'));//构造通知函数信息
+    $bBes = $oAlipay->verifyNotify();
 
-    $bBes = $notify->notifyVerify(0x1003, intval($sTradeNo), $isDeBug ? 1000 : $iMoney, $sPayNo, $sBuyer);
     if ($bBes) {
+        $userFinanceService = new UserFinance();
+        $userFinanceService->doPaySuccess(Input::get('out_trade_no'), Input::get('buyer_email'), Input::get('total_fee'));
+
         return 'success';
     } else {
         return 'fail';
@@ -41,71 +37,22 @@ Route::get('/alipay_notify', function () {
 });
 
 Route::get('/alipay_return', function () {
-    $aParams = $aError = array();
     $sTradeNo = Input::get('out_trade_no'); //获取支付宝传递过来的订单号
     $iMoney = Input::get('total_fee'); //获取支付宝传递过来的总价格
-    $sPayNo = Input::get('trade_no'); //支付宝交易号
-    $sTradeStatus = Input::get('trade_status'); //交易状态
     $sBuyer = Input::get('buyer_email');
-    $notify = new Alipay;
 
-    $isDeBug = Config::get('app.debug');
+    $oAlipay = new AlipayNotify(Config::get('alipay.aAlipay'));
+    $bBes = $oAlipay->verifyReturn();//计算得出通知验证结
 
-    $bBes = $notify->returnVerify(0x1003, intval($sTradeNo), $isDeBug ? 1000 : $iMoney, $sPayNo, $sBuyer);
     if ($bBes) {
         $rechargeId = intval($sTradeNo);
         $recharge = Recharge::findOrFail($rechargeId);
 
-        if ($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER) {
-            $reserveOrderString = $recharge->callback_action_token;
-            $reserveOrderIds = explode(',', $reserveOrderString);
-            $appUserID = $recharge->app_user_id;
-            $appID = $recharge->app_id;
+        $userFinanceService = new UserFinance();
+        $userFinanceService->doPaySuccess($recharge, $sBuyer, $iMoney);
 
-            DB::beginTransaction();
-            try {
-                $manager = new InstantOrderManager();
-                $result = $manager->batchPay($reserveOrderIds, $recharge->user_id);
-                DB::commit();
-                if ($result['status'] == 'pay_success') {
-                    if ($appID == 2 && $appUserID) {
-                        return Redirect::to('/pay_success?app_id=' . $appID . '&app_user_id=' . $appUserID);
-
-                    }
-
-                    return '支付成功';
-                } else {
-                    return '支付失败';
-                }
-            } catch (Exception $e) {
-                DB::rollBack();
-                throw $e;
-            }
-        }else if($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_RESERVE_ORDER){
-            $reserveOrderString = $recharge->callback_action_token;
-            $reserveOrderIds = explode(',', $reserveOrderString);
-            $appUserID = $recharge->app_user_id;
-            $appID = $recharge->app_id;
-
-            DB::beginTransaction();
-            try {
-                $manager = new ReserveOrderManager();
-                $result = $manager->batchPay($reserveOrderIds, $recharge->user_id);
-                DB::commit();
-                if ($result['status'] == 'pay_success') {
-                    if ($appID == 2 && $appUserID) {
-                        return Redirect::to('/pay_success?app_id=' . $appID . '&app_user_id=' . $appUserID);
-
-                    }
-
-                    return '支付成功';
-                } else {
-                    return '支付失败';
-                }
-            } catch (Exception $e) {
-                DB::rollBack();
-                throw $e;
-            }
+        if ($recharge->app_id == APP_WE_CHAT) {
+            return Redirect::to('/pay_success');
         }
         return '充值成功';
     } else {
@@ -158,7 +105,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         //spbill_create_ip已填,商户无需重复填写
         //sign已填,商户无需重复填写
         $unifiedOrder->setParameter("openid","$openId");//商品描述
-        $unifiedOrder->setParameter("body","贡献一分钱");//商品描述
+        $unifiedOrder->setParameter("body","网球儿");//商品描述
         //自定义订单号，此处仅作举例
         $unifiedOrder->setParameter("out_trade_no", $rechargeId);//商户订单号
         $unifiedOrder->setParameter("total_fee", intval($money * 100));//总金额
@@ -226,44 +173,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
 
             $rechargeId = intval($notify->data['out_trade_no']);
 
-            $isDeBug = Config::get('app.debug');
-            //修改充值结果
-            $affectedRows = Recharge::where('id','=',$rechargeId)->where('stat' ,'=',1)->update(array('stat' =>2,
-                'sToken'=>$notify->data['openid'],'pay_money'=>$isDeBug ? 1000 : $notify->data['total_fee'],'edittime'=>time()));
+            $userFinanceService = new UserFinance();
+            $userFinanceService->doPaySuccess($rechargeId, $notify->data['openid'], $notify->data['total_fee']);
 
-            if($affectedRows == 1){
-                $recharge = Recharge::findOrFail($rechargeId);
-                //执行一次充值
-                $userFiance = new UserFinance();
-                $userFiance->addbalancefromrecharge($recharge);
-
-                if ($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_INSTANT_ORDER) {
-                    $instantOrderString = $recharge->callback_action_token;
-                    $instantOrderIds = explode(',', $instantOrderString);
-
-                    DB::beginTransaction();
-                    try {
-                        $manager = new InstantOrderManager();
-                        $manager->batchPay($instantOrderIds, $recharge->user_id);
-                        DB::commit();
-                    } catch (Exception $e) {
-                        DB::rollBack();
-                    }
-                }else if($recharge->callback_action_type == RECHARGE_CALLBACK_PAY_RESERVE_ORDER){
-                    $reserveOrderIdString = $recharge->callback_action_token;
-                    $reserveOrderIds = explode(',', $reserveOrderIdString);
-
-                    DB::beginTransaction();
-                    try{
-                        $manager = new ReserveOrderManager();
-                        $manager->batchPay($reserveOrderIds, $recharge->user_id);
-                        DB::commit();
-                    }catch (Exception $e){
-                        DB::rollBack();
-                        Log::warning('pay_failed_when_recharge_success', array('trace' => $e->getTraceAsString()));
-                    }
-                }
-            }
         }
 
         $returnXml = $notify->returnXml();

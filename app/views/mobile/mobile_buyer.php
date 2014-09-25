@@ -1,40 +1,42 @@
 <div class="content user-center">
     <ul class="table-view">
-        <li class="table-view-cell media">
-            <a style="padding: 10px 5px">
-                <?php
-                $head = $user->head;
-                if (empty($head)) {
-                    if (!empty($wxUserProfile->headimgurl)) {
-                        $head = str_replace('/0', '/132', $wxUserProfile->headimgurl);
-                    } else {
-                        $head = 'http://wangqiuer.com' . ($wxUserProfile->sexy == 1 ? '/Images/page/head_girl.jps' : '/Images/page/head_boy.jpg');
-                    }
+        <li class="table-view-cell media" style="padding: 10px 5px">
+            <?php
+            $head = $user->head;
+            if (empty($head)) {
+                if (!empty($wxUserProfile->headimgurl)) {
+                    $head = str_replace('/0', '/132', $wxUserProfile->headimgurl);
                 } else {
-                    $head = 'http://wangqiuer.com' . $head;
+                    $head = 'http://wangqiuer.com' . ($wxUserProfile->sexy == 1 ? '/Images/page/head_girl.jps' : '/Images/page/head_boy.jpg');
                 }
-                ?>
-                <img width="60px" class="media-object pull-left" src="<?= $head ?>">
+            } else {
+                $head = 'http://wangqiuer.com' . $head;
+            }
+            ?>
+            <img width="60px" class="media-object pull-left" src="<?= $head ?>"/>
 
-                <div class="media-body">
-                    <p><?php
-                        echo $wxUserProfile->nickname;
-                        if($user->telephone){
-                            echo "（" . $user->nickname . "）";
-                        }?>
-                    </p>
-                    <hr style="border: none; border-top: solid 1px #DDDDDD">
-                    <p>余额：<?= balance() ?>&nbsp;&nbsp;&nbsp;积分：<?= points() ?>
-                        <button class="btn btn-primary"
-                                onclick="window.location.href='<?= url_wrapper('/recharge') ?>'"
-                                style="float: right; font-size: 15px">充值</button>
-                    </p>
-                </div>
-            </a>
+            <div class="media-body">
+                <p><?php
+                    echo $wxUserProfile->nickname;
+                    if ($user->telephone) {
+                        echo "（" . $user->nickname . "）";
+                    }?>
+                </p>
+                <hr style="border: none; border-top: solid 1px #DDDDDD"/>
+                <p>余额：<?= balance() ?>
+                    <a class="btn btn-primary pull-right" href='<?= url_wrapper('/recharge') ?>' style="margin-left: 5px"
+                       data-ignore="push">充值</a>
+                    <?php if ($user->privilege == PRIVILEGE_GOLD) { ?>
+                        <a class="btn btn-negative btn-outlined disabled pull-right">金卡会员</a>
+                    <?php } elseif ($user->privilege == PRIVILEGE_NORMAL) { ?>
+                        <a class="btn btn-negative pull-right" href='<?= url_wrapper('/upgrade') ?>'>普通会员</a>
+                    <?php } ?>
+                </p>
+            </div>
         </li>
     </ul>
 
-    <?php if(!$user->telephone){?>
+    <?php if (!$user->telephone) { ?>
         <ul class="table-view">
             <li class="table-view-cell media">
                 <a class="navigate-right" href="<?= url_wrapper('/mobile_change_user') ?>" data-ignore="push">
@@ -49,7 +51,7 @@
                 </a>
             </li>
         </ul>
-    <?php }?>
+    <?php } ?>
 
     <ul class="table-view reserve">
         <li class="table-view-cell media">
@@ -108,7 +110,7 @@
         </a>
     </div>
 
-    <?php if($user->telephone){ ?>
+    <?php if ($user->telephone) { ?>
         <ul class="table-view">
             <li class="table-view-cell media">
                 <a class="navigate-right" href="<?= url_wrapper('/mobile_change_user') ?>" data-ignore="push">
@@ -123,5 +125,5 @@
                 </a>
             </li>
         </ul>
-    <?php }?>
+    <?php } ?>
 </div>

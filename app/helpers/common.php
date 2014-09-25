@@ -132,9 +132,32 @@ function no_money_array(){
     );
 }
 
+function no_money_generate_url(&$no_money_array, Recharge $recharge){
+    $no_money_array['adviseForwardUrl'] = url_wrapper(sprintf('/recharge/alipay?recharge_id=%s', $recharge->id));
+    $no_money_array['weChatPayUrl'] = sprintf('/recharge/wechatpay?recharge_id=%s', $recharge->id);
+}
+
 function adjustTimeStamp($models){
     foreach($models as $model){
         empty($model->updated_at) && $model->updated_at = \Carbon\Carbon::now();
         empty($model->created_at) && $model->created_at = \Carbon\Carbon::now();
+    }
+}
+
+function user_id(User $user = null){
+    empty($user) && $user = Auth::getUser();
+    return empty($user) ? null : $user->user_id;
+}
+
+function debug(){
+    return Config::get('app.debug');
+}
+
+function app_id(){
+    $sHost = Request::getHost();
+    if(isset($_ENV['DOMAIN_WE_CHAT']) && ($sHost  == $_ENV['DOMAIN_WE_CHAT'])){
+        return APP_WE_CHAT;
+    }else{
+        return APP_WEB_PC;
     }
 }
