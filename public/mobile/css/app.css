@@ -316,6 +316,17 @@ header.bar .title {
 .form-controller .item{
 }
 
+.form-controller .notice{
+    font-size: 14px;
+    color: dimgray;
+    text-align: right;
+    padding: 5px;
+    background: #fffff2;
+    border: 1px solid #dea52a;
+    border-radius: 5px;
+    margin: 5px 15px;
+}
+
 .form-controller .error{
     padding-left: 25%;
     font-size: 14px;
