@@ -60,8 +60,10 @@
                                             <?php echo FinanceConstant::$relationTypeOptions[$billingStaging->relation_type] ?>
                                         <?php } ?>
                                         <?php if ($billingStaging->relation_type == 5) { ?>
-                                            <?php if ($billingStaging->recharge_type == 1) { ?>
+                                            <?php if ($billingStaging->recharge_type == PAY_TYPE_ALI) { ?>
                                                 支付宝充值：支付宝帐号为
+                                            <?php }elseif($billingStaging->recharge_type == PAY_TYPE_WE_CHAT){ ?>
+                                                微信支付：微信open_id为
                                             <?php } ?>
                                             <?php echo $billingStaging->recharge_token ?>
                                         <?php } else if ($billingStaging->recharge_type == 9) { ?>
