@@ -32,7 +32,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         if (!$app) {
             $weChatUserProfile = weChatUserProfile::findOrFail($appUserId);
             DB::beginTransaction();
-            $nickname = 'wx_' . $weChatUserProfile->nickname;
+            $nickname = 'wx_' . $weChatUserProfile->openid;
             $user = User::whereNickname($nickname)->first();
             if (empty($user)) {
                 $user = new User;

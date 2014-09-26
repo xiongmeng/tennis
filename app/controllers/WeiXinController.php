@@ -67,24 +67,8 @@ class WeiXinController extends \BaseController
 
         if ($type === 'text') { //文本输入
             $content = strtolower($message['content']);
-
-            if ($content == 'jcbd') {
-                $isBond = $this->getUser($appUserID);
-                if ($isBond) {
-                    if ($isBond instanceof RelationUserApp) {
-                        $isBond->delete();
-
-
-                        $reply = $server->getXml4Txt("成功解除绑定");
-                    }
-                } else {
-                    $reply = $server->getXml4Txt("您还没有绑定网球通账号");
-                }
-            } else {
 //                $reply = $server->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
-                $reply = $server->getXml4Txt('http://www.gotennis.cn/mobile_home/reserve/recommend?app_id=2&app_user_id='.$appUserID);
-
-            }
+            $reply = $server->getXml4Txt('http://www.gotennis.cn/mobile_home/reserve/recommend?app_id=2&app_user_id='.$appUserID);
 
             echo $reply;
         }

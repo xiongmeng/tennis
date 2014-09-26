@@ -53,7 +53,11 @@ return array(
         //即时订单购买成功后场馆侧的消息提醒
         'hall_instant_order_sold' => array(
             'users' => function (InstantOrder $order, NotifyChunkPack $chunk) {
-                    return User::whereUserId($order->seller)->get();
+                    $users = User::whereUserId($order->seller)->get();
+                    foreach($users as $user){
+                        $user->telephone = $user->receive_sms_telephone;
+                    }
+                    return $users;
                 },
             'object' => function ($objectId) {
                     return InstantOrder::with(array('Hall'))->find($objectId);
