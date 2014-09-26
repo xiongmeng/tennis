@@ -62,7 +62,7 @@ class InstantOrderGenerate extends Command
 
         $holidays = LegalHolidays::whereIn('date', array_keys($dateTimestamps))->get();
         foreach ($holidays as $holiday) {
-            $dateTimestamps[$holiday->date] = $holiday->type;
+            $dateTimestamps[$holiday->date] = $holiday;
         }
 
         return $dateTimestamps;
