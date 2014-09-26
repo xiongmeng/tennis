@@ -515,9 +515,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
             $user->telephone = $telephone;
             $user->save();
-            return View::make('mobile_layout')->nest('content', 'mobile.change_telephone_success', array('user' => $user));
+            return View::make('mobile_layout_no_footer')->nest('content', 'mobile.change_telephone_success', array('user' => $user));
         }
-        return View::make('mobile_layout')->nest('content', 'mobile.change_telephone',
+        return View::make('mobile_layout_no_footer')->nest('content', 'mobile.change_telephone',
             array('user' => $user, 'queries' => $queries, 'validCode' => array_except($validCode, 'code')));
     });
 
