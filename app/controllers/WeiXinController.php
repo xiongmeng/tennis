@@ -37,7 +37,7 @@ class WeiXinController extends \BaseController
             $Event = $message['event']; //获取事件类型
 
             if ($Event == 'subscribe') { //关注事件返回消息
-                $reply = $server->getXml4Txt('欢迎关注网球通！');
+                $reply = $server->getXml4Txt('欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。更多内容请点击菜单项！');
                 echo $reply;
             }
 
@@ -68,7 +68,7 @@ class WeiXinController extends \BaseController
         if ($type === 'text') { //文本输入
             $content = strtolower($message['content']);
 //                $reply = $server->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
-            $reply = $server->getXml4Txt('http://www.gotennis.cn/mobile_home/reserve/recommend?app_id=2&app_user_id='.$appUserID);
+            $reply = $server->getXml4Txt('欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。更多内容请点击菜单项！');
 
             echo $reply;
         }
