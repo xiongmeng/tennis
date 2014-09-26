@@ -38,7 +38,7 @@
         </div>
 
         <div class="form-controller">
-            <div class="notice" id="code">注：获取短信验证码时请收起输入法面板</div>
+<!--            <div class="notice" id="code">注：获取短信验证码时请收起输入法面板</div>-->
             <div class="item">
                 <label class="label">验证码：</label>
                 <input class="input-normal" style="width: 28%;" name="validcode" id="validcode"

@@ -10,30 +10,17 @@ class WeiXinController extends \BaseController
      */
     public function index()
     {
-        //生成自定义菜单
-//        $menu = Config::get('/packages/cooper/wechat/menu.WeChatMenu');
-//        $client = new \Cooper\Wechat\WeChatClient();
-//        //Log::info($menu[0]);
-//        $client->setMenu($menu[0]);
-//        $client->deleteMenu();
-
         //获取微信消息
         $server = new \Cooper\Wechat\WeChatServer();
         $message = $server->getMessage();
 
-        //$this->log($message);
         $appUserID = $message['from'];
         $type = $message['type'];
-        $currentdomain = $_SERVER['HTTP_HOST']; //获取当前域名
-        $reg_url = "http://" . $currentdomain . "/register?app_user_id=" . $appUserID. '&app_id=2';
-        $bond_url = "http://" . $currentdomain . "/bond?app_user_id=" . $appUserID . '&app_id=2';
-
 
         /**
          *自定义菜单下
          */
         if ($type === 'event') { //点击菜单事件
-            //$weixin->save_log($postStr);//记日志
             $Event = $message['event']; //获取事件类型
 
             if ($Event == 'subscribe') { //关注事件返回消息
@@ -42,35 +29,34 @@ class WeiXinController extends \BaseController
             }
 
             if ($Event == 'location') { //地理位置事件
-                //$weixin->saveLocation($postStr);//存储到数据库
                 $this->saveLocation($message);
 
             }
-            if ($Event == 'scan'){
-                $reply = $server->getXml4Txt('http://www.gotennis.cn/reserve/recommend?app_id=2&app_user_id='.$appUserID);
+            if ($Event == 'scan') {
+                $reply = $server->getXml4Txt('http://www.gotennis.cn/reserve/recommend?app_id=2&app_user_id=' . $appUserID);
                 echo $reply;
             }
 
             if ($Event == 'click') { //CLICK事件
                 echo $server->getXml4Txt('精彩内容，敬请期待.......');
-               // $key = $message['key']; //获取当前菜单key
-//                $isBond = $this->getUser($appUserID);
-//                $res = $this->WeChatMsg($appUserID,$isBond);
-//                    $reply = $server->getXml4RichMsgByArray($res);
-//                    echo $reply;
-
-
-
             }
         }
 
 
         if ($type === 'text') { //文本输入
             $content = strtolower($message['content']);
-//                $reply = $server->getXml4Txt("欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。");
-            $reply = $server->getXml4Txt('欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。更多内容请点击菜单项！');
-
-            echo $reply;
+            $host = "http://" . $_ENV['DOMAIN_WE_CHAT'];
+            switch($content){
+                case 'jcbd':
+                    echo $server->getXml4Txt("$host/jcbd");
+                    break;
+                case 'logout':
+                    echo $server->getXml4Txt("$host/logout");
+                    break;
+                default:
+                    echo $server->getXml4Txt('欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。更多内容请点击菜单项！');
+                    break;
+            }
         }
 
     }
@@ -93,83 +79,83 @@ class WeiXinController extends \BaseController
 
     }
 
-    function WeChatMsg($appUserID,$isBond){
+    function WeChatMsg($appUserID, $isBond)
+    {
         $domain = $_ENV['DOMAIN_MOBILE'];
-        if($isBond){
+        if ($isBond) {
             return array(
 
-                    0 => array(
-                        'title' => '订场就找网球通',
-                        'desc' => '订场就找网球通',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/logo.jpg",
-                        'url' => "http://" . $domain. "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    1 => array(
-                        'title' => '预约订场',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
-                        'url' => "http://" . $domain. "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    2 => array(
-                        'title' => '即时订场',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
-                        'url' => "http://" . $domain. "/mobile_home/instant?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    3 => array(
-                        'title' => '活动资讯',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
-                        'url' => "http://" . $domain. "/mobile_home/reserve?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    4 => array(
-                        'title' => '个人中心',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
-                        'url' => "http://" . $domain. "/mobile_buyer?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
+                0 => array(
+                    'title' => '订场就找网球通',
+                    'desc' => '订场就找网球通',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/logo.jpg",
+                    'url' => "http://" . $domain . "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                1 => array(
+                    'title' => '预约订场',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
+                    'url' => "http://" . $domain . "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                2 => array(
+                    'title' => '即时订场',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
+                    'url' => "http://" . $domain . "/mobile_home/instant?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                3 => array(
+                    'title' => '活动资讯',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
+                    'url' => "http://" . $domain . "/mobile_home/reserve?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                4 => array(
+                    'title' => '个人中心',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
+                    'url' => "http://" . $domain . "/mobile_buyer?app_user_id=" . $appUserID . '&app_id=2'
+                ),
 
             );
-        }
-        else{
+        } else {
             return array(
 
-                    0 => array(
-                        'title' => '订场就找网球通',
-                        'desc' => '订场就找网球通',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/logo.jpg",
-                        'url' => "http://" . $domain. "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    1 => array(
-                        'title' => '预约订场',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
-                        'url' => "http://" . $domain. "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    2 => array(
-                        'title' => '即时订场',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
-                        'url' => "http://" . $domain. "/mobile_home/instant?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    3 => array(
-                        'title' => '活动资讯',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
-                        'url' => "http://" . $domain. "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    4 => array(
-                        'title' => '绑定用户',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/bond.jpg",
-                        'url' => "http://" . $domain. "/mobile_bond?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
-                    5 => array(
-                        'title' => '注册用户',
-                        'desc' => '预定场地1',
-                        'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
-                        'url' => "http://" . $domain. "/mobile_register?app_user_id=" . $appUserID . '&app_id=2'
-                    ),
+                0 => array(
+                    'title' => '订场就找网球通',
+                    'desc' => '订场就找网球通',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/logo.jpg",
+                    'url' => "http://" . $domain . "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                1 => array(
+                    'title' => '预约订场',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
+                    'url' => "http://" . $domain . "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                2 => array(
+                    'title' => '即时订场',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
+                    'url' => "http://" . $domain . "/mobile_home/instant?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                3 => array(
+                    'title' => '活动资讯',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
+                    'url' => "http://" . $domain . "/mobile_home/reserve/recommend?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                4 => array(
+                    'title' => '绑定用户',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/bond.jpg",
+                    'url' => "http://" . $domain . "/mobile_bond?app_user_id=" . $appUserID . '&app_id=2'
+                ),
+                5 => array(
+                    'title' => '注册用户',
+                    'desc' => '预定场地1',
+                    'pic' => "http://www.wangqiuer.com/Images/weixinImage/TopPic/ibill.jpg",
+                    'url' => "http://" . $domain . "/mobile_register?app_user_id=" . $appUserID . '&app_id=2'
+                ),
 
             );
         }

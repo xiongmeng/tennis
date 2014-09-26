@@ -3,6 +3,10 @@ View::creator('mobile_layout', function (\Illuminate\View\View $view) {
     $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
 });
 
+View::creator('mobile_layout_no_footer', function(\Illuminate\View\View $view){
+    $view->nest('header', 'format.mobile.header');
+});
+
 View::creator('mobile_layout_hall', function (\Illuminate\View\View $view) {
     $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
 });
@@ -602,11 +606,11 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 return View::make('mobile_layout')->nest('content', 'mobile.register_success',
                     array('user' => $user, 'wxUserProfile' => $wxUserProfile));
             }
-            return View::make('mobile_layout')->nest('content', 'mobile.register',
+            return View::make('mobile_layout_no_footer')->nest('content', 'mobile.register',
                 array('queries' => $queries, 'app' => $app, 'user' => $user,
                     'errors' => $validator->messages(), 'validCode' => $validCode));
         }
-        return View::make('mobile_layout')->nest('content', 'mobile.register',
+        return View::make('mobile_layout_no_footer')->nest('content', 'mobile.register',
             array('queries' => $queries, 'app' => $app, 'user' => $user, 'validCode' => $validCode));
     });
 

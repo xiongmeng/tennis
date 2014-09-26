@@ -92,8 +92,7 @@ Route::group(array('prefix' => 'xm'), function(){
     });
 
     Route::get('/artisan', function(){
-        Artisan::call('instantOrder:generate', array('--date' => array('2014-07-30')),
-            new \Symfony\Component\Console\Output\StreamOutput(fopen(storage_path() . '/logs/artisan.log', 'w')));
+        Artisan::call('instantOrder:generate', array('--date' => '2014-10-01', '--hall' =>8920));
     });
 
     Route::get('/register', function(){
