@@ -53,6 +53,10 @@ class WeiXinController extends \BaseController
                 case 'logout':
                     echo $server->getXml4Txt("$host/logout");
                     break;
+                case 'register':
+                case '注册':
+                    echo $server->getXml4Txt("$host/mobile_register");
+                    break;
                 default:
                     echo $server->getXml4Txt('欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。更多内容请点击菜单项！');
                     break;

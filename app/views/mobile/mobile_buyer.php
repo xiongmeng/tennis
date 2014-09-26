@@ -44,13 +44,13 @@
                 </a>
             </li>
         </ul>
-<!--        <ul class="table-view">-->
-<!--            <li class="table-view-cell media">-->
-<!--                <a class="navigate-right" href="--><?//= url_wrapper('/mobile_register') ?><!--" data-ignore="push">-->
-<!--                    <div class="media-body">没有网球通账号，请注册。</div>-->
-<!--                </a>-->
-<!--            </li>-->
-<!--        </ul>-->
+        <ul class="table-view">
+            <li class="table-view-cell media">
+                <a class="navigate-right" href="<?= url_wrapper('/mobile_register') ?>" data-ignore="push">
+                    <div class="media-body">没有网球通账号，请注册。</div>
+                </a>
+            </li>
+        </ul>
     <?php } ?>
 
     <ul class="table-view reserve">
