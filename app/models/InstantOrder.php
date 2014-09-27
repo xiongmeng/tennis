@@ -63,6 +63,9 @@ class InstantOrder extends Eloquent implements \Finite\StatefulInterface {
             if(!empty($aQuery['event_date_start'])){
                 $builder->where('event_date', '>=', $aQuery['event_date_start']);
             }
+            if(!empty($aQuery['event_date_end'])){
+                $builder->where('event_date', '<=', $aQuery['event_date_end']);
+            }
             if(!empty($aQuery['event_date'])){
                 $builder->where('event_date', '=', $aQuery['event_date']);
             }

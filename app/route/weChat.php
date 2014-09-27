@@ -161,6 +161,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         $curDate = date('Y-m-d');
         $queries['event_date_start'] = $curDate;
+        $queries['event_date_end'] = date('Y-m-d', strtotime("+" . (WORKTABLE_SUPPORT_DAYS_LENGTH - 1). " day"));
 
         $queries['state'] = array('on_sale');
 

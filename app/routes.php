@@ -128,6 +128,7 @@ Route::get('/hall_on_sale', array('before' => 'auth', function () {
 
     $curDate = date('Y-m-d');
     $queries['event_date_start'] = $curDate;
+    $queries['event_date_end'] = date('Y-m-d', strtotime("+" . (WORKTABLE_SUPPORT_DAYS_LENGTH - 1). " day"));
 
     $queries['state'] = array('on_sale');
 
@@ -193,7 +194,7 @@ Route::get('/order_court_manage', array('before' => 'auth', function () {
     empty($activeDate) && $activeDate = date('Y-m-d');
 
     $dates = array();
-    for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
+    for ($i = 0; $i < MGR_WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
         $time = strtotime("+$i day");
         $dates[date('Y-m-d', $time)] = $time;
     }
