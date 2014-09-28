@@ -97,7 +97,7 @@ Route::get('/instant_order_mgr', array('before' => 'auth', function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
 
-    empty($queries['state']) && $queries['state'] = 'payed';
+    !isset($queries['state']) && $queries['state'] = 'payed';
 //    $queries['state'] = array_keys(
 //        array_except(Config::get('fsm.instant_order.states'), array('draft', 'waste')));
 

@@ -17,6 +17,7 @@ function weekday_option()
 function instant_order_state_option()
 {
     return array(
+        '' => '请选择',
         'draft' => '草稿',
         'waste' => '过时',
         'on_sale' => '待售',
