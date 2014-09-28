@@ -28,6 +28,10 @@
                     array('class' => 'form-control', 'placeholder' => '买家名称'))?>
             </div>
             <div class="form-group">
+                <?= Form::select('state', $states, null,
+                    array('class' => 'form-control', 'placeholder' => '买家名称'))?>
+            </div>
+            <div class="form-group">
                 <?= Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
             </div>
             <?= Form::close() ?><br/>
@@ -70,7 +74,7 @@
                                     <td><?= !empty($instant->expire_time) ? date('m-d H:i', $instant->expire_time) : ''?>
                                     <td><?php echo $instant->seller; ?></td>
                                     <td><?php echo $instant->buyer_name; ?></td>
-                                    <td><?php echo $states[$instant->state]['label']; ?></td>
+                                    <td><?php echo $states[$instant->state]; ?></td>
 
                                     <td><?php if ($fsm->can('cancel')) { ?>
                                             <a class="btn btn-danger btn-xs"

@@ -97,12 +97,13 @@ Route::get('/instant_order_mgr', array('before' => 'auth', function () {
     $queries = Input::all();
     $instantModel = new InstantOrder();
 
-    $queries['state'] = array_keys(
-        array_except(Config::get('fsm.instant_order.states'), array('draft', 'waste')));
+    empty($queries['state']) && $queries['state'] = 'payed';
+//    $queries['state'] = array_keys(
+//        array_except(Config::get('fsm.instant_order.states'), array('draft', 'waste')));
 
     $instants = $instantModel->search($queries);
 
-    $states = Config::get('state.data');
+    $states = instant_order_state_option();
 
     return View::make('layout')->nest('content', 'instantOrder.order_mgr',
         array('instants' => $instants, 'queries' => $queries, 'states' => $states));
