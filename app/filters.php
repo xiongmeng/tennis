@@ -79,8 +79,6 @@ Route::filter('csrf', function () {
 });
 
 Route::filter('weChatAuth', function () {
-    Log::debug('wxAuthTest');
-
     if (Auth::guest()) {
         $weChatClient = new \Cooper\Wechat\WeChatClient($_ENV['WECHAT_PAY_APP_ID'], $_ENV['WECHAT_PAY_APP_SECRET']);
 
