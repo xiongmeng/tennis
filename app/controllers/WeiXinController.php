@@ -17,6 +17,8 @@ class WeiXinController extends \BaseController
         $appUserID = $message['from'];
         $type = $message['type'];
 
+        $host = "http://" . $_ENV['DOMAIN_WE_CHAT'];
+
         /**
          *自定义菜单下
          */
@@ -38,14 +40,25 @@ class WeiXinController extends \BaseController
             }
 
             if ($Event == 'click') { //CLICK事件
-                echo $server->getXml4Txt('精彩内容，敬请期待.......');
+                Log::debug('wechat_click_happend', $message);
+                echo $server->getXml4RichMsgByArray(array(
+                    0 => array(
+                        'title' => '订场就找网球通',
+                        'desc' => '与中网球星同“场”挥拍
+2014年中国网球公开赛已经在国家网球中心打响，世界顶尖高手汇聚一场！在看巨星们比赛的时候，球友们是不是手痒难耐？
+“网球通”为球友们预留了中网比赛期间国家网球中心室内外球场各个黄金时段的场地，想一想能在与大牌球星比赛赛场咫尺之遥的球场上挥拍，是多么激动人心令人艳羡！
+即刻关注“网球通”微信官方公众账户：“添加朋友”>“查找公众号”>搜索“网球通”，在“即时订场”里赶快下单吧！
+我们国家网球中心球场上见！',
+                        'pic' => "http://wangqiuer.com/uploadfiles/court/201206/8920_50f694c5ea35c841f17623b3c53930c8.jpg",
+                        'url' => $host . '/mobile_home/instant'
+                    ),
+                ));
             }
         }
 
 
         if ($type === 'text') { //文本输入
             $content = strtolower($message['content']);
-            $host = "http://" . $_ENV['DOMAIN_WE_CHAT'];
             switch($content){
                 case 'jcbd':
                     echo $server->getXml4Txt("$host/jcbd");
