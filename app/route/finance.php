@@ -174,7 +174,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
             $rechargeId = intval($notify->data['out_trade_no']);
 
             $userFinanceService = new UserFinance();
-            $userFinanceService->doPaySuccess($rechargeId, $notify->data['openid'], $notify->data['total_fee']);
+            $userFinanceService->doPaySuccess($rechargeId, $notify->data['openid'], intval($notify->data['total_fee']/100));
 
         }
 
