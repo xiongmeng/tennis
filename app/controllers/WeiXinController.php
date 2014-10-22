@@ -43,14 +43,10 @@ class WeiXinController extends \BaseController
                 Log::debug('wechat_click_happend', $message);
                 echo $server->getXml4RichMsgByArray(array(
                     0 => array(
-                        'title' => '订场就找网球通',
-                        'desc' => '与中网球星同“场”挥拍
-2014年中国网球公开赛已经在国家网球中心打响，世界顶尖高手汇聚一场！在看巨星们比赛的时候，球友们是不是手痒难耐？
-“网球通”为球友们预留了中网比赛期间国家网球中心室内外球场各个黄金时段的场地，想一想能在与大牌球星比赛赛场咫尺之遥的球场上挥拍，是多么激动人心令人艳羡！
-即刻关注“网球通”微信官方公众账户：“添加朋友”>“查找公众号”>搜索“网球通”，在“即时订场”里赶快下单吧！
-我们国家网球中心球场上见！',
-                        'pic' => "http://wangqiuer.com/uploadfiles/court/201206/8920_50f694c5ea35c841f17623b3c53930c8.jpg",
-                        'url' => $host . '/mobile_home/instant'
+                        'title' => 'Gotennis磨砂干性手胶60个超值盒装',
+                        'desc' => '磨砂干性手胶60个超值盒装，仅要150元',
+                        'pic' => "https://mmbiz.qlogo.cn/mmbiz/QeXiaHN2eevHmhpHdPCuYCl2eeTnjfw73Bu8vDntxKJicxlv5XQWxRKrh8h1yDIMThHBm8psCSpicwphyKSzeeT2g/0",
+                        'url' => "http://mp.weixin.qq.com/bizmall/malldetail?id=&pid=pzSPvjt3xWeW3Cq_JH82xEXIbgSU&biz=MjM5ODAzNjk0MQ==&scene=&action=show_detail&showwxpaytitle=1#wechat_redirect"
                     ),
                 ));
             }
@@ -69,6 +65,16 @@ class WeiXinController extends \BaseController
                 case 'register':
                 case '注册':
                     echo $server->getXml4Txt("$host/mobile_register");
+                    break;
+                case 'good':
+                    echo $server->getXml4RichMsgByArray(array(
+                        0 => array(
+                            'title' => 'Gotennis磨砂干性手胶60个超值盒装',
+                            'desc' => '',
+                            'pic' => "https://mmbiz.qlogo.cn/mmbiz/QeXiaHN2eevHmhpHdPCuYCl2eeTnjfw73Bu8vDntxKJicxlv5XQWxRKrh8h1yDIMThHBm8psCSpicwphyKSzeeT2g/0",
+                            'url' => "http://mp.weixin.qq.com/bizmall/malldetail?id=&pid=pzSPvjt3xWeW3Cq_JH82xEXIbgSU&biz=MjM5ODAzNjk0MQ==&scene=&action=show_detail&showwxpaytitle=1#wechat_redirect"
+                        ),
+                    ));
                     break;
                 default:
                     echo $server->getXml4Txt('欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。更多内容请点击菜单项！');

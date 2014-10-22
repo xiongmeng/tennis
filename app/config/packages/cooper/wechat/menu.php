@@ -15,7 +15,7 @@ return array(
        },
      {
           "type":"click",
-          "name":"活动资讯",
+          "name":"特惠商品",
           "key":"Active"
       }]
 
