@@ -1,7 +1,9 @@
 {
     "repositories": [
         {"type": "vcs","url": "https://github.com/xiongmeng/libs"},
-        {"type": "vcs","url": "https://github.com/huanghua581/laravel-wechat-sdk"}
+        {"type": "vcs","url": "https://github.com/xiongmeng/laravel-wechat-sdk"},
+        {"type": "composer", "url": "http://pkg.phpcomposer.com/repo/packagist/"},
+        {"packagist": false}
         ],
 	"name": "laravel/laravel",
 	"description": "The Laravel Framework.",

@@ -19,6 +19,7 @@ class WeiXinController extends \BaseController
 
         $host = "http://" . $_ENV['DOMAIN_WE_CHAT'];
 
+        Log::debug('wx-access-message', $message);
         /**
          *自定义菜单下
          */
