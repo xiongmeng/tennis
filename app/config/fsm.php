@@ -183,9 +183,9 @@ return array(
                             $instant->expire_time = $expireTime;
                             $instant->save();
 
-                            Notify::doNotify('user_instant_order_payed', $instant->id);
+                            Notify::sendWithBusiness(NOTIFY_TYPE_USER_INSTANT_ORDER_PAYED, $instant->id);
 
-                            Notify::doNotify('hall_instant_order_sold', $instant->id);
+                            Notify::sendWithBusiness(NOTIFY_TYPE_HALL_INSTANT_ORDER_SOLD, $instant->id);
                         }
                 ),
                 array( //已支付->取消

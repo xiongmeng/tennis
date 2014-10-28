@@ -27,11 +27,10 @@ return array(
             'children' => array()
         ),
         '8' => array(
-            'label' => '订单管理',
+            'label' => '即时订单管理',
             'name' => 'instant_order_mgr',
             'url' => '/instant_order_mgr',
             'children' => array()
-
         ),
         '9' => array(
             'label' => '场地管理',
@@ -52,6 +51,12 @@ return array(
             'url' => '/set_receive_sms_telephone',
             'children' => array()
 
+        ),
+        '13' => array(
+            'label' => '预约订单管理',
+            'name' => 'reserve_order_mgr',
+            'url' => '/reserve_order_mgr',
+            'children' => array()
         ),
     ),
 
@@ -75,7 +80,7 @@ return array(
              '2', '4', '5'
         ),
         '2' => array(
-            '8','6'
+            '8','6','13'
         ),
         '3' => array(
               '11', '9', '12'

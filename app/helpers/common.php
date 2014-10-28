@@ -32,6 +32,19 @@ function instant_order_state_option()
     );
 }
 
+function reserve_order_status_option(){
+    return array(
+        '' => '请选择',
+        0=>"待处理",
+        1=>"代支付",
+        2=>"已支付",
+        3=>"待分账",
+        4=>"已结束",
+        5=>"已取消",
+        6=>"预订失败"
+    );
+}
+
 function weekday($timestamp)
 {
     $weekday = weekday_option();
@@ -209,4 +222,68 @@ function app_user_id()
 {
     $app = user_app();
     return $app ? $app->app_user_id : '';
+}
+
+/**
+ * @param $user_id
+ * @return User
+ */
+function cache_user($user_id){
+    static $users = array();
+    if(!isset($users[$user_id])){
+        $users[$user_id] = User::findOrFail($user_id);
+    }
+    return $users[$user_id];
+}
+
+/**
+ * @param $order_id
+ * @return ReserveOrder
+ */
+function cache_reserve_order($order_id){
+    static $orders = array();
+    if(!isset($orders[$order_id])){
+        $orders[$order_id] = ReserveOrder::findOrFail($order_id);
+    }
+    return $orders[$order_id];
+}
+
+/**
+ * @param $order_id
+ * @return InstantOrder
+ */
+function cache_instant_order($order_id){
+    static $orders = array();
+    if(!isset($orders[$order_id])){
+        $orders[$order_id] = InstantOrder::findOrFail($order_id);
+    }
+    return $orders[$order_id];
+}
+
+/**
+ * @param $hall_id
+ * @return Hall
+ */
+function cache_hall($hall_id){
+    static $halls = array();
+    if(!isset($halls[$hall_id])){
+        $halls[$hall_id] = Hall::findOrFail($hall_id);
+    }
+    return $halls[$hall_id];
+}
+
+function array_extract_one_key($arrays, $key){
+    $result = array();
+    foreach($arrays as $id => $array){
+        $result[$id] = $array[$key];
+    }
+    return $result;
+}
+
+function option_notify_event(){
+    return array_extract_one_key(Config::get('notify.events'), 'title');
+}
+
+function option_notify_channel(){
+    return array_extract_one_key(Config::get('notify.channels'), 'title');
 }

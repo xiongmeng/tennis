@@ -19,7 +19,7 @@ body {
    font-family: '微软雅黑';
 }
 
-p, a, li { 
+p, li {
    color: #555;
    line-height: 1.6; 
 }

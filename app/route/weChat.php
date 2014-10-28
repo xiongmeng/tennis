@@ -399,7 +399,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         $order->createuser = $queries['user_id'];
         $order->save();
 
-        Notify::doNotify('mgr_reserve_order_created', $order->id);
+        Notify::sendWithBusiness(NOTIFY_TYPE_ORDER_NOTICE, $order->id);
 
         return Redirect::to(url_wrapper('/reserve_order_buyer'));
     });

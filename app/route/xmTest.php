@@ -180,11 +180,16 @@ Route::group(array('prefix' => 'xm'), function(){
     });
 
     Route::get('notify', function(){
-//        Notify::doNotify('mgr_reserve_order_created', 16891);
-//
-//        Notify::doNotify('user_instant_order_payed', 20857);
+//        return Notify::getRecord(NOTIFY_TYPE_ORDER_NOTICE, 16891, NOTIFY_CHANNEL_SMS_SYNC);
 
-        Notify::doNotify('hall_instant_order_sold', 20857);
+        $result = array();
+        $result[] = Notify::sendWithBusiness(NOTIFY_TYPE_ORDER_NOTICE, 16891);
+
+        $result[] = Notify::sendWithBusiness(NOTIFY_TYPE_USER_INSTANT_ORDER_PAYED, 12254);
+
+        $result[] = Notify::sendWithBusiness(NOTIFY_TYPE_HALL_INSTANT_ORDER_SOLD, 12254);
+
+        return $result;
     });
 
     Route::get('log', function(){
@@ -194,6 +199,16 @@ Route::group(array('prefix' => 'xm'), function(){
     Route::get('test', function(){
         $userFinanceService = new UserFinance();
         $userFinanceService->doPaySuccess(1411621305, 'test', 360);
+    });
+
+    Route::get('wx_notify', function(){
+        //return Notify::notifyUserWithCustomMsg(890490, 'test', array(NOTIFY_CHANNEL_WX_SYNC));
+
+        return Notify::sendByChannel(890569, 'test', array(NOTIFY_CHANNEL_WX_SYNC));
+    });
+
+    Route::get('env', function(){
+        return App::environment();
     });
 });
 

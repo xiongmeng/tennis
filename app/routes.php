@@ -15,6 +15,8 @@ require_once 'route/xmTest.php';
 require_once 'route/fjTest.php';
 require_once 'route/finance.php';
 require_once 'route/weChat.php';
+require_once 'route/notify.php';
+require_once 'route/user.php';
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -27,7 +29,6 @@ Route::get('/', function () {
             return Redirect::to('instant_order_mgr');
         }
         if ($role == 3) {
-//            return Redirect::to('order_court_manage');
             return Redirect::to('/set_receive_sms_telephone');
         }
     } else {
@@ -107,6 +108,19 @@ Route::get('/instant_order_mgr', array('before' => 'auth', function () {
 
     return View::make('layout')->nest('content', 'instantOrder.order_mgr',
         array('instants' => $instants, 'queries' => $queries, 'states' => $states));
+}));
+
+Route::get('/reserve_order_mgr', array('before' => 'auth', function () {
+    $queries = Input::all();
+    $reserveModel = new ReserveOrder();
+
+    $reserves = $reserveModel->search($queries);
+    adjustTimeStamp($reserves);
+
+    $states = reserve_order_status_option();
+    $notifyHref = '/notify/create?events=' . implode(',', array(NOTIFY_TYPE_ORDER_UNPAY, NOTIFY_TYPE_ORDER_PAYED, NOTIFY_TYPE_ORDER_CANCEL));
+    return View::make('layout')->nest('content', 'reserveOrder.order_mgr',
+        array('reserves' => $reserves, 'queries' => $queries, 'states' => $states, 'notifyHref' => $notifyHref));
 }));
 
 Route::get('/instant_order_buyer', array('before' => 'auth', function () {
