@@ -8,7 +8,6 @@ Route::get('/user/detail/{id}', function($id){
 });
 
 Route::get('/user', function(){
-
     $queries = Input::all();
     $userModel = new User();
 
@@ -23,7 +22,36 @@ Route::get('/user', function(){
     $isBondWeChat = option_yes_no();
     $isBondWeChat[''] = '是否绑定微信';
 
-    return View::make('layout')->nest('content', 'user.list_mgr',
+    return View::make('layout')->nest('content', 'user.user_mgr',
         array('users' => $users, 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy,
             'isBondWeChat' => $isBondWeChat));
+});
+
+Route::get('/account', function(){
+    $queries = Input::all();
+    !isset($queries['purpose']) && $queries['purpose'] = Sports\Constant\Finance::PURPOSE_ACCOUNT;
+
+    $accountModel = new Account();
+
+    $accounts = $accountModel->search($queries);
+
+    $purposes = option_account_type();
+    $purposes[''] = '账户类型';
+
+    return View::make('layout')->nest('content', 'user.account_mgr',
+        array('accounts' => $accounts, 'queries' => $queries , 'purposes' => $purposes));
+});
+
+Route::get('/app', function(){
+    $queries = Input::all();
+
+    $appUserModel = new RelationUserApp();
+
+    $appUsers = $appUserModel->search($queries);
+
+    $appTypes = option_app_type();
+    $appTypes[''] = '应用类型';
+
+    return View::make('layout')->nest('content', 'user.app_user_mgr',
+        array('appUsers' => $appUsers, 'queries' => $queries , 'appTypes' => $appTypes));
 });

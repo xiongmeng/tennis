@@ -123,6 +123,19 @@ function option_yes_no(){
     return array(1 => '是', 2 => '否');
 }
 
+function option_account_type(){
+    return array(
+        \Sports\Constant\Finance::PURPOSE_POINTS =>     '积分',
+        \Sports\Constant\Finance::PURPOSE_ACCOUNT =>    '余额',
+    );
+}
+
+function option_app_type(){
+    return array(
+        APP_WE_CHAT => '微信'
+    );
+}
+
 function user_roles(User $user = null)
 {
     static $roles = null;
