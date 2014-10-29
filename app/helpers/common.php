@@ -74,46 +74,33 @@ function url_wrapper($url)
 
 }
 
-function balance($userId = null, $refresh = false)
-{
-    static $balance = null;
-    if ($balance === null || $refresh) {
-        if ($userId === null) {
-            $user = Auth::getUser();
-            if (!empty($user)) {
-                $userId = $user->user_id;
-            }
-        }
+function cache_account($user_id = null , $purpose = \Sports\Constant\Finance::PURPOSE_ACCOUNT){
+    static $accounts = array();
 
-        if (!empty($userId)) {
-            $account = Finance::ensureAccountExisted($userId, \Sports\Constant\Finance::PURPOSE_ACCOUNT);
-            $balance = intval($account->getBalance());
-        } else {
-            $balance = 0;
+    $balance = 0;
+    if($user_id === null){
+        $user = Auth::getUser();
+        if (!empty($user)) {
+            $user_id = $user->user_id;
         }
+    }
+
+    if(!empty($user_id)){
+        $key = $user_id . '-' . $purpose;
+        if(!isset($accounts[$key])){
+            $accounts[$key] = Finance::ensureAccountExisted($user_id, $purpose);
+        }
+        $balance = intval($accounts[$key]->getBalance());
     }
     return $balance;
 }
 
-function points($userId = null, $refresh = false)
-{
-    static $balance = null;
-    if ($balance === null || $refresh) {
-        if ($userId === null) {
-            $user = Auth::getUser();
-            if (!empty($user)) {
-                $userId = $user->user_id;
-            }
-        }
+function cache_balance($userId = null){
+    return cache_account($userId);
+}
 
-        if (!empty($userId)) {
-            $account = Finance::ensureAccountExisted($userId, \Sports\Constant\Finance::PURPOSE_POINTS);
-            $balance = intval($account->getBalance());
-        } else {
-            $balance = 0;
-        }
-    }
-    return $balance;
+function cache_points($userId = null){
+    return cache_account($userId, \Sports\Constant\Finance::PURPOSE_POINTS);
 }
 
 
@@ -126,6 +113,14 @@ function option_user_privilege($sLanguage = 'cn')
         return array(1 => "member", 2 => "vip");
     else
         return array(1 => "普通会员", 2 => "vip会员");
+}
+
+function option_sexy(){
+    return array(1 => '女', 2 => '男');
+}
+
+function option_yes_no(){
+    return array(1 => '是', 2 => '否');
 }
 
 function user_roles(User $user = null)
@@ -270,6 +265,19 @@ function cache_hall($hall_id){
         $halls[$hall_id] = Hall::findOrFail($hall_id);
     }
     return $halls[$hall_id];
+}
+
+/**
+ * @param $user_id
+ * @return weChatUserProfile
+ */
+function cache_weChat_profile($user_id){
+    static $profiles = array();
+    if(!isset($profiles[$user_id])){
+        $app = RelationUserApp::whereUserId($user_id)->whereAppId(APP_WE_CHAT)->first();
+        $profiles[$user_id] = empty($app) ? null : weChatUserProfile::whereOpenid($app->app_user_id)->first();
+    }
+    return $profiles[$user_id];
 }
 
 function array_extract_one_key($arrays, $key){

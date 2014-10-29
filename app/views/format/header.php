@@ -1,11 +1,11 @@
 <div class="container">
     <div class="row header margin-bottom-10 top">
-        <div class="col-md-4">
+        <div class="col-md-2">
             <a class="navbar-brand" href="javascript:void(0)">
                 <img id="logo-header" src="/assets/img/logo.png" alt="Logo">
             </a>
         </div>
-        <div class="row col-md-8">
+        <div class="row col-md-10">
             <div class="top">
                 <div class="container">
                     <ul class="loginbar pull-right">

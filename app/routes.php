@@ -118,9 +118,8 @@ Route::get('/reserve_order_mgr', array('before' => 'auth', function () {
     adjustTimeStamp($reserves);
 
     $states = reserve_order_status_option();
-    $notifyHref = '/notify/create?events=' . implode(',', array(NOTIFY_TYPE_ORDER_UNPAY, NOTIFY_TYPE_ORDER_PAYED, NOTIFY_TYPE_ORDER_CANCEL));
     return View::make('layout')->nest('content', 'reserveOrder.order_mgr',
-        array('reserves' => $reserves, 'queries' => $queries, 'states' => $states, 'notifyHref' => $notifyHref));
+        array('reserves' => $reserves, 'queries' => $queries, 'states' => $states));
 }));
 
 Route::get('/instant_order_buyer', array('before' => 'auth', function () {

@@ -23,7 +23,7 @@
                     }?>
                 </p>
                 <hr style="border: none; border-top: solid 1px #DDDDDD"/>
-                <p>余额：<?= balance() ?>
+                <p>余额：<?= cache_balance() ?>
                     <a class="btn btn-primary pull-right" href='<?= url_wrapper('/recharge') ?>' style="margin-left: 5px"
                        data-ignore="push">充值</a>
                     <?php if ($user->privilege == PRIVILEGE_GOLD) { ?>

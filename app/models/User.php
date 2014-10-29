@@ -26,16 +26,32 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
-    public function search($aQuery, $iPageSize = 10){
-        return User::where(function(\Illuminate\Database\Eloquent\Builder $builder) use ($aQuery){
-            if(!empty($aQuery['nickname'])){
-                $builder->where('nickname', 'like', '%' . $aQuery['nickname'] . '%');
-            }
-            if(!empty($aQuery['telephone'])){
-                $builder->where('telephone', 'like', '%' . $aQuery['telephone'] . '%');
-            }
-        })
-        ->paginate($iPageSize);
+    public function search($aQuery, $iPageSize = 20){
+        $query = User::leftJoin('gt_relation_user_app as relation_weChat', function(\Illuminate\Database\Query\JoinClause $join){
+            $join->on('relation_weChat.user_id', '=', 'gt_user_tiny.user_id')->where('relation_weChat.app_id', '=', APP_WE_CHAT);
+        });
+        if(!empty($aQuery['id'])){
+            $query->where('gt_user_tiny.user_id', '=', $aQuery['id']);
+        }
+        if(!empty($aQuery['nickname'])){
+            $query->where('gt_user_tiny.nickname', 'like', '%' . $aQuery['nickname'] . '%');
+        }
+        if(!empty($aQuery['telephone'])){
+            $query->where('gt_user_tiny.telephone', 'like', '%' . $aQuery['telephone'] . '%');
+        }
+        if(!empty($aQuery['openid'])){
+            $query->where('relation_weChat.app_user_id', 'like', '%' . $aQuery['openid'] . '%');
+        }
+        if(!empty($aQuery['is_bond_weChat'])){
+            $aQuery['is_bond_weChat'] == YES ? $query->whereNotNull('relation_weChat.app_user_id') :
+                $query->whereNull('relation_weChat.app_user_id');
+        }
+        if(!empty($aQuery['privilege'])){
+            $query->where('gt_user_tiny.privilege', '=', $aQuery['privilege']);
+        }
+        return $query->orderBy('gt_user_tiny.user_id', 'desc')
+            ->paginate($iPageSize, array('gt_user_tiny.*',
+                'relation_weChat.app_user_id as weChat_open_id'));
     }
 
     public function roles(){

@@ -291,8 +291,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             }
         }
 
-        $app = RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->first();
-        $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
+        $wxUserProfile = cache_weChat_profile($user->user_id);
 
         return View::make('mobile_layout_hall')->nest('content', 'mobile.mobile_buyer', array('user' => $user, 'wxUserProfile' => $wxUserProfile,
             'insPaying' => $insPaying, 'payed' => $payed, 'resPaying' => $resPaying, 'pending' => $pending));

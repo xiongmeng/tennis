@@ -1105,3 +1105,13 @@ i.style-switcher-btn-option:hover {
 .hall-on-sale .go{
 
 }
+
+.panel-body .item {
+    /*border: 1px solid  lightgray;*/
+    /*border-bottom: 1px  solid lightgray;*/
+
+}
+
+.panel-body .item .title{
+
+}

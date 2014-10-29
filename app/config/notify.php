@@ -8,7 +8,7 @@ function contactReserveOrderInfo(ReserveOrder $order)
 
 function contactFinanceInfo(User $user)
 {
-    return sprintf('您目前的账户余额为%s元，积分为%s分。', balance($user->user_id), points($user->user_id));
+    return sprintf('您目前的账户余额为%s元，积分为%s分。', cache_balance($user->user_id), cache_points($user->user_id));
 }
 
 function get_who_from_user_and_channel($user_id, $channel){
@@ -27,6 +27,31 @@ function get_who_from_user_and_channel($user_id, $channel){
 
 return array(
     'events' => array(
+        //初始化
+        NOTIFY_TYPE_INIT_WJ => array(
+            'who' => function ($object_id, $channel) {
+                    return get_who_from_user_and_channel($object_id, $channel);
+                },
+            'msg' => function ($object_id, $channel) {
+                    $user = cache_user($object_id);
+                    return sprintf('%s，您好！欢迎加入网球通俱乐部！您可以登录www.wangqiuer.com（用户名：%s，默认密码：666666），
+                        储值%s元即可成为金卡会员。有问题可咨询4000665189。', $user->nickname, $user->nickname, UPGRADE_TO_GOLD_MONEY);
+                },
+            'channels' => array(NOTIFY_CHANNEL_SMS_ASYNC, NOTIFY_CHANNEL_WX_SYNC),
+            'title' => '初始化',
+        ),
+        //会员余额不足
+        NOTIFY_TYPE_NOMONEY => array(
+            'who' => function ($object_id, $channel) {
+                    return get_who_from_user_and_channel($object_id, $channel);
+                },
+            'msg' => function ($object_id, $channel) {
+                    return sprintf('您的网球通账户余额已不足%s元（当前余额：%s元）。请尽快登录网球通充值。'
+                        , NO_MONEY_LOWER_BOUND ,cache_balance($object_id));
+                },
+            'channels' => array(NOTIFY_CHANNEL_SMS_ASYNC, NOTIFY_CHANNEL_WX_SYNC),
+            'title' => '余额不足',
+        ),
         //预约订单取消成功
         NOTIFY_TYPE_ORDER_CANCEL => array(
             'who' => function ($object_id, $channel) {

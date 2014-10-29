@@ -4,58 +4,69 @@ return array(
     'headers' => array(
         '2' => array(
             'label' => '即时订场',
-            'name' => 'instant',
             'url' => '/hall_on_sale',
             'children' => array()
         ),
         '4' => array(
             'label' => '我的订单',
-            'name' => 'mgr_court',
             'url' => '/instant_order_buyer',
             'children' => array()
             ),
         '5' => array(
             'label' => '账户明细',
-            'name' => 'mgr_court',
             'url' => '/billing_buyer/account_balance',
             'children' => array()
         ),
         '6' => array(
-            'label' => '流水明细',
-            'name' => 'mgr_court',
+            'label' => '流水',
             'url' => '/billing_mgr/account_balance',
             'children' => array()
         ),
         '8' => array(
-            'label' => '即时订单管理',
-            'name' => 'instant_order_mgr',
+            'label' => '即时订单',
             'url' => '/instant_order_mgr',
             'children' => array()
         ),
         '9' => array(
             'label' => '场地管理',
-            'name' => 'mgr_court',
             'url' => '/order_court_manage',
             'children' => array()
         ),
         '11' => array(
             'label' => '已售场地',
-            'name' => 'instant_order_seller',
             'url' => '/instant_order_seller',
             'children' => array()
 
         ),
         '12' => array(
             'label' => '预订信息短信通知手机号码设定',
-            'name' => 'instant_order_seller',
             'url' => '/set_receive_sms_telephone',
             'children' => array()
 
         ),
         '13' => array(
-            'label' => '预约订单管理',
-            'name' => 'reserve_order_mgr',
+            'label' => '预约订单',
             'url' => '/reserve_order_mgr',
+            'children' => array()
+        ),
+        '14' => array(
+            'label' => '通知',
+            'url' => '/notify/record',
+            'children' => array()
+        ),
+        '15' => array(
+            'label' => '用户',
+            'url' => '/user',
+            'children' => array()
+        ),
+        '16' => array(
+            'label' => '账户',
+            'url' => '/account',
+            'children' => array()
+        ),
+        '17' => array(
+            'label' => '微信用户',
+            'url' => '/app',
             'children' => array()
         ),
     ),
@@ -80,7 +91,7 @@ return array(
              '2', '4', '5'
         ),
         '2' => array(
-            '8','6','13'
+            '8','6','13','14','15','16','17'
         ),
         '3' => array(
               '11', '9', '12'

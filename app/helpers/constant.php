@@ -36,6 +36,7 @@ const PRIVILEGE_NORMAL = 1;//普通会员
 const PRIVILEGE_GOLD = 2; //金卡会员
 
 const UPGRADE_TO_GOLD_MONEY = 500;  //升级成为金卡会员的钱数
+const NO_MONEY_LOWER_BOUND = 200;   //余额不足的短信提示
 
 //通知渠道
 const NOTIFY_CHANNEL_SMS_ASYNC = 'sms-async';   //通过短信的方式通知 - 异步
@@ -63,3 +64,8 @@ const NOTIFY_TYPE_PASSWORD_RESET = 8873;//为用户发送密码重置短信
 const NOTIFY_TYPE_FINANCE_CUSTOM_DEBTOR = 8872;//自定义扣款中，为扣款人发送短信
 const NOTIFY_TYPE_USER_INSTANT_ORDER_PAYED = 9000;    //即时订单购买成功后用户的消息
 const NOTIFY_TYPE_HALL_INSTANT_ORDER_SOLD = 9001;     //即时订单购买成功后场馆侧的消息提醒
+
+const USER_PRIVILEGE_NORMAL = 1;    //普通会员
+const USER_PRIVILEGE_VIP = 2;   //VIP会员
+
+const YES = 1; const NO = 2;

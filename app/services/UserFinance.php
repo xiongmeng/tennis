@@ -68,7 +68,7 @@ class UserFinance
                 break;
             //升级成为VIP
             default:
-                $balance = balance($recharge->user_id);
+                $balance = cache_balance($recharge->user_id);
                 if ($balance >= UPGRADE_TO_GOLD_MONEY) {
                     User::whereUserId($recharge->user_id)->wherePrivilege(PRIVILEGE_NORMAL)
                         ->update(array('privilege' => PRIVILEGE_GOLD));

@@ -22,7 +22,7 @@
     </div>
     <div class="row">
         <p class="col-md-12 bg-light alert-warning" style="font-size: 16px;margin-left: 15px;margin-bottom: 15px;">
-            当前余额：<strong><?=balance()?></strong> 元，当前积分：<strong><?= points()?></strong> 分</p>
+            当前余额：<strong><?=cache_balance()?></strong> 元，当前积分：<strong><?= cache_points()?></strong> 分</p>
     </div>
     <div class="row">
         <div class="col-md-12">

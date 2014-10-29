@@ -4,7 +4,7 @@
         <div class="form-controller">
             <div class="item">
                 <label class="label">余额：</label>
-                <label class="input-normal"><?= balance() ?>&nbsp;元</label>
+                <label class="input-normal"><?= cache_balance() ?>&nbsp;元</label>
             </div>
         </div>
 
