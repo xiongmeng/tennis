@@ -27,13 +27,27 @@ function get_who_from_user_and_channel($user_id, $channel){
 
 return array(
     'events' => array(
+        //充值
+        NOTIFY_TYPE_RECHARGE => array(
+            'who' => function ($recharge_id, $channel) {
+                    $recharge = cache_recharge($recharge_id);
+                    return get_who_from_user_and_channel($recharge->user_id, $channel);
+                },
+            'msg' => function ($recharge_id, $channel) {
+                    $recharge = cache_recharge($recharge_id);
+                    $user = cache_user($recharge->user_id);
+                    return sprintf("您刚刚向网球通个人账户充值了%s元，%s", $recharge->pay_money, contactFinanceInfo($user));
+                },
+            'channels' => array(NOTIFY_CHANNEL_SMS_ASYNC, NOTIFY_CHANNEL_WX_SYNC),
+            'title' => '充值提醒',
+        ),
         //初始化
         NOTIFY_TYPE_INIT_WJ => array(
-            'who' => function ($object_id, $channel) {
-                    return get_who_from_user_and_channel($object_id, $channel);
+            'who' => function ($user_id, $channel) {
+                    return get_who_from_user_and_channel($user_id, $channel);
                 },
-            'msg' => function ($object_id, $channel) {
-                    $user = cache_user($object_id);
+            'msg' => function ($user_id, $channel) {
+                    $user = cache_user($user_id);
                     return sprintf('%s，您好！欢迎加入网球通俱乐部！您可以登录www.wangqiuer.com（用户名：%s，默认密码：666666），
                         储值%s元即可成为金卡会员。有问题可咨询4000665189。', $user->nickname, $user->nickname, UPGRADE_TO_GOLD_MONEY);
                 },
@@ -42,24 +56,24 @@ return array(
         ),
         //会员余额不足
         NOTIFY_TYPE_NOMONEY => array(
-            'who' => function ($object_id, $channel) {
-                    return get_who_from_user_and_channel($object_id, $channel);
+            'who' => function ($user_id, $channel) {
+                    return get_who_from_user_and_channel($user_id, $channel);
                 },
-            'msg' => function ($object_id, $channel) {
+            'msg' => function ($user_id, $channel) {
                     return sprintf('您的网球通账户余额已不足%s元（当前余额：%s元）。请尽快登录网球通充值。'
-                        , NO_MONEY_LOWER_BOUND ,cache_balance($object_id));
+                        , NO_MONEY_LOWER_BOUND ,cache_balance($user_id));
                 },
             'channels' => array(NOTIFY_CHANNEL_SMS_ASYNC, NOTIFY_CHANNEL_WX_SYNC),
             'title' => '余额不足',
         ),
         //预约订单取消成功
         NOTIFY_TYPE_ORDER_CANCEL => array(
-            'who' => function ($object_id, $channel) {
-                    $order = cache_reserve_order($object_id);
+            'who' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
                     return get_who_from_user_and_channel($order->user_id, $channel);
                 },
-            'msg' => function ($object_id, $channel) {
-                    $order = cache_reserve_order($object_id);
+            'msg' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
                     return sprintf("您预订的场地已经取消成功，订单号%s（%s）。%s元已返还到您的账户中。",
                         $order->id, contactReserveOrderInfo($order), $order->cost);
                 },
@@ -68,12 +82,12 @@ return array(
         ),
         //预约订单支付成功
         NOTIFY_TYPE_ORDER_PAYED => array(
-            'who' => function ($object_id, $channel) {
-                    $order = cache_reserve_order($object_id);
+            'who' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
                     return get_who_from_user_and_channel($order->user_id, $channel);
                 },
-            'msg' => function ($object_id, $channel) {
-                    $order = cache_reserve_order($object_id);
+            'msg' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
                     $hall = cache_hall($order->hall_id);
                     return sprintf("您预订的场地已经支付成功，订单号%s（%s）。场馆联系电话%s",
                         $order->id, contactReserveOrderInfo($order), $hall->telephone);
@@ -83,12 +97,12 @@ return array(
         ),
         //预约订单待支付
         NOTIFY_TYPE_ORDER_UNPAY => array(
-            'who' => function ($object_id, $channel) {
-                    $order = cache_reserve_order($object_id);
+            'who' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
                     return get_who_from_user_and_channel($order->user_id, $channel);
                 },
-            'msg' => function ($object_id, $channel) {
-                    $order = cache_reserve_order($object_id);
+            'msg' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
                     $hall = cache_hall($order->hall_id);
                     return sprintf("您预订了%s,请%s分钟内登录网球通/微信完成支付，或致电4000665189授权网球通客服人员帮您完成网上支付。场馆联系电话%s",
                         contactReserveOrderInfo($order), RESERVE_EXPIRE_TIME, $hall->telephone);
@@ -98,11 +112,11 @@ return array(
         ),
         //网站创建预约订单后的管理员短信通知
         NOTIFY_TYPE_ORDER_NOTICE => array(
-            'who' => function ($object_id, $channel) {
+            'who' => function ($reserve_order_id, $channel) {
                     return '15210489872';
                 },
-            'msg' => function ($object_id, $channel) {
-                    $order = cache_reserve_order($object_id);
+            'msg' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
                     $booker = cache_user($order->user_id);
 
                     $privilegeOption = option_user_privilege();
@@ -115,12 +129,12 @@ return array(
         ),
         //即时订单购买成功后用户的消息
         NOTIFY_TYPE_USER_INSTANT_ORDER_PAYED => array(
-            'who' => function($object_id, $channel){
-                    $order = cache_instant_order($object_id);
+            'who' => function($instant_order_id, $channel){
+                    $order = cache_instant_order($instant_order_id);
                     return get_who_from_user_and_channel($order->buyer, $channel);
                 },
-            'msg' => function ($object_id, $channel) {
-                    $order = cache_instant_order($object_id);
+            'msg' => function ($instant_order_id, $channel) {
+                    $order = cache_instant_order($instant_order_id);
                     $buyer = cache_user($order->buyer);
                     $hall = $order->Hall;
                     return sprintf("您预订的场地已经支付成功，订单号%s（%s%s日%s点-%s点%s号场地）。场馆联系电话：%s。%s",
@@ -132,13 +146,13 @@ return array(
         ),
         //即时订单购买成功后场馆侧的消息提醒
         NOTIFY_TYPE_HALL_INSTANT_ORDER_SOLD => array(
-            'who' => function($object_id, $channel){
-                    $order = cache_instant_order($object_id);
+            'who' => function($instant_order_id, $channel){
+                    $order = cache_instant_order($instant_order_id);
                     $user = cache_user($order->seller);
                     return $user->receive_sms_telephone;
                 },
-            'msg' => function ($object_id, $channel) {
-                    $order = cache_instant_order($object_id);
+            'msg' => function ($instant_order_id, $channel) {
+                    $order = cache_instant_order($instant_order_id);
                     $hall = $order->Hall;
                     return sprintf("售出%s%s日%s点-%s点%s号场地，订单号%s。", $hall->name, substr($order->event_date, 0, 10),
                         $order->start_hour, $order->end_hour, $order->court_number, $order->id);

@@ -210,6 +210,11 @@ Route::group(array('prefix' => 'xm'), function(){
     Route::get('env', function(){
         return App::environment();
     });
+
+    Route::get('transfer', function(){
+        $userFinance = new UserFinance();
+        $userFinance->transfer(890490, 889082, null, '微信更换绑定的网球通账户');
+    });
 });
 
 Route::group(array('domain' => 'homestead1.app'), function()

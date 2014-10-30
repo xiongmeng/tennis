@@ -293,6 +293,18 @@ function cache_weChat_profile($user_id){
     return $profiles[$user_id];
 }
 
+/**
+ * @param $recharge_id
+ * @return Recharge
+ */
+function cache_recharge($recharge_id){
+    static $recharges = array();
+    if(!isset($recharges[$recharge_id])){
+        $recharges[$recharge_id] = Recharge::findOrFail($recharge_id);
+    }
+    return $recharges[$recharge_id];
+}
+
 function array_extract_one_key($arrays, $key){
     $result = array();
     foreach($arrays as $id => $array){

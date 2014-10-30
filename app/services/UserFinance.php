@@ -79,21 +79,23 @@ class UserFinance
         }
 
         $oOperate = new OperateObject();
-        $oOperate->setRelationId($financeCustom->id);
+        $oOperate->setRelationId($financeCustom->id)->setRelationType(FinanceConstant::RELATION_CUSTOM_OUT);
 
         //扣钱方扣钱
         $oAction = new ActionObject();
         $oAction->setUserId($financeCustom->debtor)
-            ->setAmount(-$financeCustom->amount)->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)
+            ->setAmount($financeCustom->amount)->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)
             ->setOperateType(FinanceConstant::OPERATE_CONSUME)->setRelationType(FinanceConstant::RELATION_CUSTOM_OUT);
         $oOperate->addAction($oAction);
 
-        //得钱方加钱
-        $oAction = new ActionObject();
-        $oAction->setUserId($financeCustom->debtor)
-            ->setAmount($financeCustom->amount)->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)
-            ->setOperateType(FinanceConstant::OPERATE_RECHARGE)->setRelationType(FinanceConstant::RELATION_CUSTOM_IN);
-        $oOperate->addAction($oAction);
+        if(!empty($financeCustom->creditor)){
+            //得钱方加钱
+            $oAction = new ActionObject();
+            $oAction->setUserId($financeCustom->creditor)
+                ->setAmount($financeCustom->amount)->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)
+                ->setOperateType(FinanceConstant::OPERATE_RECHARGE)->setRelationType(FinanceConstant::RELATION_CUSTOM_IN);
+            $oOperate->addAction($oAction);
+        }
 
         Finance::execute($oOperate);
     }
@@ -101,7 +103,7 @@ class UserFinance
     public function transfer($debtor, $creditor, $amount=null, $reason){
         $sourceAccount = Account::whereUserId($debtor)->wherePurpose(Sports\Constant\Finance::ACCOUNT_BALANCE)->first();
         if(!$sourceAccount || $sourceAccount->balance <= 0 || ($amount !== null && $sourceAccount->balance < $amount)){
-            throw new LogicException('原账户中没钱或余额不足');
+            return '原账户中没钱或余额不足';
         }
 
         $amount === null && $amount = $sourceAccount->balance;
@@ -118,6 +120,8 @@ class UserFinance
         $finance->save();
 
         $this->ensureUpgradeToGoldMoney($creditor);
+
+        return true;
     }
 
     function ensureUpgradeToGoldMoney($userId){

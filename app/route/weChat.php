@@ -134,7 +134,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
                 $user = User::where('telephone', '=', $telephone)->first();
                 if ($user) {
                     try {
-                        Sms::sendSync($telephone, '您的网球通账号密码已被重置为' . $iCode . '感谢您对网球通的支持。以后打球不办卡，办卡就找【网球通】。', '');
+                        Sms::sendSync($telephone, '您的网球通账号密码已被重置为' . $iCode . '，感谢您对网球通的支持。以后打球不办卡，办卡就找【网球通】。', '');
                     } catch (Exception $e) {
                     }
                     $user->password = Hash::make($iCode);

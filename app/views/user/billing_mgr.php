@@ -48,8 +48,9 @@
                                 <th>变更id</th>
                                 <th>用户名</th>
                                 <th>变更时间</th>
-                                <th>详情</th>
-                                <th>金额</th>
+                                <th width="50%">详情</th>
+                                <th>变更额度</th>
+                                <th>变更后额度</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -58,7 +59,7 @@
                                     ?>
                                     <tr>
                                         <td><?php echo $billingStaging->id ?></td>
-                                        <td><?= $billingStaging->user_name ?></td>
+                                        <td><a href="/user/detail/<?= $billingStaging->user_id?>" target="_blank"><?= $billingStaging->user_name?></a></td>
                                         <td><?php echo date('Y-m-d H:i', $billingStaging->billing_created_time) ?></td>
                                         <td>
                                             <?php if (isset(FinanceConstant::$relationTypeOptions[$billingStaging->relation_type])) { ?>
@@ -81,6 +82,10 @@
                                         </td>
                                         <td>
                                             <?php echo intval($billingStaging->account_change) ?>
+                                            <?php echo $queries['purpose'] == FinanceConstant::PURPOSE_ACCOUNT ? "元" : "分" ?>
+                                        </td>
+                                        <td>
+                                            <?= intval($billingStaging->account_after)?>
                                             <?php echo $queries['purpose'] == FinanceConstant::PURPOSE_ACCOUNT ? "元" : "分" ?>
                                         </td>
                                     </tr>
