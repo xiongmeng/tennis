@@ -33,12 +33,10 @@
 
             <div class="error" id="code" data-bind="text:validcodeError"></div>
         </div>
-        <input type="submit" id="ok" name="ok" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
+        <input type="submit" id="ok" name="ok" class="btn btn-primary btn-block center"
                value="确定">
 
-        <a style="width: 80%; margin-left: 10%;float: left;margin-bottom: 18px"
-           href="<?= url_wrapper('/get_password') ?>" data-ignore="push">
-            <p>如果您长时间未收到短息，可直接拨打（4000 66 5189），由客服人员帮忙绑定新的手机号</p></a>
+        <p class="center">如果您长时间未收到短信，可直接拨打（4000 66 5189），由客服人员帮忙绑定新的手机号。</p>
 
         <p style="height: 400px">&nbsp;</p>
     </form>

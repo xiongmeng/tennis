@@ -68,12 +68,62 @@ class UserFinance
                 break;
             //升级成为VIP
             default:
-                $balance = cache_balance($recharge->user_id);
-                if ($balance >= UPGRADE_TO_GOLD_MONEY) {
-                    User::whereUserId($recharge->user_id)->wherePrivilege(PRIVILEGE_NORMAL)
-                        ->update(array('privilege' => PRIVILEGE_GOLD));
-                }
+                $this->ensureUpgradeToGoldMoney($recharge->user_id);
                 break;
+        }
+    }
+
+    public function execFinanceCustom($financeCustom){
+        if(!$financeCustom instanceof FinanceCustom){
+            $financeCustom = FinanceCustom::findOrFail($financeCustom);
+        }
+
+        $oOperate = new OperateObject();
+        $oOperate->setRelationId($financeCustom->id);
+
+        //扣钱方扣钱
+        $oAction = new ActionObject();
+        $oAction->setUserId($financeCustom->debtor)
+            ->setAmount(-$financeCustom->amount)->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)
+            ->setOperateType(FinanceConstant::OPERATE_CONSUME)->setRelationType(FinanceConstant::RELATION_CUSTOM_OUT);
+        $oOperate->addAction($oAction);
+
+        //得钱方加钱
+        $oAction = new ActionObject();
+        $oAction->setUserId($financeCustom->debtor)
+            ->setAmount($financeCustom->amount)->setPurpose(FinanceConstant::PURPOSE_ACCOUNT)
+            ->setOperateType(FinanceConstant::OPERATE_RECHARGE)->setRelationType(FinanceConstant::RELATION_CUSTOM_IN);
+        $oOperate->addAction($oAction);
+
+        Finance::execute($oOperate);
+    }
+
+    public function transfer($debtor, $creditor, $amount=null, $reason){
+        $sourceAccount = Account::whereUserId($debtor)->wherePurpose(Sports\Constant\Finance::ACCOUNT_BALANCE)->first();
+        if(!$sourceAccount || $sourceAccount->balance <= 0 || ($amount !== null && $sourceAccount->balance < $amount)){
+            throw new LogicException('原账户中没钱或余额不足');
+        }
+
+        $amount === null && $amount = $sourceAccount->balance;
+
+        //新建自定义转款
+        $finance = new FinanceCustom();
+        $finance->generate($debtor, $creditor, $amount, $reason);
+
+        //执行
+        $this->execFinanceCustom($finance);
+
+        //标记执行成功
+        $finance->stat = FINANCE_CUSTOM_SUCC;
+        $finance->save();
+
+        $this->ensureUpgradeToGoldMoney($creditor);
+    }
+
+    function ensureUpgradeToGoldMoney($userId){
+        $sourceAccount = Account::whereUserId($userId)->wherePurpose(Sports\Constant\Finance::ACCOUNT_BALANCE)->first();
+        if ($sourceAccount && $sourceAccount->balance >= UPGRADE_TO_GOLD_MONEY) {
+            User::whereUserId($userId)->wherePrivilege(PRIVILEGE_NORMAL)->update(array('privilege' => PRIVILEGE_GOLD));
         }
     }
 }

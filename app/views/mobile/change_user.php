@@ -26,7 +26,12 @@
                         echo $errors->first('password');
                     } ?></div>
             </div>
-            <input type="submit" id="bond" name="bond" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
+
+            <input type="submit" id="bond" name="bond" class="btn btn-primary btn-block center"
                    value="<?=$user->telephone ? '更换账号' : '绑定账号'?>">
+
+            <?php if($user->telephone){?>
+                <p class="center">温馨提示：更换账号后，老账号的余额将会全部增加到新账号中。</p>
+            <?php }?>
         </form>
     </div>

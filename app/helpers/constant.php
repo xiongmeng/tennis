@@ -69,3 +69,8 @@ const USER_PRIVILEGE_NORMAL = 1;    //普通会员
 const USER_PRIVILEGE_VIP = 2;   //VIP会员
 
 const YES = 1; const NO = 2;
+
+//自定义扣款的相关常量
+const FINANCE_CUSTOM_INIT = 1;
+const FINANCE_CUSTOM_SUCC = 2;
+const FINANCE_CUSTOM_FAIL = 3;

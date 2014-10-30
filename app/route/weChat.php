@@ -532,6 +532,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         $app = RelationUserApp::whereUserId($user->user_id)->whereAppId(APP_WE_CHAT)->first();
 
         if (Request::isMethod('post')) {
+            $oldUser = $user;
             $rules = array(
                 'nickname' => "required|user_auth:" . (isset($queries['password']) ? $queries['password'] : ''),
                 'password' => 'required|between:6,20',
@@ -549,6 +550,12 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 $app->save();
 
                 $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
+
+                //执行钱款更换
+                $userFinance = new UserFinance();
+                $userFinance->transfer($oldUser->user_id, $user->user_id, null,
+                    sprintf('微信更换绑定的网球通账户，从%s更换至%s', $oldUser->nickname, $user->nickname));
+
                 return View::make('mobile_layout')->nest('content', 'mobile.bond_success',
                     array('user' => $user, 'wxUserProfile' => $wxUserProfile));
             }

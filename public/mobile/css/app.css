@@ -376,6 +376,10 @@ header.bar .title {
     width:90%; margin: 20px auto ;
 }
 
+.center{
+    width: 90% !important;
+    margin: 5px auto;
+}
 
 .table-view-cell  .item{
     position: relative;
