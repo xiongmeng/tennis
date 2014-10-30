@@ -56,7 +56,7 @@ class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
                 $query->where('gt_order.stat', '=', $aQuery['stat']);
             }
         }
-        return $query->orderBy('gt_order.event_date', 'desc')
+        return $query->orderBy('gt_order.id', 'desc')
             ->paginate($iPageSize, array('gt_order.*',
                 'gt_hall_tiny.name as hall_name', 'gt_user_tiny.nickname as buyer_name'));
     }
