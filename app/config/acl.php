@@ -24,7 +24,7 @@ return array(
         ),
         '8' => array(
             'label' => '即时订单',
-            'url' => '/instant_order_mgr',
+            'url' => '/instant_order_mgr/all',
             'children' => array()
         ),
         '9' => array(
@@ -46,7 +46,7 @@ return array(
         ),
         '13' => array(
             'label' => '预约订单',
-            'url' => '/reserve_order_mgr',
+            'url' => '/reserve_order_mgr/book_pending',
             'children' => array()
         ),
         '14' => array(

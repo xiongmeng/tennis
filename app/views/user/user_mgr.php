@@ -66,9 +66,9 @@
                                         <a href="<?='/notify/create?events=' . NOTIFY_TYPE_INIT_WJ . '&object=' . $user->user_id?>" target="_blank">初始</a>
                                     </td>
                                     <td>
-                                        <a href="/reserve_order_mgr?buyer_name=<?= $user->nickname?>" target="_blank">预约</a>|
+                                        <a href="/reserve_order_mgr/all?buyer_name=<?= $user->nickname?>" target="_blank">预约</a>|
                                         <a href="/billing_mgr/account_balance?user_name=<?= $user->nickname?>" target="_blank">流水</a>|
-                                        <a href="/instant_order_mgr?buyer_name=<?= $user->nickname?>" target="_blank">即时</a>
+                                        <a href="/instant_order_mgr/all?buyer_name=<?= $user->nickname?>" target="_blank">即时</a>
                                     </td>
                                 </tr>
 

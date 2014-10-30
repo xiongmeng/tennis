@@ -26,7 +26,7 @@ Route::get('/', function () {
             return Redirect::to('hall_on_sale');
         }
         if ($role == 2) {
-            return Redirect::to('instant_order_mgr');
+            return Redirect::to('/instant_order_mgr/all');
         }
         if ($role == 3) {
             return Redirect::to('/set_receive_sms_telephone');
@@ -94,32 +94,62 @@ Route::post('/logining', function () {
     }
 });
 
-Route::get('/instant_order_mgr', array('before' => 'auth', function () {
+Route::get('/instant_order_mgr/{curTab}', array('before' => 'auth', function ($curTab) {
+    $tabs = array(
+        'all' => array(
+            'label' => '全部订单',
+            'url' => '/instant_order_mgr/all'
+        ),
+        'expiring' => array(
+            'label' => '将过期订单',
+            'url' => '/instant_order_mgr/expiring'
+        ),
+    );
+
     $queries = Input::all();
     $instantModel = new InstantOrder();
 
+    if($curTab == 'expiring'){
+        $queries['state'] = 'on_sale';
+        $queries['event_date_start'] = \Carbon\Carbon::tomorrow();
+        $queries['event_date_end'] = \Carbon\Carbon::tomorrow()->addDay(1);
+    }
     !isset($queries['state']) && $queries['state'] = 'payed';
-//    $queries['state'] = array_keys(
-//        array_except(Config::get('fsm.instant_order.states'), array('draft', 'waste')));
 
     $instants = $instantModel->search($queries);
 
     $states = instant_order_state_option();
 
     return View::make('layout')->nest('content', 'instantOrder.order_mgr',
-        array('instants' => $instants, 'queries' => $queries, 'states' => $states));
+        array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'curTab' => $curTab, 'tabs' => $tabs));
 }));
 
-Route::get('/reserve_order_mgr', array('before' => 'auth', function () {
-    $queries = Input::all();
-    $reserveModel = new ReserveOrder();
+Route::get('/reserve_order_mgr/{curTab}', array('before' => 'auth', function ($curTab) {
+    $tabs = array(
+        'book_pending' => array(
+            'label' => '待处理订单',
+            'url' => '/reserve_order_mgr/book_pending'
+        ),
+        'all' => array(
+            'label' => '全部订单',
+            'url' => '/reserve_order_mgr/all',
+        ),
+    );
 
+    $queries = Input::all();
+    if($curTab == 'book_pending'){
+        $queries['stat'] = 0;
+    }else if(isset($queries['stat']) && strlen($queries['stat']) > 0){
+        $queries['stat'] = intval($queries['stat']);
+    }
+
+    $reserveModel = new ReserveOrder();
     $reserves = $reserveModel->search($queries);
     adjustTimeStamp($reserves);
 
     $states = reserve_order_status_option();
     return View::make('layout')->nest('content', 'reserveOrder.order_mgr',
-        array('reserves' => $reserves, 'queries' => $queries, 'states' => $states));
+        array('reserves' => $reserves, 'queries' => $queries, 'states' => $states, 'curTab' => $curTab, 'tabs' => $tabs));
 }));
 
 Route::get('/instant_order_buyer', array('before' => 'auth', function () {
