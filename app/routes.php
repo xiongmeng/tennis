@@ -96,13 +96,17 @@ Route::post('/logining', function () {
 
 Route::get('/instant_order_mgr/{curTab}', array('before' => 'auth', function ($curTab) {
     $tabs = array(
-        'all' => array(
-            'label' => '全部订单',
-            'url' => '/instant_order_mgr/all'
+        'payed' => array(
+            'label' => '已购买订单',
+            'url' => '/instant_order_mgr/payed'
         ),
         'expiring' => array(
             'label' => '将过期订单',
             'url' => '/instant_order_mgr/expiring'
+        ),
+        'all' => array(
+            'label' => '全部订单',
+            'url' => '/instant_order_mgr/all'
         ),
     );
 
@@ -113,8 +117,9 @@ Route::get('/instant_order_mgr/{curTab}', array('before' => 'auth', function ($c
         $queries['state'] = 'on_sale';
         $queries['event_date_start'] = \Carbon\Carbon::tomorrow();
         $queries['event_date_end'] = \Carbon\Carbon::tomorrow()->addDay(1);
+    }else if($curTab == 'payed'){
+        $queries['state'] = 'payed';
     }
-    !isset($queries['state']) && $queries['state'] = 'payed';
 
     $instants = $instantModel->search($queries);
 
