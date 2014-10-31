@@ -116,7 +116,7 @@ Route::get('/instant_order_mgr/{curTab}', array('before' => 'auth', function ($c
     if($curTab == 'expiring'){
         $queries['state'] = 'on_sale';
         $queries['event_date_start'] = \Carbon\Carbon::tomorrow();
-        $queries['event_date_end'] = \Carbon\Carbon::tomorrow()->addDay(1);
+        $queries['event_date_end'] = \Carbon\Carbon::tomorrow();
     }else if($curTab == 'payed'){
         $queries['state'] = 'payed';
     }

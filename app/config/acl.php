@@ -24,7 +24,7 @@ return array(
         ),
         '8' => array(
             'label' => '即时订单',
-            'url' => '/instant_order_mgr/all',
+            'url' => '/instant_order_mgr/payed',
             'children' => array()
         ),
         '9' => array(
