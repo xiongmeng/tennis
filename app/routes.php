@@ -26,7 +26,7 @@ Route::get('/', function () {
             return Redirect::to('hall_on_sale');
         }
         if ($role == 2) {
-            return Redirect::to('/instant_order_mgr/all');
+            return Redirect::to('/reserve_order_mgr/book_pending');
         }
         if ($role == 3) {
             return Redirect::to('/set_receive_sms_telephone');
