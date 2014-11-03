@@ -136,6 +136,14 @@ function option_app_type(){
     );
 }
 
+function option_hall_stat(){
+    return array(
+        HALL_STAT_DRAFT => '草稿',
+        HALL_STAT_PUBlISH => '已发布',
+        HALL_STAT_DELETE => '已删除',
+    );
+}
+
 function user_roles(User $user = null)
 {
     static $roles = null;

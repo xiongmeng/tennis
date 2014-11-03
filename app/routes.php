@@ -17,6 +17,7 @@ require_once 'route/finance.php';
 require_once 'route/weChat.php';
 require_once 'route/notify.php';
 require_once 'route/user.php';
+require_once 'route/hall.php';
 
 Route::get('/', function () {
     if (Auth::check()) {

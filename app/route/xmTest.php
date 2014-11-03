@@ -92,7 +92,10 @@ Route::group(array('prefix' => 'xm'), function(){
     });
 
     Route::get('/artisan', function(){
-        Artisan::call('instantOrder:generate', array('--date' => '2014-10-01', '--hall' =>8920));
+//        Artisan::call('instantOrder:generate', array('--date' => '2014-10-01', '--hall' =>8920));
+        $out = new \Symfony\Component\Console\Output\BufferedOutput();
+        Artisan::call('user:hall', array('operate' => 'generate', '--hall' =>array(8920)), $out);
+        return $out->fetch();
     });
 
     Route::get('/register', function(){

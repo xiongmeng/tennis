@@ -1,0 +1,75 @@
+<?php
+Route::get('/hall/detail/{id}', function($id){
+    $hall = Hall::with(array('HallMarkets', 'HallPrices', 'Users', 'HallImages', 'Map'))->findOrFail($id);
+
+    return View::make('layout')->nest('content', 'hall.detail_mgr',
+        array('hall' => $hall));
+});
+
+Route::get('/hall/{curTab}', array("before"=>'auth' ,function($curTab){
+    $tabs = array(
+        'published' => array(
+            'label' => '已发布场馆',
+            'url' => '/hall/published'
+        ),
+        'all' => array(
+            'label' => '所有场馆',
+            'url' => '/hall/all',
+        ),
+    );
+
+    $queries = Input::all();
+    if($curTab == 'published'){
+        $queries['stat'] = HALL_STAT_PUBlISH;
+    }
+
+    $hallModel = new Hall();
+    $halls = $hallModel->search($queries);
+    adjustTimeStamp($halls);
+
+    $stats = option_hall_stat();
+    $stats[''] = '状态';
+
+    return View::make('layout')->nest('content', 'hall.hall_mgr',
+        array('halls' => $halls, 'queries' => $queries, 'stats'=>$stats, 'tabs' => $tabs, 'curTab' => $curTab));
+}));
+
+Route::post('/hall/generateUser/{hallId}', array('before' => 'auth', function($hallId){
+    $user = Input::only(array('user_id', 'nickname', 'init_password'));
+    if(empty($user['nickname']) || empty($user['init_password'])){
+        return rest_fail('登录名或初始密码均不能为空！');
+    }
+
+    if(empty($user['user_id'])){
+        $hall = new Hall();
+        $generateUser = $hall->generateUser($hallId, $user['nickname'], $user['init_password']);
+    }else{
+        return rest_success($user);
+    }
+
+    return rest_success($generateUser);
+}));
+
+/**
+ * 更新地图信息
+ */
+Route::post('/hall/saveMap/{hallId}', array('before' => 'auth', function($hallId){
+    $mapData = Input::only(array('long', 'lat', 'baidu_code'));
+    $mapData['hall_id'] = $hallId;
+
+    $mapId = Input::get('id');
+    if(!empty($mapId)){
+        $res = HallMap::whereId($mapId)->update($mapData);
+    }else{
+        $res = HallMap::create($mapData);
+    }
+
+    return rest_success($res);
+}));
+
+Route::post('/hall/update/{hallId}', array('before' => 'auth', function($hallId){
+    $mapData = Input::only(array('name','code','telephone','linkman','province','city','county',
+        'area_text','sort','business','air','bath','park','thread','good','comment'));
+    $res = Hall::whereId($hallId)->update($mapData);
+    return rest_success($res);
+}));

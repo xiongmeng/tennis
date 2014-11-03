@@ -69,6 +69,11 @@ return array(
             'url' => '/app',
             'children' => array()
         ),
+        '18' => array(
+            'label' => '场馆',
+            'url' => '/hall/published',
+            'children' => array()
+        ),
     ),
 
     'roles' => array(
@@ -91,7 +96,7 @@ return array(
              '2', '4', '5'
         ),
         '2' => array(
-            '8','6','13','14','15','16','17'
+            '8','6','13','14','15','16','17','18'
         ),
         '3' => array(
               '11', '9', '12'

@@ -21,6 +21,7 @@ const PAY_TYPE_WE_CHAT = 8; //微信支付
 const CACHE_PREFIX_VALID_CODE = 'valid_code_';
 
 const ROLE_USER = 1;//用户会员角色
+const ROLE_HALL = 3;//场馆角色
 
 const RESERVE_STAT_INIT =  0;  //初始化 - 草稿 - 待处理
 const RESERVE_STAT_UNPAY = 1; //待支付
@@ -74,3 +75,8 @@ const YES = 1; const NO = 2;
 const FINANCE_CUSTOM_INIT = 1;
 const FINANCE_CUSTOM_SUCC = 2;
 const FINANCE_CUSTOM_FAIL = 3;
+
+const HALL_STAT_NULL = 0;
+const HALL_STAT_DRAFT = 1;   //未发布
+const HALL_STAT_PUBlISH = 2; //已发布
+const HALL_STAT_DELETE = 88; //已删除
