@@ -58,7 +58,7 @@
                 <label class="control-label col-md-3">省份：</label>
 
                 <div class="col-md-8">
-                    <input class="form-control" placeholder="省份" type="text" data-bind="value:province">
+                    <input class="form-control" placeholder="省份" type="text" data-bind="value:province" disabled>
                 </div>
             </div>
 
@@ -66,7 +66,7 @@
                 <label class="control-label col-md-3">市：</label>
 
                 <div class="col-md-8">
-                    <input class="form-control" placeholder="市" type="text" data-bind="value:city">
+                    <input class="form-control" placeholder="市" type="text" data-bind="value:city" disabled>
                 </div>
             </div>
 
@@ -74,7 +74,7 @@
                 <label class="control-label col-md-3">区县：</label>
 
                 <div class="col-md-8">
-                    <input class="form-control" placeholder="区县" type="text" data-bind="value:county">
+                    <input class="form-control" placeholder="区县" type="text" data-bind="value:county" disabled>
                 </div>
             </div>
 
