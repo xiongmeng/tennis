@@ -42,14 +42,26 @@ class WeiXinController extends \BaseController
 
             if ($Event == 'click') { //CLICK事件
                 Log::debug('wechat_click_happend', $message);
-                echo $server->getXml4RichMsgByArray(array(
-                    0 => array(
-                        'title' => 'Gotennis磨砂干性手胶60个超值盒装',
-                        'desc' => '磨砂干性手胶60个超值盒装，仅要150元',
-                        'pic' => "https://mmbiz.qlogo.cn/mmbiz/QeXiaHN2eevHmhpHdPCuYCl2eeTnjfw73Bu8vDntxKJicxlv5XQWxRKrh8h1yDIMThHBm8psCSpicwphyKSzeeT2g/0",
-                        'url' => "http://mp.weixin.qq.com/bizmall/malldetail?id=&pid=pzSPvjt3xWeW3Cq_JH82xEXIbgSU&biz=MjM5ODAzNjk0MQ==&scene=&action=show_detail&showwxpaytitle=1#wechat_redirect"
-                    ),
-                ));
+//                echo $server->getXml4RichMsgByArray(array(
+//                    0 => array(
+//                        'title' => 'Gotennis磨砂干性手胶60个超值盒装',
+//                        'desc' => '磨砂干性手胶60个超值盒装，仅要150元',
+//                        'pic' => "https://mmbiz.qlogo.cn/mmbiz/QeXiaHN2eevHmhpHdPCuYCl2eeTnjfw73Bu8vDntxKJicxlv5XQWxRKrh8h1yDIMThHBm8psCSpicwphyKSzeeT2g/0",
+//                        'url' => "http://mp.weixin.qq.com/bizmall/malldetail?id=&pid=pzSPvjt3xWeW3Cq_JH82xEXIbgSU&biz=MjM5ODAzNjk0MQ==&scene=&action=show_detail&showwxpaytitle=1#wechat_redirect"
+//                    ),
+//                ));
+                $client = new \Cooper\Wechat\WeChatClient();
+                $products = $client->getOnlineProduct();
+                $res = array();
+                foreach($products as $product){
+                    $res[] = array(
+                        'title' => $product['product_base']['name'],
+                        'desc' => '',
+                        'pic' => $product['product_base']['main_img'],
+                        'url' => sprintf('http://mp.weixin.qq.com/bizmall/malldetail?id=&pid=%s&biz=MjM5ODAzNjk0MQ==&scene=&action=show_detail&showwxpaytitle=1#wechat_redirect',$product['product_id']),
+                    );
+                }
+                echo $server->getXml4RichMsgByArray($res);
             }
         }
 
@@ -68,14 +80,18 @@ class WeiXinController extends \BaseController
                     echo $server->getXml4Txt("$host/mobile_register");
                     break;
                 case 'good':
-                    echo $server->getXml4RichMsgByArray(array(
-                        0 => array(
-                            'title' => 'Gotennis磨砂干性手胶60个超值盒装',
+                    $client = new \Cooper\Wechat\WeChatClient();
+                    $products = $client->getOnlineProduct();
+                    $res = array();
+                    foreach($products as $product){
+                        $res[] = array(
+                            'title' => $product['product_base']['name'],
                             'desc' => '',
-                            'pic' => "https://mmbiz.qlogo.cn/mmbiz/QeXiaHN2eevHmhpHdPCuYCl2eeTnjfw73Bu8vDntxKJicxlv5XQWxRKrh8h1yDIMThHBm8psCSpicwphyKSzeeT2g/0",
-                            'url' => "http://mp.weixin.qq.com/bizmall/malldetail?id=&pid=pzSPvjt3xWeW3Cq_JH82xEXIbgSU&biz=MjM5ODAzNjk0MQ==&scene=&action=show_detail&showwxpaytitle=1#wechat_redirect"
-                        ),
-                    ));
+                            'pic' => $product['product_base']['main_img'],
+                            'url' => sprintf('http://mp.weixin.qq.com/bizmall/malldetail?id=&pid=%s&biz=MjM5ODAzNjk0MQ==&scene=&action=show_detail&showwxpaytitle=1#wechat_redirect',$product['product_id']),
+                        );
+                    }
+                    echo $server->getXml4RichMsgByArray($res);
                     break;
                 default:
                     echo $server->getXml4Txt('欢迎关注网球通！我们将竭诚为你提供更方便，更低价格的的网球订场服务。更多内容请点击菜单项！');
