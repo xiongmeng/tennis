@@ -1,7 +1,6 @@
 <?php
 Route::get('/hall/detail/{id}', function($id){
-    $hall = Hall::with(array('HallMarkets', 'HallPrices', 'Users', 'HallImages', 'Map'))->findOrFail($id);
-
+    $hall = Hall::with(array('CourtGroup', 'HallMarkets', 'HallPrices', 'Users', 'HallImages', 'Map'))->findOrFail($id);
     return View::make('layout')->nest('content', 'hall.detail_mgr',
         array('hall' => $hall));
 });
@@ -62,6 +61,20 @@ Route::post('/hall/saveMap/{hallId}', array('before' => 'auth', function($hallId
         $res = HallMap::whereId($mapId)->update($mapData);
     }else{
         $res = HallMap::create($mapData);
+    }
+
+    return rest_success($res);
+}));
+
+Route::post('/hall/saveCourtGroup/{hallId}', array('before' => 'auth', function($hallId){
+    $courtGroupData = Input::only(array('name', 'count'));
+    $courtGroupData['hall_id'] = $hallId;
+
+    $mapId = Input::get('id');
+    if(!empty($mapId)){
+        $res = CourtGroup::whereId($mapId)->update($courtGroupData);
+    }else{
+        $res = CourtGroup::create($courtGroupData);
     }
 
     return rest_success($res);

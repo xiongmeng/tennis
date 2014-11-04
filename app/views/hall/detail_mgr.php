@@ -5,6 +5,7 @@
 <div class="col-md-12" id="worktable">
 <ul class="nav nav-tabs nav-justified" role="tablist">
     <li role="presentation"><a href="#base">基本信息</a></li>
+    <li role="presentation"><a href="#court">场地信息</a></li>
     <li role="presentation"><a href="#user">用户信息</a></li>
     <li role="presentation"><a href="#map">地图信息</a></li>
     <li role="presentation"><a href="#detail">详细信息</a></li>
@@ -91,6 +92,41 @@
             <div class="form-group">
                 <div class="col-md-3 col-md-offset-4">
                     <button class="btn-u btn-u-green btn-block" data-bind="click:update">提交保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default" id="court" data-bind="with:courtGroup">
+    <div class="panel-heading">场地信息</div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-md-3">ID：</label>
+
+                <div class="col-md-8">
+                    <input class="form-control" placeholder="ID" type="text" data-bind="value:id" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">类型：</label>
+
+                <div class="col-md-8">
+                    <input class="form-control" placeholder="类型" type="text" data-bind="value:name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">数目：</label>
+
+                <div class="col-md-8">
+                    <input class="form-control" placeholder="初始密码" type="text" data-bind="value:count">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-3 col-md-offset-4">
+                    <button class="btn-u btn-u-green btn-block" data-bind="click:$root.saveCourtGroup">提交保存</button>
                 </div>
             </div>
         </form>

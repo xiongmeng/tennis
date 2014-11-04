@@ -9,6 +9,14 @@ define(function(require){
         'submitUrl' : ''
     };
 
+    var CourtGroupModel = function(courtGroup){
+        var self = this;
+        self.id = courtGroup.id;
+        self.hall_id = courtGroup.hall_id;
+        self.name = courtGroup.name;
+        self.count = courtGroup.count;
+    };
+
     var MapModel = function(map){
         var self = this;
         self.id = map.id;
@@ -30,6 +38,7 @@ define(function(require){
         var self = mappingModel;
         self.map = ko.observable(new MapModel(hallData.map || {}));
         self.user = ko.observable(new UserModel(hallData.users.length > 0 ? hallData.users[0] : {}));
+        self.courtGroup = ko.observable(new CourtGroupModel(hallData.court_group || {}));
 
         self.generateUser = function(){
             var $user = mapping.toJS(self.user);
@@ -47,6 +56,14 @@ define(function(require){
         self.saveMap = function(){
             var $map = mapping.toJS(self.map);
             var defer = $.restPost('/hall/saveMap/' + self.id(), $map);
+            defer.done(function(res, data){
+                window.location.reload();
+            });
+        };
+
+        self.saveCourtGroup = function(){
+            var group = mapping.toJS(self.courtGroup);
+            var defer = $.restPost('/hall/saveCourtGroup/' + self.id(), group);
             defer.done(function(res, data){
                 window.location.reload();
             });
