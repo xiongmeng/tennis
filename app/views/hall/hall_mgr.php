@@ -62,7 +62,7 @@
                         <tr>
                             <td><?= $hall->sort; ?></td>
                             <td><?= $hall->id?></td>
-                            <td><a href="/hall/detail/<?= $hall->id?>" target="_blank"><?= $hall->name?></a></td>
+                            <td><?= href_hall_detail($hall->id, $hall->name);?></td>
                             <td>TBD</td>
                             <td><?= $hall->telephone; ?></td>
                             <td><?= $hall->court_name . ' ' . $hall->court_num?>片</td>

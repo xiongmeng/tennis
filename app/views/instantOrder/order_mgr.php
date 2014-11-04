@@ -74,7 +74,7 @@
                     <?php $fsm = new InstantOrderFsm($instant); ?>
                     <tr>
                         <td><?php echo $instant->id; ?></td>
-                        <td><?php echo $instant->hall_name; ?></td>
+                        <td><?= href_hall_detail($instant->hall_id, $instant->hall_name); ?></td>
                         <td><?php echo $instant->court_tags; ?></td>
                         <td><?php echo substr($instant->event_date, 0, 10); ?></td>
                         <td><?php echo $instant->start_hour . '-' . $instant->end_hour; ?></td>
@@ -82,7 +82,7 @@
                         <td><?php echo $instant->cost_price; ?></td>
                         <td><?= !empty($instant->expire_time) ? date('m-d H:i', $instant->expire_time) : '' ?>
                         <td><?php echo $instant->seller; ?></td>
-                        <td><?php echo $instant->buyer_name; ?></td>
+                        <td><?= href_user_detail($instant->buyer, $instant->buyer_name); ?></td>
                         <td><?php echo $states[$instant->state]; ?></td>
 
                         <td><?php if ($fsm->can('cancel')) { ?>

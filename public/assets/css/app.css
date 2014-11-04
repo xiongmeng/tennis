@@ -60,6 +60,9 @@ img.img-circle {
    border-bottom: none;
 }
 
+.table tbody > tr > td{
+    word-break:break-all
+}
 /*Forms
 ------------------------------------*/
 .form-control {

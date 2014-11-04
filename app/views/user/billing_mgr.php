@@ -59,7 +59,7 @@
                                     ?>
                                     <tr>
                                         <td><?php echo $billingStaging->id ?></td>
-                                        <td><a href="/user/detail/<?= $billingStaging->user_id?>" target="_blank"><?= $billingStaging->user_name?></a></td>
+                                        <td><?= href_user_detail($billingStaging->user_id, $billingStaging->user_name)?></td>
                                         <td><?php echo date('Y-m-d H:i', $billingStaging->billing_created_time) ?></td>
                                         <td>
                                             <?php if (isset(FinanceConstant::$relationTypeOptions[$billingStaging->relation_type])) { ?>

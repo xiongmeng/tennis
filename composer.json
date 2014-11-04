@@ -30,7 +30,8 @@
 		],
         "files": [
             "app/helpers/common.php",
-            "app/helpers/constant.php"
+            "app/helpers/constant.php",
+            "app/helpers/view.php"
         ]
 	},
 	"scripts": {
