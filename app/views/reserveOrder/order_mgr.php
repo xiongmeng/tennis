@@ -72,6 +72,7 @@
                             <td><?php echo $states[$reserve->stat]; ?></td>
                             <td></td>
                             <td>
+                                <a href="<?='/notify/create?events=' . NOTIFY_TYPE_ORDER_FAILED . '&object=' . $reserve->id?>" target="_blank">无场地</a>|
                                 <a href="<?='/notify/create?events=' . NOTIFY_TYPE_ORDER_UNPAY . '&object=' . $reserve->id?>" target="_blank">预订</a>|
                                 <a href="<?='/notify/create?events=' . NOTIFY_TYPE_ORDER_PAYED . '&object=' . $reserve->id?>" target="_blank">支付</a>|
                                 <a href="<?='/notify/create?events=' . NOTIFY_TYPE_ORDER_CANCEL . '&object=' . $reserve->id?>" target="_blank">取消</a>

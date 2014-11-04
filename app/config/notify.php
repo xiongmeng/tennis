@@ -66,6 +66,19 @@ return array(
             'channels' => array(NOTIFY_CHANNEL_SMS_ASYNC, NOTIFY_CHANNEL_WX_SYNC),
             'title' => '余额不足',
         ),
+        //场地预订失败
+        NOTIFY_TYPE_ORDER_FAILED => array(
+            'who' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
+                    return get_who_from_user_and_channel($order->user_id, $channel);
+                },
+            'msg' => function ($reserve_order_id, $channel) {
+                    $order = cache_reserve_order($reserve_order_id);
+                    return sprintf("很抱歉，您预订的场地已经售出。订单号%s（%s）。", $order->id, contactReserveOrderInfo($order));
+                },
+            'channels' => array(NOTIFY_CHANNEL_WX_SYNC),
+            'title' => '预约订单没有场地',
+        ),
         //预约订单取消成功
         NOTIFY_TYPE_ORDER_CANCEL => array(
             'who' => function ($reserve_order_id, $channel) {

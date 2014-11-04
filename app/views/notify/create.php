@@ -42,7 +42,7 @@
                     <label for="inputPassword3" class="col-sm-2 control-label">接收信息</label>
 
                     <div class="col-sm-10">
-                        <textarea class="form-control" rows="3" data-bind="text:msg"></textarea>
+                        <textarea class="form-control" rows="3" data-bind="value:msg"></textarea>
                     </div>
                 </div>
                 <div class="form-group">

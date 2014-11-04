@@ -56,6 +56,7 @@ const NOTIFY_TYPE_TRADE_UNPAY_CREDITOR = 8881;//对于失败的分账，为发�
 const NOTIFY_TYPE_TRADE_PAYED_DEBTOR = 8880;//对于成功的分账，为被分账用户发送短信提醒
 const NOTIFY_TYPE_ORDER_CANCEL = 8879;//订单取消，为用户发送的短信
 const NOTIFY_TYPE_ORDER_NOTICE = 8700;//前台用户提交的短信，用于提醒管理员
+const NOTIFY_TYPE_ORDER_FAILED = 8889;//没有场地，给用户发送微信提示
 const NOTIFY_TYPE_PARTNER_COACH = 8878;//陪练中教练费用支付，提醒教练
 const NOTIFY_TYPE_PARTNER_STUDENT = 8877;//陪练中用户费用扣除，提醒用户
 const NOTIFY_TYPE_TRAIN_COACH = 8876;//培训中教练费用支付，提醒教练
