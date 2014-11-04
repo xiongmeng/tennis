@@ -165,7 +165,9 @@ class Common_util_
 		//post提交方式
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
-		//运行curl
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+
+        //运行curl
         $data = curl_exec($ch);
 //		curl_close($ch);
 		//返回结果
@@ -199,7 +201,9 @@ class Common_util_
 		curl_setopt($ch,CURLOPT_SSLCERT, WxPayConf::SSLCERT_PATH);
 		curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
 		curl_setopt($ch,CURLOPT_SSLKEY, WxPayConf::SSLKEY_PATH);
-		//post提交方式
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+
+        //post提交方式
 		curl_setopt($ch,CURLOPT_POST, true);
 		curl_setopt($ch,CURLOPT_POSTFIELDS,$xml);
 		$data = curl_exec($ch);
@@ -872,7 +876,9 @@ class WeChatJsApi extends Common_util_
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		//运行curl，结果以jason形式返回
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+
+        //运行curl，结果以jason形式返回
         $res = curl_exec($ch);
 		curl_close($ch);
 		//取出openid
