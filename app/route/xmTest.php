@@ -218,6 +218,17 @@ Route::group(array('prefix' => 'xm'), function(){
         $userFinance = new UserFinance();
         $userFinance->transfer(890490, 889082, null, '微信更换绑定的网球通账户');
     });
+
+    Route::get('wxProduct', function(){
+        $client = new \Cooper\Wechat\WeChatClient();
+        $res = $client->getOnlineProduct();
+        return $res;
+    });
+
+    Route::get('curl', function(){
+        $client = new \Cooper\Wechat\WeChatClient();
+        return $client->getMenu();
+    });
 });
 
 Route::group(array('domain' => 'homestead1.app'), function()
