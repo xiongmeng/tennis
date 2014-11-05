@@ -6,6 +6,8 @@
 <ul class="nav nav-tabs nav-justified" role="tablist">
     <li role="presentation"><a href="#base">基本信息</a></li>
     <li role="presentation"><a href="#court">场地信息</a></li>
+    <li role="presentation"><a href="#price">价格标准</a></li>
+    <li role="presentation"><a href="#market">日期时段</a></li>
     <li role="presentation"><a href="#user">用户信息</a></li>
     <li role="presentation"><a href="#map">地图信息</a></li>
     <li role="presentation"><a href="#detail">详细信息</a></li>
@@ -130,6 +132,96 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="panel panel-default" id="price">
+    <div class="panel-heading">价格标准</div>
+    <div class="panel-body">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th width="5%">ID</th>
+                <th width="8%">场地类型</th>
+                <th width="10%">计价标准</th>
+                <th width="10%">门市价</th>
+                <th width="10%">会员价</th>
+                <th width="10%">VIP价</th>
+                <th width="10%">采购价</th>
+                <th width="10%">操作</th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: hall_prices">
+                <tr>
+                    <td data-bind="text:id"></td>
+                    <td>
+                        <select class="form-control" data-bind="with:$root.courtGroup,value:court_type">
+                            <option data-bind="text: name, value:id"></option>
+                        </select>
+                    </td>
+                    <td class="has-success"><input type="text" class="form-control" data-bind="value:name"></td>
+                    <td class="has-success"><input type="text" class="form-control" data-bind="value:market"></td>
+                    <td class="has-success"><input type="text" class="form-control" data-bind="value:member"></td>
+                    <td class="has-success"><input type="text" class="form-control" data-bind="value:vip"></td>
+                    <td class="has-success"><input type="text" class="form-control" data-bind="value:purchase"></td>
+                    <td>
+                        <div class="btn-toolbar">
+                            <button class="btn btn-primary" data-bind="click:$root.savePrice, enable:name()&&market()&&member()&&vip()&&purchase()">保存</button>
+                            <button class="btn btn-danger" data-bind="click:$root.deletePrice, enable:id()">删除</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default" id="market">
+    <div class="panel-heading">日期时段</div>
+    <div class="panel-body">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th width="5%">ID</th>
+                <th width="8%">类型</th>
+                <th width="10%">开始星期</th>
+                <th width="10%">结束星期</th>
+                <th width="10%">开始时间</th>
+                <th width="10%">结束时间</th>
+                <th width="10%">计价标准</th>
+                <th width="10%">操作</th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: hall_markets">
+            <tr>
+                <td data-bind="text:id"></td>
+                <td>
+                    <select class="form-control"
+                            data-bind="options:$root.types,value:type,
+                            optionsText:'name',optionsValue:'id',optionsCaption: ' '"></select>
+                </td>
+
+                <td class="has-success"><select class="form-control"
+                                                data-bind="options:$root.weeks,value:start_week,
+                            optionsText:'name',optionsValue:'id',optionsCaption: ' '"></select></td>
+                <td class="has-success"><select class="form-control"
+                                                data-bind="options:$root.weeks,value:end_week,
+                            optionsText:'name',optionsValue:'id',optionsCaption: ' '"></select></td>
+                <td class="has-success"><select class="form-control" data-bind="options:$root.hours,value:start,optionsCaption: ' '"></select></td>
+                <td class="has-success"><select class="form-control" data-bind="options:$root.hours,value:end,optionsCaption: ' '"></select></td>
+                <td class="has-success"><select class="form-control" data-bind="options:$root.hall_prices,
+                    optionsText: function(item){return item.name()},
+                                   optionsValue: function(item){return item.id()},
+                value:price"></td>
+                <td>
+                    <div class="btn-toolbar">
+                        <button class="btn btn-primary" data-bind="click:$root.saveMarket, enable:type()&&start_week()&&end_week()&&start()&&end()&&price()">保存</button>
+                        <button class="btn btn-danger" data-bind="click:$root.deleteMarket, enable:id()">删除</button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 

@@ -2,6 +2,7 @@
 
 class HallMarket extends Eloquent {
     protected $table = 'gt_hall_market_week';
+    protected $fillable = array('type', 'hall_id', 'start_week', 'end_week', 'start', 'end', 'price');
 
     public function Hall(){
         return $this->belongsTo('Hall', 'hall_id');
