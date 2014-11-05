@@ -87,17 +87,17 @@
 
                         <td><?php if ($fsm->can('cancel')) { ?>
                                 <a class="btn btn-danger btn-xs"
-                                   href="fsm-operate/<?php echo $instant->id; ?>/cancel"><i
+                                   href="/fsm-operate/<?php echo $instant->id; ?>/cancel"><i
                                         class="icon-trash"></i> 取消</a>
                             <?php } ?>
                             <?php if ($fsm->can('online')) { ?>
                                 <a class="btn btn-warning btn-xs"
-                                   href="fsm-operate/<?php echo $instant->id; ?>/online"><i
+                                   href="/fsm-operate/<?php echo $instant->id; ?>/online"><i
                                         class="icon-ok"></i>上架</a>
                             <?php } ?>
                             <?php if ($fsm->can('terminate')) { ?>
                                 <a class="btn btn-warning btn-xs"
-                                   href="fsm-operate/<?php echo $instant->id; ?>/terminate"><i
+                                   href="/fsm-operate/<?php echo $instant->id; ?>/terminate"><i
                                         class="icon-pencil"></i>终止</a>
                                 <!--<button class="btn btn-success btn-xs"><i class="icon-ok"></i> Submit</button>-->
                                 <!--<button class="btn btn-info btn-xs"><i class="icon-share"></i> Share</button></td>-->
