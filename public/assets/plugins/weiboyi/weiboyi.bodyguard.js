@@ -1,0 +1,1 @@
+Weiboyi.setDefaultOpts("window", {defaultBtnType: "important"});

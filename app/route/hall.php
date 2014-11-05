@@ -1,9 +1,9 @@
 <?php
-Route::get('/hall/detail/{id}', function($id){
+Route::get('/hall/detail/{id}', array('before' => 'auth',function($id){
     $hall = Hall::with(array('CourtGroup', 'HallMarkets', 'HallPrices', 'Users', 'HallImages', 'Map'))->findOrFail($id);
     return View::make('layout')->nest('content', 'hall.detail_mgr',
         array('hall' => $hall));
-});
+}));
 
 Route::get('/hall/{curTab}', array("before"=>'auth' ,function($curTab){
     $tabs = array(
@@ -122,5 +122,25 @@ Route::post('/hall/update/{hallId}', array('before' => 'auth', function($hallId)
     $mapData = Input::only(array('name','code','telephone','linkman','province','city','county',
         'area_text','sort','business','air','bath','park','thread','good','comment'));
     $res = Hall::whereId($hallId)->update($mapData);
+    return rest_success($res);
+}));
+
+Route::post('hall/saveImages/{hallId}', array('before' => 'auth', function($hallId){
+    $imageString = Input::only(array('images'));
+    $images = explode(',', $imageString);
+    $inserts = array();
+
+    $now = time();
+    foreach($images as $image){
+        $inserts[] = array(
+            'hall_id' => $hallId,
+            'path' => $image,
+            'createtime' => $now
+        );
+    }
+
+    HallImage::whereHallId($hallId)->delete();
+    $res = HallImage::insert($inserts);
+
     return rest_success($res);
 }));

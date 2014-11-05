@@ -1,6 +1,7 @@
 define(function(require) {
     var ko = require('knockout');
     require('plupload');
+    require('fancybox');
 
     ko.bindingHandlers.plupload = {
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
@@ -15,10 +16,9 @@ define(function(require) {
 
             var config = {
                 responseParser : function(res) {
-                    if (res && res.success || res.code == 1000) {
+                    if (res && res.code == 1000) {
                         return {
-                            path: res.url,
-                            id: res.file_id
+                            path: res.data.url
                         }
                     } else {
                         return {

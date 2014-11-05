@@ -11,6 +11,11 @@ seajs.config({
         knockout: 'plugin/knockout/knockout.cmd.js',
         knockout_mapping: 'plugin/knockout/plugins/mapping_debug.js',
         knockout_switch_case: 'plugin/knockout/plugins/knockout-switch-case.min.js',
+        knockout_plupload: 'plugin/knockout/plugins/knockout_plupload.js',
+        plupload: 'plugin/plupload/plupload_cmd.js',
+        doT:    'plugin/doT/doT_cmd.js',
+        fancybox: 'plugin/fancybox/fancybox_cmd.js',
+        weiboyi: 'plugin/weiboyi/weiboyi_all_cmd',
         datetimePicker: 'plugin/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.cmd.js',
         kkcountdown:'plugin/kkcountdown/js/build/kkcountdown.js',
         bootbox:'plugin/bootbox/bootbox.min.js'

@@ -1,9 +1,9 @@
 define(function (require) {
     var ko = require('knockout');
     var mapping = require('knockout_mapping');
-    require('knockout_switch_case');
     require('rest');
     require('bootbox');
+    require('knockout_plupload');
 
     var MarketModel = function (market) {
         var self = this;
@@ -75,6 +75,19 @@ define(function (require) {
             {id: 7, name: '周日'}
         ];
         self.hours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
+        self.images = ko.observable(function(){
+            return $.map(hallData.hall_images, function(item){
+                return item.path;
+            }).join(',');
+        }());
+        self.images.plupload_cfg = {
+            url: '/upload',
+            upload_limit: 8,
+            filters : [
+                {title : "Custom files", extensions : "gif,png,bmp,jpg,jpeg"}
+            ],
+            max_file_size : '5mb'
+        };
 
         self.generateUser = function () {
             var $user = mapping.toJS(self.user);
@@ -130,6 +143,13 @@ define(function (require) {
 
         self.deleteMarket = function (data) {
             var defer = $.restPost('/hall/deleteMarket/' + data.id());
+            defer.done(function (res, data) {
+                window.location.reload();
+            });
+        };
+
+        self.saveImages = function(data){
+            var defer = $.restPost('/hall/saveImages/' + data.id());
             defer.done(function (res, data) {
                 window.location.reload();
             });

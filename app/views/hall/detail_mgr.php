@@ -8,6 +8,7 @@
     <li role="presentation"><a href="#court">场地信息</a></li>
     <li role="presentation"><a href="#price">价格标准</a></li>
     <li role="presentation"><a href="#market">日期时段</a></li>
+    <li role="presentation"><a href="#image">场馆相册</a></li>
     <li role="presentation"><a href="#user">用户信息</a></li>
     <li role="presentation"><a href="#map">地图信息</a></li>
     <li role="presentation"><a href="#detail">详细信息</a></li>
@@ -152,25 +153,28 @@
             </tr>
             </thead>
             <tbody data-bind="foreach: hall_prices">
-                <tr>
-                    <td data-bind="text:id"></td>
-                    <td>
-                        <select class="form-control" data-bind="with:$root.courtGroup,value:court_type">
-                            <option data-bind="text: name, value:id"></option>
-                        </select>
-                    </td>
-                    <td class="has-success"><input type="text" class="form-control" data-bind="value:name"></td>
-                    <td class="has-success"><input type="text" class="form-control" data-bind="value:market"></td>
-                    <td class="has-success"><input type="text" class="form-control" data-bind="value:member"></td>
-                    <td class="has-success"><input type="text" class="form-control" data-bind="value:vip"></td>
-                    <td class="has-success"><input type="text" class="form-control" data-bind="value:purchase"></td>
-                    <td>
-                        <div class="btn-toolbar">
-                            <button class="btn btn-primary" data-bind="click:$root.savePrice, enable:name()&&market()&&member()&&vip()&&purchase()">保存</button>
-                            <button class="btn btn-danger" data-bind="click:$root.deletePrice, enable:id()">删除</button>
-                        </div>
-                    </td>
-                </tr>
+            <tr>
+                <td data-bind="text:id"></td>
+                <td>
+                    <select class="form-control" data-bind="with:$root.courtGroup,value:court_type">
+                        <option data-bind="text: name, value:id"></option>
+                    </select>
+                </td>
+                <td class="has-success"><input type="text" class="form-control" data-bind="value:name"></td>
+                <td class="has-success"><input type="text" class="form-control" data-bind="value:market"></td>
+                <td class="has-success"><input type="text" class="form-control" data-bind="value:member"></td>
+                <td class="has-success"><input type="text" class="form-control" data-bind="value:vip"></td>
+                <td class="has-success"><input type="text" class="form-control" data-bind="value:purchase"></td>
+                <td>
+                    <div class="btn-toolbar">
+                        <button class="btn btn-primary"
+                                data-bind="click:$root.savePrice, enable:name()&&market()&&member()&&vip()&&purchase()">
+                            保存
+                        </button>
+                        <button class="btn btn-danger" data-bind="click:$root.deletePrice, enable:id()">删除</button>
+                    </div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -207,21 +211,36 @@
                 <td class="has-success"><select class="form-control"
                                                 data-bind="options:$root.weeks,value:end_week,
                             optionsText:'name',optionsValue:'id',optionsCaption: ' '"></select></td>
-                <td class="has-success"><select class="form-control" data-bind="options:$root.hours,value:start,optionsCaption: ' '"></select></td>
-                <td class="has-success"><select class="form-control" data-bind="options:$root.hours,value:end,optionsCaption: ' '"></select></td>
+                <td class="has-success"><select class="form-control"
+                                                data-bind="options:$root.hours,value:start,optionsCaption: ' '"></select>
+                </td>
+                <td class="has-success"><select class="form-control"
+                                                data-bind="options:$root.hours,value:end,optionsCaption: ' '"></select>
+                </td>
                 <td class="has-success"><select class="form-control" data-bind="options:$root.hall_prices,
                     optionsText: function(item){return item.name()},
                                    optionsValue: function(item){return item.id()},
                 value:price"></td>
                 <td>
                     <div class="btn-toolbar">
-                        <button class="btn btn-primary" data-bind="click:$root.saveMarket, enable:type()&&start_week()&&end_week()&&start()&&end()&&price()">保存</button>
+                        <button class="btn btn-primary"
+                                data-bind="click:$root.saveMarket, enable:type()&&start_week()&&end_week()&&start()&&end()&&price()">
+                            保存
+                        </button>
                         <button class="btn btn-danger" data-bind="click:$root.deleteMarket, enable:id()">删除</button>
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
+    </div>
+</div>
+
+<div class="panel panel-default" id="market">
+    <div class="panel-heading">场馆相册</div>
+    <div class="panel-body" data-bind="plupload: images">
+        <div><a class="js_btn btn btn-block btn-primary" href="javascript:;"><span class="btn_wrap">上传</span></a></div>
+        <ul class="js_list"></ul>
     </div>
 </div>
 
