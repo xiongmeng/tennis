@@ -3,6 +3,7 @@
 <div class="container" xmlns="http://www.w3.org/1999/html">
 <div class="row">
 <div class="col-md-12" id="worktable">
+<div class="tab-v1">
 <ul class="nav nav-tabs nav-justified" id="tablist">
     <li><a href="#base">基本信息</a></li>
     <li><a href="#court">场地信息</a></li>
@@ -13,6 +14,7 @@
     <li><a href="#map">地图信息</a></li>
     <li><a href="#detail">详细信息</a></li>
 </ul>
+</div>
 
 <div class="panel panel-default" id="base">
     <div class="panel-heading">场馆基本信息</div>
