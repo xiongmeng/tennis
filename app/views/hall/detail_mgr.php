@@ -3,15 +3,15 @@
 <div class="container" xmlns="http://www.w3.org/1999/html">
 <div class="row">
 <div class="col-md-12" id="worktable">
-<ul class="nav nav-tabs nav-justified" role="tablist">
-    <li role="presentation"><a href="#base">基本信息</a></li>
-    <li role="presentation"><a href="#court">场地信息</a></li>
-    <li role="presentation"><a href="#price">价格标准</a></li>
-    <li role="presentation"><a href="#market">日期时段</a></li>
-    <li role="presentation"><a href="#image">场馆相册</a></li>
-    <li role="presentation"><a href="#user">用户信息</a></li>
-    <li role="presentation"><a href="#map">地图信息</a></li>
-    <li role="presentation"><a href="#detail">详细信息</a></li>
+<ul class="nav nav-tabs nav-justified" id="tablist">
+    <li><a href="#base">基本信息</a></li>
+    <li><a href="#court">场地信息</a></li>
+    <li><a href="#price">价格标准</a></li>
+    <li><a href="#market">日期时段</a></li>
+    <li><a href="#image">场馆相册</a></li>
+    <li><a href="#user">用户信息</a></li>
+    <li><a href="#map">地图信息</a></li>
+    <li><a href="#detail">详细信息</a></li>
 </ul>
 
 <div class="panel panel-default" id="base">
@@ -236,11 +236,31 @@
     </div>
 </div>
 
-<div class="panel panel-default" id="market">
+<div class="panel panel-default" id="image">
     <div class="panel-heading">场馆相册</div>
-    <div class="panel-body" data-bind="plupload: images">
-        <div><a class="js_btn btn btn-block btn-primary" href="javascript:;"><span class="btn_wrap">上传</span></a></div>
-        <ul class="js_list"></ul>
+    <div class="panel-body" >
+        <div class="row" data-bind="foreach: hall_images">
+            <div class="col-md-3">
+                <div class="thumbnail" style="height: 200px">
+                    <!--ko if:path()-->
+
+                    <img data-bind="attr:{src:path}">
+                    <div class="caption">
+                        <p>
+                            <button class="btn btn-primary" data-bind="enable:id()!=$root.image(),click:$root.setEnvelope">选为首页</button>
+                            <button class="btn btn-danger" data-bind="click:$root.deleteImage">删除图片</button>
+                        </p>
+                    </div>
+                    <!--/ko -->
+
+                    <!--ko if:!path()-->
+                    <div data-bind="plupload: $root.images">
+                        <a class="js_btn btn btn-block btn-primary" href="javascript:;"><span class="btn_wrap">上传</span></a>
+                    </div>
+                    <!--/ko -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -411,4 +431,13 @@
     seajs.use('hall/hall', function (hall) {
         hall.init($('#worktable')[0], <?= json_encode($hall)?>);
     });
+
+    var tabs = $('#tablist li');
+    tabs.click(function(){
+        tabs.removeClass('active');
+        $(this).addClass('active');
+    });
+
+    var curTab = location.hash || '#base';
+    tabs.find('[href=' + curTab + ']').parent().addClass('active');
 </script>

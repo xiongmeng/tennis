@@ -5,6 +5,13 @@ define(function (require) {
     require('bootbox');
     require('knockout_plupload');
 
+    var ImageModel = function (image) {
+        var self = this;
+        self.id = ko.observable(image.id);
+        self.hall_id = ko.observable(image.hall_id);
+        self.path = ko.observable(image.path);
+    };
+
     var MarketModel = function (market) {
         var self = this;
         self.id = ko.observable(market.id);
@@ -75,19 +82,24 @@ define(function (require) {
             {id: 7, name: '周日'}
         ];
         self.hours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
-        self.images = ko.observable(function(){
-            return $.map(hallData.hall_images, function(item){
-                return item.path;
-            }).join(',');
-        }());
+        self.images = ko.observable();
         self.images.plupload_cfg = {
-            url: '/upload',
+            url: '/hall/saveImage/' + hallData.id,
             upload_limit: 8,
             filters : [
                 {title : "Custom files", extensions : "gif,png,bmp,jpg,jpeg"}
             ],
-            max_file_size : '5mb'
+            max_file_size : '5mb',
+            responseParser : function(res) {
+                if(res && res.code == 1000){
+                    window.location.reload();
+//                    self.hall_images.push(new ImageModel(res.data));
+                }
+                return true;
+            }
         };
+
+        self.hall_images.push(new ImageModel({hall_id: hallData.id}));
 
         self.generateUser = function () {
             var $user = mapping.toJS(self.user);
@@ -148,8 +160,15 @@ define(function (require) {
             });
         };
 
-        self.saveImages = function(data){
-            var defer = $.restPost('/hall/saveImages/' + data.id());
+        self.deleteImage = function(data){
+            var defer = $.restPost('/hall/deleteImage/' + data.id());
+            defer.done(function (res, data) {
+                window.location.reload();
+            });
+        };
+
+        self.setEnvelope = function(data){
+            var defer = $.restPost('/hall/setEnvelope/' + data.hall_id() + '/' + data.id());
             defer.done(function (res, data) {
                 window.location.reload();
             });

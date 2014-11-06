@@ -183,6 +183,9 @@ define(function(require) {
                 }
                 var r = settings.responseParser(result);
 
+                if(r === true){
+                    return;
+                }
                 if (r.path || r.id) {
                     var src = r.path;
                     var $thumb = $item.find('.js_thumb');
@@ -194,7 +197,7 @@ define(function(require) {
                     processItem($item, r.path, r.id, result);
                     settings.onitemschange.apply(self, [uploader, $list, result]);
                     return;
-                } else {
+                } else{
                     alertMsg(r.error || '文件上传失败', 'error');
                 }
             }
