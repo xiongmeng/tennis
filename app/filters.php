@@ -142,3 +142,12 @@ Validator::extend('user_unique', function ($attribute, $value, $parameters) {
     }
     return true;
 });
+
+Validator::extend('hall_unique', function ($attribute, $value, $parameters) {
+    //参数1为user_id，有用于修改的情况
+    $hall = Hall::where($attribute, '=', $value)->first();
+    if ($hall) {
+        return (count($parameters) > 0) ? ($hall->id == $parameters[0]) : false;
+    }
+    return true;
+});

@@ -3,6 +3,8 @@
 class Hall extends Eloquent {
     protected $table = 'gt_hall_tiny';
     protected $primaryKey = 'id';
+    protected $fillable = array('name', 'code', 'stat');
+
     public function CourtGroup(){
         return $this->hasOne('CourtGroup', 'hall_id');
     }

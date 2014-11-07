@@ -64,10 +64,11 @@ define(function (require) {
     var HallModel = function (mappingModel, hallData) {
         var self = mappingModel;
         self.map = ko.observable(new MapModel(hallData.map || {}));
-        self.user = ko.observable(new UserModel(hallData.users.length > 0 ? hallData.users[0] : {}));
+        self.user = ko.observable(new UserModel((hallData.users && hallData.users.length > 0) ? hallData.users[0] : {}));
         self.courtGroup = ko.observable(new CourtGroupModel(hallData.court_group || {}));
-        self.hall_prices.push(new PriceModel({hall_id: hallData.id}));
-        self.hall_markets.push(new MarketModel({hall_id: hallData.id}));
+        self.hall_prices && self.hall_prices.push(new PriceModel({hall_id: hallData.id}));
+        self.hall_markets && self.hall_markets.push(new MarketModel({hall_id: hallData.id}));
+
         self.types = [
             {id: 1, name: '节假日'},
             {id: 2, name: '平时'}
@@ -99,7 +100,7 @@ define(function (require) {
             }
         };
 
-        self.hall_images.push(new ImageModel({hall_id: hallData.id}));
+        self.hall_images && self.hall_images.push(new ImageModel({hall_id: hallData.id}));
 
         self.generateUser = function () {
             var $user = mapping.toJS(self.user);

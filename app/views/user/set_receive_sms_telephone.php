@@ -1,5 +1,3 @@
-<?php use Sports\Constant\Finance as FinanceConstant; ?>
-<!--=== Content ===-->
 <!--=== Content Part ===-->
 <div class="container">
     <div class="row">
@@ -7,7 +5,7 @@
             <div class="reg-header">
                 <h2>设置预订信息短信通知手机号</h2>
             </div>
-            <form class="form-horizontal" action="/set_receive_sms_telephone" method="post">
+            <form class="form-horizontal" action="/hall/create" method="post">
                 <div class="form-group">
                     <label class="col-sm-4 control-label">当前手机号：</label>
                     <div class="col-sm-8">

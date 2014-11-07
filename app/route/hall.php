@@ -1,6 +1,6 @@
 <?php
 Route::get('/hall/detail/{id}', array('before' => 'auth',function($id){
-    Layout::setHighlightHeader('nav_场馆（管理员）');
+    Layout::setHighlightHeader('nav_场馆列表（管理员）');
     $hall = Hall::with(array('CourtGroup', 'HallMarkets', 'HallPrices', 'Users', 'HallImages', 'Map'))->findOrFail($id);
     Layout::appendBreadCrumbs($hall->name);
 
@@ -8,17 +8,17 @@ Route::get('/hall/detail/{id}', array('before' => 'auth',function($id){
         array('hall' => $hall));
 }));
 
-Route::get('/hall/{curTab}', array("before"=>'auth' ,function($curTab){
-    Layout::setHighlightHeader('nav_场馆（管理员）');
+Route::get('/hall/list/{curTab}', array("before"=>'auth' ,function($curTab){
+    Layout::setHighlightHeader('nav_场馆列表（管理员）');
 
     $tabs = array(
         'published' => array(
             'label' => '已发布场馆',
-            'url' => '/hall/published'
+            'url' => '/hall/list/published'
         ),
         'all' => array(
             'label' => '所有场馆',
-            'url' => '/hall/all',
+            'url' => '/hall/list/all',
         ),
     );
 
@@ -149,4 +149,30 @@ Route::post('/hall/update/{hallId}', array('before' => 'auth', function($hallId)
         'area_text','sort','business','air','bath','park','thread','good','comment'));
     $res = Hall::whereId($hallId)->update($mapData);
     return rest_success($res);
+}));
+
+Route::any('/hall/create', array('before' => 'auth', function(){
+    Layout::setHighlightHeader('nav_新增场馆');
+
+    if(Request::isMethod('post')){
+        $rules = array(
+            'name' => 'required|hall_unique',
+        );
+        $messages = array(
+            'required' => '此项不能为空',
+            'hall_unique' => '该场馆名称已经被添加过'
+        );
+
+        $validator = Validator::make(Input::all(), $rules, $messages);
+        if ($validator->fails()) {
+            return View::make('layout')->nest('content', 'hall.create', array('errors' => $validator->messages()));
+        }
+
+        $data = Input::only('name', 'code');
+        $data['stat'] = HALL_STAT_DRAFT;
+        $hall = Hall::create($data);
+
+        return Redirect::to('/hall/detail/' . $hall->id);
+    }
+    return View::make('layout')->nest('content', 'hall.create');
 }));

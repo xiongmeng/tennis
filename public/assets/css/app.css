@@ -1118,3 +1118,7 @@ i.style-switcher-btn-option:hover {
 .panel-body .item .title{
 
 }
+
+form .error{
+    color: red; font-weight: bold
+}

@@ -60,9 +60,19 @@ return array(
                 ),
             )
         ),
-        'nav_场馆（管理员）' => array(
-            'label' => '场馆',
-            'url' => '/hall/published',
+        'nav_场馆一级菜单' => array(
+            'label' => '场馆管理',
+            'url' => '#',
+            'children' => array(
+                'nav_场馆列表（管理员）' => array(
+                    'label' => '场馆列表',
+                    'url' => '/hall/list/published'
+                ),
+                'nav_新增场馆' => array(
+                    'label' => '新增场馆',
+                    'url' => '/hall/create'
+                )
+            )
         ),
     ),
 
@@ -94,7 +104,9 @@ return array(
             'nav_用户一级菜单',
             'nav_账户列表',
             'nav_微信用户列表',
-            'nav_场馆（管理员）'
+            'nav_场馆一级菜单',
+            'nav_场馆列表（管理员）',
+            'nav_新增场馆',
         ),
         ROLE_HALL => array(
             'nav_已售场地列表（场馆侧）',
