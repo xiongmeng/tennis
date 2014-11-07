@@ -36,7 +36,7 @@
 
     <div class="row">
         <div class="table-responsive pin-container col-md-12" id="table_court">
-            <?php if (empty($instantOrders)) { ?>
+            <?php if ($instantOrders->count()<=0) { ?>
                 <div class="alert alert-info"><strong>没有可出售的场地！</strong></div>
             <?php } else { ?>
                 <div class="table-court">

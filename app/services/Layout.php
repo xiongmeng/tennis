@@ -20,7 +20,7 @@ class Layout{
     }
 
     public static $breadcrumb = array();
-    public static function appendBreadCrumbs(array $breadCrumbs){
-
+    public static function appendBreadCrumbs($label, $url = null){
+        self::$breadcrumb[] = array('label' => $label, 'url' => $url);
     }
 }

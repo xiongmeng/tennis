@@ -1,6 +1,8 @@
 <?php
 
 Route::get('/notify/create', function(){
+
+
     $allEvents = option_notify_event();
 
     //如果有指定的值，则选择指定值
@@ -36,6 +38,8 @@ Route::post('/notify/send', function(){
 });
 
 Route::get('/notify/record', function(){
+    Layout::setHighlightHeader('nav_通知列表');
+
     $queries = Input::all();
     $notifyRecord = new NotifyRecord();
 

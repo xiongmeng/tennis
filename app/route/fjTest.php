@@ -133,14 +133,7 @@ Route::group(array('prefix' => 'fj'), function () {
         Sms::sendASync('18611367408', 'hello', -1);
     });
 });
-Route::any('/weixin_access', 'WeiXinController@index');
 
-Route::get('/setMenu',function(){
-    $menu = Config::get('/packages/cooper/wechat/menu.WeChatMenu');
-    $client = new \Cooper\Wechat\WeChatClient();
-//Log::info($menu[0]);
-    return ' ' . $client->setMenu($menu[0]);
-});
 
 
 

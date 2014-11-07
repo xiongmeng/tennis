@@ -1,11 +1,16 @@
 <?php
 Route::get('/hall/detail/{id}', array('before' => 'auth',function($id){
+    Layout::setHighlightHeader('nav_场馆（管理员）');
     $hall = Hall::with(array('CourtGroup', 'HallMarkets', 'HallPrices', 'Users', 'HallImages', 'Map'))->findOrFail($id);
+    Layout::appendBreadCrumbs($hall->name);
+
     return View::make('layout')->nest('content', 'hall.detail_mgr',
         array('hall' => $hall));
 }));
 
 Route::get('/hall/{curTab}', array("before"=>'auth' ,function($curTab){
+    Layout::setHighlightHeader('nav_场馆（管理员）');
+
     $tabs = array(
         'published' => array(
             'label' => '已发布场馆',
