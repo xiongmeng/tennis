@@ -77,5 +77,12 @@
 
 <script type="text/javascript" src="/assets/plugins/toolbar/jquery.toolbar.js"></script>
 <script type="text/javascript" src="/assets/plugins/pin/jquery.pin.js"></script>
+
+<script type="text/javascript" src="/assets/js/app.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+    });
+</script>
 </body>
 </html>	

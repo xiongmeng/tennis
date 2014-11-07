@@ -2,104 +2,104 @@
 
 return array(
     'headers' => array(
-        '2' => array(
+        'nav_即时订场（用户侧）' => array(
             'label' => '即时订场',
             'url' => '/hall_on_sale',
-            'children' => array()
         ),
-        '4' => array(
+        'nav_我的订单' => array(
             'label' => '我的订单',
             'url' => '/instant_order_buyer',
-            'children' => array()
             ),
-        '5' => array(
+        'nav_账户明细（用户侧）' => array(
             'label' => '账户明细',
             'url' => '/billing_buyer/account_balance',
-            'children' => array()
         ),
-        '6' => array(
+        'nav_流水列表（管理员侧）' => array(
             'label' => '流水',
             'url' => '/billing_mgr/account_balance',
-            'children' => array()
         ),
-        '8' => array(
+        'nav_即时订单列表（管理员侧）' => array(
             'label' => '即时订单',
             'url' => '/instant_order_mgr/payed',
-            'children' => array()
         ),
-        '9' => array(
+        'nav_场地管理（场馆侧）' => array(
             'label' => '场地管理',
             'url' => '/order_court_manage',
-            'children' => array()
         ),
-        '11' => array(
+        'nav_已售场地列表（场馆侧）' => array(
             'label' => '已售场地',
             'url' => '/instant_order_seller',
-            'children' => array()
-
         ),
-        '12' => array(
+        'nav_预订信息短信通知手机号码设定' => array(
             'label' => '预订信息短信通知手机号码设定',
             'url' => '/set_receive_sms_telephone',
-            'children' => array()
-
         ),
-        '13' => array(
+        'nav_预约订单列表（管理员）' => array(
             'label' => '预约订单',
             'url' => '/reserve_order_mgr/book_pending',
-            'children' => array()
         ),
-        '14' => array(
+        'nav_通知列表' => array(
             'label' => '通知',
             'url' => '/notify/record',
-            'children' => array()
         ),
-        '15' => array(
+        'nav_用户一级菜单' => array(
             'label' => '用户',
-            'url' => '/user',
-            'children' => array()
+            'url' => '#',
+            'children' => array(
+                'nav_用户列表' => array(
+                    'label' => '用户列表',
+                    'url' => '/user',
+                ),
+                'nav_账户列表' => array(
+                    'label' => '账户列表',
+                    'url' => '/account',
+                ),
+                'nav_微信用户列表' => array(
+                    'label' => '微信用户列表',
+                    'url' => '/app',
+                ),
+            )
         ),
-        '16' => array(
-            'label' => '账户',
-            'url' => '/account',
-            'children' => array()
-        ),
-        '17' => array(
-            'label' => '微信用户',
-            'url' => '/app',
-            'children' => array()
-        ),
-        '18' => array(
+        'nav_场馆（管理员）' => array(
             'label' => '场馆',
             'url' => '/hall/published',
-            'children' => array()
         ),
     ),
 
     'roles' => array(
-        '1' => array(
+        ROLE_USER => array(
             'label' => '会员',
             'name' => 'user'
         ),
-        '2' => array(
+        ROLE_MGR => array(
             'label' => '管理员',
             'name' => 'mgr'
         ),
-        '3' => array(
+        ROLE_HALL => array(
             'label' => '场馆',
             'name' => 'hall'
         )
     ),
 
     'roles_headers' => array(
-        '1' => array(
-             '2', '4', '5'
+        ROLE_USER => array(
+             'nav_即时订场（用户侧）', 'nav_我的订单', 'nav_账户明细（用户侧）'
         ),
-        '2' => array(
-            '8','6','13','14','15','16','17','18'
+        ROLE_MGR => array(
+            'nav_即时订单列表（管理员侧）',
+            'nav_流水列表（管理员侧）',
+            'nav_预约订单列表（管理员）',
+            'nav_通知列表',
+            'nav_用户列表',
+            'nav_用户一级菜单',
+            'nav_账户列表',
+            'nav_微信用户列表',
+            'nav_场馆（管理员）'
         ),
-        '3' => array(
-              '11', '9', '12'
+        ROLE_HALL => array(
+            'nav_已售场地列表（场馆侧）',
+            'nav_场地管理（场馆侧）',
+            'nav_预订信息短信通知手机号码设定'
         )
     )
 );

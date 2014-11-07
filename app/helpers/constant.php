@@ -21,6 +21,7 @@ const PAY_TYPE_WE_CHAT = 8; //微信支付
 const CACHE_PREFIX_VALID_CODE = 'valid_code_';
 
 const ROLE_USER = 1;//用户会员角色
+const ROLE_MGR = 2;//管理员
 const ROLE_HALL = 3;//场馆角色
 
 const RESERVE_STAT_INIT =  0;  //初始化 - 草稿 - 待处理

@@ -39,9 +39,22 @@
                             <?php if (isset($headers) && isset($acl)) { ?>
                                 <?php foreach ($headers as $headerId => $header) { ?>
                                     <?php if (in_array($headerId, $acl)) { ?>
-                                        <li class="divider <?php if (strstr($header['url'], Request::decodedPath())) { ?>active<?php } ?>">
-                                            <a href="<?php echo $header['url'] ?>"><?php echo $header['label'] ?>
-                                            </a>
+                                        <li class="dropdown <?php if (strstr($header['url'], Request::decodedPath())) { ?>active<?php } ?>">
+                                            <a href="<?php echo $header['url'] ?>" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false"><?php echo $header['label'] ?></a>
+
+                                            <!--二级菜单-->
+                                            <?php if(isset($header['children'])) {?>
+                                                <ul class="dropdown-menu">
+                                                <?php foreach ($header['children'] as $childHeaderId => $childHeader) { ?>
+                                                    <?php if (in_array($childHeaderId, $acl)) { ?>
+                                                        <li class="dropdown">
+                                                            <a href="<?php echo $childHeader['url'] ?>"><?php echo $childHeader['label'] ?></a>
+                                                        </li>
+                                                    <?php } ?>
+                                                <?php } ?>
+                                                </ul>
+                                            <?php }?>
+
                                         </li>
                                     <?php } ?>
                                 <?php } ?>
