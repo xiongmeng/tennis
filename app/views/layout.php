@@ -64,6 +64,7 @@
 <!--=== Header ===-->
 <?php echo $header; ?><!--/header-->
 <!--=== End Header ===-->
+<?php echo $breadcrumb; ?>
 
 <?php echo $content; ?>
 

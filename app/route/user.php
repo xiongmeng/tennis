@@ -8,6 +8,8 @@ Route::get('/user/detail/{id}', function($id){
 });
 
 Route::get('/user', function(){
+    Layout::setHighlightHeader('nav_用户列表');
+
     $queries = Input::all();
     $userModel = new User();
 

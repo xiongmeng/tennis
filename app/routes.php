@@ -60,7 +60,7 @@ View::creator('format.header', function ($view) {
 });
 
 View::creator('layout', function (\Illuminate\View\View $view) {
-    $view->nest('header', 'format.header')->nest('copyright', 'format.copyright');
+    $view->nest('header', 'format.header')->nest('copyright', 'format.copyright')->nest('breadcrumb', 'format.breadcrumb');
 });
 
 Route::get('/home', function () {

@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row header margin-bottom-10 top">
+    <div class="row header top">
         <div class="col-md-2">
             <a class="navbar-brand" href="javascript:void(0)">
                 <img id="logo-header" src="/assets/img/logo.png" alt="Logo">
@@ -39,21 +39,26 @@
                             <?php if (isset($headers) && isset($acl)) { ?>
                                 <?php foreach ($headers as $headerId => $header) { ?>
                                     <?php if (in_array($headerId, $acl)) { ?>
-                                        <li class="dropdown <?php if (strstr($header['url'], Request::decodedPath())) { ?>active<?php } ?>">
-                                            <a href="<?php echo $header['url'] ?>" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false"><?php echo $header['label'] ?></a>
+                                        <li class="dropdown
+                                            <?php if (Layout::$highlightHeader == $headerId || (isset($header['children']) && array_key_exists(Layout::$highlightHeader, $header['children']))) { ?>active<?php } ?>">
+                                            <a href="<?= $header['url'] ?>"
+                                                <?php if (!empty($header['children'])) { ?>
+                                                    class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                                                <?php } ?>
+                                                ><?= $header['label'] ?></a>
 
                                             <!--二级菜单-->
-                                            <?php if(isset($header['children'])) {?>
+                                            <?php if (isset($header['children'])) { ?>
                                                 <ul class="dropdown-menu">
-                                                <?php foreach ($header['children'] as $childHeaderId => $childHeader) { ?>
-                                                    <?php if (in_array($childHeaderId, $acl)) { ?>
-                                                        <li class="dropdown">
-                                                            <a href="<?php echo $childHeader['url'] ?>"><?php echo $childHeader['label'] ?></a>
-                                                        </li>
+                                                    <?php foreach ($header['children'] as $childHeaderId => $childHeader) { ?>
+                                                        <?php if (in_array($childHeaderId, $acl)) { ?>
+                                                            <li class="dropdown <?php if (Layout::$highlightHeader == $childHeaderId) { ?>active<?php } ?>">
+                                                                <a href="<?= $childHeader['url'] ?>"><?= $childHeader['label'] ?></a>
+                                                            </li>
+                                                        <?php } ?>
                                                     <?php } ?>
-                                                <?php } ?>
                                                 </ul>
-                                            <?php }?>
+                                            <?php } ?>
 
                                         </li>
                                     <?php } ?>
