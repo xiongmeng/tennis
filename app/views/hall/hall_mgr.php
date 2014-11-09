@@ -53,8 +53,9 @@
                     <th>电话</th>
                     <th width="10%">场地</th>
                     <th width="10%">添加时间</th>
-                    <th width="8%">状态</th>
-                    <th width="12%">操作</th>
+                    <th width="5%">发布</th>
+                    <th width="5%">最新</th>
+                    <th width="5%">推荐</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -67,8 +68,22 @@
                             <td><?= $hall->telephone; ?></td>
                             <td><?= $hall->court_name . ' ' . $hall->court_num?>片</td>
                             <td><?= date("Y-m-d", $hall->createtime)?></td>
-                            <td><?= $stats[$hall->stat]?></td>
-                            <td></td>
+                            <td>
+                                <a href="/hall/publish/<?= $hall->id?>/<?= intval(!($hall->stat==HALL_STAT_PUBlISH))?>">
+                                    <?= $hall->stat==HALL_STAT_PUBlISH ? '下架' : '上架'?>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/hall/active/operate/<?= $hall->id?>/<?= HALL_ACTIVE_LATEST?>/<?= intval(!$hall->is_latest)?>">
+                                    <?= $hall->is_latest ? '下架' : '上架'?>
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="/hall/active/operate/<?= $hall->id?>/<?= HALL_ACTIVE_RECOMMEND?>/<?= intval(!$hall->is_recommend)?>">
+                                    <?= $hall->is_recommend ? '下架' : '上架'?>
+                                </a>
+                            </td>
                         </tr>
 
                     <?php } ?>

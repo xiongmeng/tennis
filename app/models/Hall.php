@@ -50,6 +50,9 @@ class Hall extends Eloquent {
         if(!empty($aQuery['id'])){
             $query->where('gt_hall_tiny.id', '=', $aQuery['id']);
         }
+        if(!empty($aQuery['ids'])){
+            $query->whereIn('gt_hall_tiny.id', $aQuery['ids']);
+        }
         if(!empty($aQuery['name'])){
             $query->where('gt_hall_tiny.name', 'like', '%' . $aQuery['name'] . '%');
         }

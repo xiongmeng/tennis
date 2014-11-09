@@ -20,22 +20,42 @@ Route::get('/hall/list/{curTab}', array("before"=>'auth' ,function($curTab){
             'label' => '所有场馆',
             'url' => '/hall/list/all',
         ),
+        'latest' => array(
+            'label' => '最新场馆',
+            'url' => '/hall/list/latest',
+        ),
+        'recommend' => array(
+            'label' => '推荐场馆',
+            'url' => '/hall/list/recommend',
+        ),
     );
+
+    $latestIds = db_result_ids(HallActive::whereType(HALL_ACTIVE_LATEST)->get(array('hall_id')), 'hall_id');
+    $recommendIds = db_result_ids(HallActive::whereType(HALL_ACTIVE_RECOMMEND)->get(array('hall_id')), 'hall_id');
 
     $queries = Input::all();
     if($curTab == 'published'){
         $queries['stat'] = HALL_STAT_PUBlISH;
+    }else if($curTab == 'latest'){
+        $queries['ids'] = $latestIds;
+    }else if($curTab == 'recommend'){
+        $queries['ids'] = $recommendIds;
     }
 
     $hallModel = new Hall();
     $halls = $hallModel->search($queries);
     adjustTimeStamp($halls);
 
+    foreach($halls as $hall){
+        $hall->is_latest = in_array($hall->id, $latestIds);
+        $hall->is_recommend = in_array($hall->id, $recommendIds);
+    }
+
     $stats = option_hall_stat();
     $stats[''] = '状态';
 
-    return View::make('layout')->nest('content', 'hall.hall_mgr',
-        array('halls' => $halls, 'queries' => $queries, 'stats'=>$stats, 'tabs' => $tabs, 'curTab' => $curTab));
+    return View::make('layout')->nest('content', 'hall.hall_mgr', array('halls' => $halls, 'queries' => $queries,
+        'stats'=>$stats, 'tabs' => $tabs, 'curTab' => $curTab));
 }));
 
 Route::post('/hall/generateUser/{hallId}', array('before' => 'auth', function($hallId){
@@ -176,3 +196,16 @@ Route::any('/hall/create', array('before' => 'auth', function(){
     }
     return View::make('layout')->nest('content', 'hall.create');
 }));
+
+Route::any('hall/active/operate/{hallId}/{type}/{online}', function($hallId, $type, $online){
+    HallActive::whereHallId($hallId)->whereType($type)->delete();
+    if($online){
+        HallActive::create(array('hall_id'=> $hallId, 'type' => $type));
+    }
+    return Redirect::to(URL::previous());
+});
+
+Route::any('hall/publish/{hallId}/{online}', function($hallId, $online){
+    Hall::whereId($hallId)->update(array('stat' => $online ? HALL_STAT_PUBlISH : HALL_STAT_DRAFT));
+    return Redirect::to(URL::previous());
+});

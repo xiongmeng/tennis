@@ -82,3 +82,6 @@ const HALL_STAT_NULL = 0;
 const HALL_STAT_DRAFT = 1;   //未发布
 const HALL_STAT_PUBlISH = 2; //已发布
 const HALL_STAT_DELETE = 88; //已删除
+
+const HALL_ACTIVE_RECOMMEND = 1; //推荐
+const HALL_ACTIVE_LATEST = 3; //最新

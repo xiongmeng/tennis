@@ -43,7 +43,7 @@ return array(
             'url' => '/notify/record',
         ),
         'nav_用户一级菜单' => array(
-            'label' => '用户',
+            'label' => '用户管理',
             'url' => '#',
             'children' => array(
                 'nav_用户列表' => array(

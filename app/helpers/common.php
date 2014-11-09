@@ -333,3 +333,11 @@ function exception_to_array(Exception $exception){
     return array('code' => $exception->getCode(),
             'msg' => $exception->getMessage(), 'line' => $exception->getLine(), 'file' => $exception->getFile());
 }
+
+function db_result_ids($dbResults, $idColumn){
+    $ids = array();
+    foreach($dbResults as $dbResult){
+        $ids[] = $dbResult->$idColumn;
+    }
+    return $ids;
+}
