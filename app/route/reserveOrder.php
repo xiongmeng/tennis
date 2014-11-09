@@ -1,7 +1,6 @@
 <?php
 Route::get('/reserve_order_mgr/{curTab}', array('before' => 'auth', function ($curTab) {
     Layout::setHighlightHeader('nav_预约订单列表（管理员）');
-
     $tabs = array(
         'book_pending' => array(
             'label' => '待处理订单',

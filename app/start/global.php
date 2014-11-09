@@ -59,14 +59,28 @@ App::after(function(\Illuminate\Http\Request $request, $response){
 
 App::error(function(Exception $exception, $code)
 {
-	Log::error(sprintf("exception:%s", Session::getId()), array('code' => $exception->getCode(),
-        'msg' => $exception->getMessage(), 'line' => $exception->getLine(), 'file' => $exception->getFile()));
+	Log::error(sprintf("exception:%s", Session::getId()), exception_to_array($exception));
+    if(Request::ajax()){
+        return rest_fail($exception->getMessage(), $code);
+    }else if(!debug()){
+        Layout::appendBreadCrumbs('回到首页', '/');
+        Layout::appendBreadCrumbs('500');
+        return Response::view('500');
+    }
 });
 
-//App::fatal(function(Exception $exception){
-//    Log::critical(sprintf("exception:%s", Session::getId()), array('code' => $exception->getCode(),
-//        'msg' => $exception->getMessage(), 'line' => $exception->getLine(), 'file' => $exception->getFile()));
-//});
+App::missing(function(Exception $exception){
+    Layout::appendBreadCrumbs('回到首页', '/');
+    Layout::appendBreadCrumbs('404');
+
+    Log::error(sprintf("exception:%s", Session::getId()), exception_to_array($exception));
+
+    return View::make('layout')->nest('content', '404');
+});
+
+App::fatal(function(Exception $exception){
+    Log::critical(sprintf("exception:%s", Session::getId()), exception_to_array($exception));
+});
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler

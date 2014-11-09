@@ -328,3 +328,8 @@ function option_notify_event(){
 function option_notify_channel(){
     return array_extract_one_key(Config::get('notify.channels'), 'title');
 }
+
+function exception_to_array(Exception $exception){
+    return array('code' => $exception->getCode(),
+            'msg' => $exception->getMessage(), 'line' => $exception->getLine(), 'file' => $exception->getFile());
+}
