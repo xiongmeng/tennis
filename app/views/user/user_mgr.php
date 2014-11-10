@@ -21,15 +21,7 @@
                     array('class' => 'form-control', 'placeholder' => '手机号'))?>
             </div>
             <div class="form-group">
-                <?=
-                Form::input('text', 'openid', null,
-                    array('class' => 'form-control', 'placeholder' => '微信openid'))?>
-            </div>
-            <div class="form-group">
                 <?= Form::select('privilege', $privileges, null, array('class' => 'form-control')) ?>
-            </div>
-            <div class="form-group">
-                <?= Form::select('is_bond_weChat', $isBondWeChat, null, array('class' => 'form-control')) ?>
             </div>
             <div class="form-group">
                 <?= Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
@@ -50,7 +42,7 @@
                             <th width="8%">类型</th>
                             <th width="20%">昵称</th>
                             <th width="10%">联系电话</th>
-                            <th width="5%">绑定<br>微信</th>
+                            <th width="5%">余额</th>
                             <th width="10%">通知</th>
                             <th width="12%">传送门</th>
                         </tr>
@@ -68,7 +60,7 @@
                                     <td><?= isset($privileges[$user->privilege]) ? $privileges[$user->privilege] : '普通会员'; ?></td>
                                     <td><?= href_user_detail($user->user_id, $user->nickname);?></td>
                                     <td><?= $user->telephone; ?></td>
-                                    <td><?= $user->weChat_open_id ? '是' : '否' ?></td>
+                                    <td><?= intval($user->balance);?>元</td>
                                     <td>
                                         <a href="<?= '/notify/create?events=' . NOTIFY_TYPE_NOMONEY . '&object=' . $user->user_id ?>"
                                            target="_blank">没钱</a>|

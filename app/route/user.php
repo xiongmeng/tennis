@@ -24,12 +24,8 @@ Route::get('/user', function(){
 
     $sexy = option_sexy();
 
-    $isBondWeChat = option_yes_no();
-    $isBondWeChat[''] = '是否绑定微信';
-
     return View::make('layout')->nest('content', 'user.user_mgr',
-        array('users' => $users, 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy,
-            'isBondWeChat' => $isBondWeChat));
+        array('users' => $users, 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy));
 });
 
 Route::get('/account', function(){
