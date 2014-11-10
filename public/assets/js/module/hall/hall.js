@@ -4,6 +4,7 @@ define(function (require) {
     require('rest');
     require('bootbox');
     require('knockout_plupload');
+    require('knockout_area');
 
     var ImageModel = function (image) {
         var self = this;
@@ -83,6 +84,7 @@ define(function (require) {
             {id: 7, name: '周日'}
         ];
         self.hours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
+
         self.images = ko.observable();
         self.images.plupload_cfg = {
             url: '/hall/saveImage/' + hallData.id,
@@ -99,8 +101,9 @@ define(function (require) {
                 return true;
             }
         };
-
         self.hall_images && self.hall_images.push(new ImageModel({hall_id: hallData.id}));
+
+        self.area = ko.observable().extend({area:hallData});
 
         self.generateUser = function () {
             var $user = mapping.toJS(self.user);
@@ -177,6 +180,10 @@ define(function (require) {
 
         self.update = function () {
             var hall = mapping.toJS(self);
+            hall.province = self.area.province();
+            hall.city = self.area.city();
+            hall.county = self.area.county();
+
             var defer = $.restPost('/hall/update/' + self.id(), hall);
             defer.done(function (res, data) {
                 window.location.reload();

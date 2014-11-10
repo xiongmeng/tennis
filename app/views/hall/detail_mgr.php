@@ -21,78 +21,61 @@
     <div class="panel-body">
         <form class="form-horizontal">
             <div class="form-group">
-                <label class="control-label col-md-3">场馆ID：</label>
+                <label class="control-label col-md-2">场馆ID：</label>
 
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <input class="form-control" placeholder="场馆ID" type="text" data-bind="value:id" disabled>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-md-3">场馆名称：</label>
+                <label class="control-label col-md-2">场馆名称：</label>
 
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <input class="form-control" placeholder="场馆名称" type="text" data-bind="value:name">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-md-3">简称：</label>
+                <label class="control-label col-md-2">简称：</label>
 
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <input class="form-control" placeholder="场馆名称" type="text" data-bind="value:code">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-md-3">电话：</label>
+                <label class="control-label col-md-2">电话：</label>
 
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <input class="form-control" placeholder="电话" type="text" data-bind="value:telephone">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-md-3">联系人：</label>
+                <label class="control-label col-md-2">联系人：</label>
 
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <input class="form-control" placeholder="联系人" type="text" data-bind="value:linkman">
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="control-label col-md-3">省份：</label>
+            <div class="form-group" data-bind="area: area">
+                <label class="control-label col-md-2">地址：</label>
 
-                <div class="col-md-8">
-                    <input class="form-control" placeholder="省份" type="text" data-bind="value:province" disabled>
+                <div class="col-md-2">
+                    <select class="form-control" data-bind="options: area.provinces, optionsValue: 'id', optionsText: 'name', value: area.province, optionsCaption: '省份'"></select>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-3">市：</label>
-
-                <div class="col-md-8">
-                    <input class="form-control" placeholder="市" type="text" data-bind="value:city" disabled>
+                <div class="col-md-2">
+                    <select class="form-control" data-bind="options: area.cities, optionsValue: 'city_id', optionsText: 'city', value: area.city, optionsCaption: '市'"></select>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-3">区县：</label>
-
-                <div class="col-md-8">
-                    <input class="form-control" placeholder="区县" type="text" data-bind="value:county" disabled>
+                <div class="col-md-2">
+                    <select class="form-control" data-bind="options: area.counties, optionsValue: 'county_id', optionsText: 'county', value: area.county, optionsCaption: '县、区'"></select>
                 </div>
-            </div>
-
-
-            <div class="form-group">
-                <label class="control-label col-md-3">详细地址：</label>
-
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <input class="form-control" placeholder="详细地址" type="text" data-bind="value:area_text">
                 </div>
             </div>
-
 
             <div class="form-group">
                 <div class="col-md-3 col-md-offset-4">

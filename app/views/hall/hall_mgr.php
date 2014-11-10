@@ -1,4 +1,3 @@
-
 <!--=== Content ===-->
 <div class="container">
     <div class="row">
@@ -7,32 +6,38 @@
             <?= Form::open(array('method' => 'GET', 'class' => 'form-inline')) ?>
             <?= Form::model($queries) ?>
             <div class="form-group">
-                <?= Form::input('text', 'id', null,
+                <?=
+                Form::input('text', 'id', null,
                     array('class' => 'form-control', 'placeholder' => 'ID'))?>
             </div>
             <div class="form-group">
-                <?= Form::input('text', 'name', null,
+                <?=
+                Form::input('text', 'name', null,
                     array('class' => 'form-control', 'placeholder' => '名称'))?>
             </div>
             <div class="form-group">
-                <?= Form::input('text', 'court_name', null,
+                <?=
+                Form::input('text', 'court_name', null,
                     array('class' => 'form-control', 'placeholder' => '场地类型'))?>
             </div>
             <div class="form-group">
-                <?= Form::input('text', 'court_num_lower_bound', null,
+                <?=
+                Form::input('text', 'court_num_lower_bound', null,
                     array('class' => 'form-control', 'placeholder' => '场地数目下限'))?>
             </div>
             <div class="form-group">
-                <?= Form::input('text', 'court_num_upper_bound', null,
+                <?=
+                Form::input('text', 'court_num_upper_bound', null,
                     array('class' => 'form-control', 'placeholder' => '场地数目上限'))?>
             </div>
             <div class="form-group">
-                <?= Form::select('stat', $stats, null, array('class' => 'form-control'))?>
+                <?= Form::select('stat', $stats, null, array('class' => 'form-control')) ?>
             </div>
             <div class="form-group">
                 <?= Form::submit('查询', array('class' => 'btn-u btn-u-green')) ?>
             </div>
             <?= Form::close() ?><br/>
+
             <div class="tab-v1">
                 <ul class="nav nav-tabs">
                     <?php foreach ($tabs as $tabKey => $tab) { ?>
@@ -60,33 +65,34 @@
                 </thead>
                 <tbody>
                 <?php foreach ($halls as $hall) { ?>
+                    <?php if ($hall instanceof Hall) { ?>
                         <tr>
                             <td><?= $hall->sort; ?></td>
-                            <td><?= $hall->id?></td>
-                            <td><?= href_hall_detail($hall->id, $hall->name);?></td>
-                            <td>TBD</td>
+                            <td><?= $hall->id ?></td>
+                            <td><?= href_hall_detail($hall->id, $hall->name); ?></td>
+                            <td><?= Area::area($hall->area_text, $hall->county, $hall->city, $hall->province) ?></td>
                             <td><?= $hall->telephone; ?></td>
-                            <td><?= $hall->court_name . ' ' . $hall->court_num?>片</td>
-                            <td><?= date("Y-m-d", $hall->createtime)?></td>
+                            <td><?= $hall->court_name . ' ' . $hall->court_num ?>片</td>
+                            <td><?= date("Y-m-d", $hall->createtime) ?></td>
                             <td>
-                                <a href="/hall/publish/<?= $hall->id?>/<?= intval(!($hall->stat==HALL_STAT_PUBlISH))?>">
-                                    <?= $hall->stat==HALL_STAT_PUBlISH ? '下架' : '上架'?>
+                                <a href="/hall/publish/<?= $hall->id ?>/<?= intval(!($hall->stat == HALL_STAT_PUBlISH)) ?>">
+                                    <?= $hall->stat == HALL_STAT_PUBlISH ? '下架' : '上架' ?>
                                 </a>
                             </td>
                             <td>
-                                <a href="/hall/active/operate/<?= $hall->id?>/<?= HALL_ACTIVE_LATEST?>/<?= intval(!$hall->is_latest)?>">
-                                    <?= $hall->is_latest ? '下架' : '上架'?>
+                                <a href="/hall/active/operate/<?= $hall->id ?>/<?= HALL_ACTIVE_LATEST ?>/<?= intval(!$hall->is_latest) ?>">
+                                    <?= $hall->is_latest ? '下架' : '上架' ?>
                                 </a>
                             </td>
 
                             <td>
-                                <a href="/hall/active/operate/<?= $hall->id?>/<?= HALL_ACTIVE_RECOMMEND?>/<?= intval(!$hall->is_recommend)?>">
-                                    <?= $hall->is_recommend ? '下架' : '上架'?>
+                                <a href="/hall/active/operate/<?= $hall->id ?>/<?= HALL_ACTIVE_RECOMMEND ?>/<?= intval(!$hall->is_recommend) ?>">
+                                    <?= $hall->is_recommend ? '下架' : '上架' ?>
                                 </a>
                             </td>
                         </tr>
-
                     <?php } ?>
+                <?php } ?>
 
 
                 </tbody>
@@ -108,8 +114,8 @@
 <!--=== End Content ===-->
 
 <script type="text/javascript">
-    $(document).ready(function(){
-        seajs.use('datetimePicker', function(){
+    $(document).ready(function () {
+        seajs.use('datetimePicker', function () {
             $('.datepicker').datetimepicker({
                 format: 'yyyy-mm-dd',
                 language: 'zh-CN',

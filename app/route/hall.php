@@ -4,6 +4,9 @@ Route::get('/hall/detail/{id}', array('before' => 'auth',function($id){
     $hall = Hall::with(array('CourtGroup', 'HallMarkets', 'HallPrices', 'Users', 'HallImages', 'Map'))->findOrFail($id);
     Layout::appendBreadCrumbs($hall->name);
 
+    $hall->cities = Area::cities($hall->province);
+    $hall->counties = Area::counties($hall->city);
+
     return View::make('layout')->nest('content', 'hall.detail_mgr',
         array('hall' => $hall));
 }));
@@ -30,8 +33,8 @@ Route::get('/hall/list/{curTab}', array("before"=>'auth' ,function($curTab){
         ),
     );
 
-    $latestIds = db_result_ids(HallActive::whereType(HALL_ACTIVE_LATEST)->get(array('hall_id')), 'hall_id');
-    $recommendIds = db_result_ids(HallActive::whereType(HALL_ACTIVE_RECOMMEND)->get(array('hall_id')), 'hall_id');
+    $latestIds = db_result_ids(HallActive::whereType(HALL_ACTIVE_LATEST)->remember(CACHE_DAY)->get(array('hall_id')), 'hall_id');
+    $recommendIds = db_result_ids(HallActive::whereType(HALL_ACTIVE_RECOMMEND)->remember(CACHE_DAY)->get(array('hall_id')), 'hall_id');
 
     $queries = Input::all();
     if($curTab == 'published'){

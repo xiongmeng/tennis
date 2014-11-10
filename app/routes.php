@@ -20,6 +20,7 @@ require_once 'route/user.php';
 require_once 'route/hall.php';
 require_once 'route/instantOrder.php';
 require_once 'route/reserveOrder.php';
+require_once 'route/area.php';
 
 Route::get('/', function () {
     if (Auth::check()) {

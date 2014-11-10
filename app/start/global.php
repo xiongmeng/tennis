@@ -41,7 +41,7 @@ App::before(function(\Illuminate\Http\Request $request){
 App::after(function(\Illuminate\Http\Request $request, $response){
     $content = $response->getContent();
     Log::info(sprintf("route-response:%s|%s|%s", Session::getId(), user_id(), app_user_id()),
-        array('content' => ($request->ajax() || strlen($content) < 256) ? $content : 'html or more than 256 bytes'));
+        array('content' => strlen($content) < 256 ? $content : 'html or more than 256 bytes'));
 });
 
 /*

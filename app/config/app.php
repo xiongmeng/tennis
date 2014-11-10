@@ -126,6 +126,7 @@ return array(
         'FinanceServiceProvider',
         'SmsProvider',
         'NotifyProvider',
+        'AreaProvider',
         'Cooper\Wechat\WechatServiceProvider',
 	),
 
@@ -195,7 +196,8 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
         'Finance'         => 'FinanceServiceFacades',
         'Sms'         => 'SmsFacades',
-        'Notify'         => 'NotifyFacades'
+        'Notify'         => 'NotifyFacades',
+        'Area'         => 'AreaFacades'
     ),
 
 );

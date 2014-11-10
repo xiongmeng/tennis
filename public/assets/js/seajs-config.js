@@ -12,6 +12,7 @@ seajs.config({
         knockout_mapping: 'plugin/knockout/plugins/mapping_debug.js',
         knockout_switch_case: 'plugin/knockout/plugins/knockout-switch-case.min.js',
         knockout_plupload: 'plugin/knockout/plugins/knockout_plupload.js',
+        knockout_area: 'plugin/knockout/extend/area.js',
         plupload: 'plugin/plupload/plupload_cmd.js',
         doT:    'plugin/doT/doT_cmd.js',
         fancybox: 'plugin/fancybox/fancybox_cmd.js',
