@@ -24,8 +24,14 @@ Route::get('/user', function(){
 
     $sexy = option_sexy();
 
-    return View::make('layout')->nest('content', 'user.user_mgr',
-        array('users' => $users, 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy));
+    $res = array('users' => $users->toArray(), 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy);
+
+    if(Input::get('ajax') || Request::ajax()){
+        return rest_success($res);
+    }else{
+        return View::make('layout')->nest('content', 'user.user_mgr',
+            array('users' => $users, 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy));
+    }
 });
 
 Route::get('/account', function(){

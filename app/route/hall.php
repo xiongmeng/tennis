@@ -57,8 +57,13 @@ Route::get('/hall/list/{curTab}', array("before"=>'auth' ,function($curTab){
     $stats = option_hall_stat();
     $stats[''] = '状态';
 
-    return View::make('layout')->nest('content', 'hall.hall_mgr', array('halls' => $halls, 'queries' => $queries,
-        'stats'=>$stats, 'tabs' => $tabs, 'curTab' => $curTab));
+    $res = array('halls' => $halls->toArray(),
+        'queries' => $queries, 'stats'=>$stats, 'tabs' => $tabs, 'curTab' => $curTab);
+    if(Request::ajax()){
+        return rest_success($res);
+    }else{
+        return View::make('layout')->nest('content', 'hall.hall_mgr', $res);
+    }
 }));
 
 Route::post('/hall/generateUser/{hallId}', array('before' => 'auth', function($hallId){

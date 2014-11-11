@@ -62,59 +62,13 @@ define(function (require) {
         self.init_password = ko.observable(user.init_password);
     };
 
-    return function (hallData) {
-        var self = this;
-        self.id = ko.observable(hallData.id);
-        self.name = ko.observable(hallData.name);
-        self.code = ko.observable(hallData.code);
-        self.telephone = ko.observable(hallData.telephone);
-        self.linkman = ko.observable(hallData.linkman);
-        self.area_text = ko.observable(hallData.area_text);
-        self.sort = ko.observable(hallData.sort);
-        self.business = ko.observable(hallData.business);
-
-        function calcBusinessStartAndEnd(business){
-            self.business.start('');self.business.end('');
-            if(business){
-                var a = business.split('-');
-                self.business.start(parseInt(a[0]));
-                self.business.end(parseInt(a[1]));
-            }
-        }
-        self.business.start = ko.observable();
-        self.business.end = ko.observable();
-        self.business.subscribe(function(newValue){calcBusinessStartAndEnd(newValue);});
-        calcBusinessStartAndEnd(hallData.business);
-
-        self.air = ko.observable(hallData.air);
-        self.bath = ko.observable(hallData.bath);
-        self.park = ko.observable(hallData.park);
-        self.thread = ko.observable(hallData.thread);
-        self.good = ko.observable(hallData.good);
-        self.comment = ko.observable(hallData.comment);
-        self.court_name = ko.observable(hallData.court_name);
-        self.court_num = ko.observable(hallData.court_num);
-
+    var HallModel = function (mappingModel, hallData) {
+        var self = mappingModel;
         self.map = ko.observable(new MapModel(hallData.map || {}));
         self.user = ko.observable(new UserModel((hallData.users && hallData.users.length > 0) ? hallData.users[0] : {}));
         self.courtGroup = ko.observable(new CourtGroupModel(hallData.court_group || {}));
-        self.hall_prices = ko.observableArray(function(){
-            var prices = [];
-            $.each(hallData.hall_prices || {}, function(index, item){
-                prices.push(new PriceModel(item));
-            });
-            prices.push(new PriceModel({hall_id: hallData.id}));
-            return prices;
-        }());
-
-        self.hall_markets = ko.observableArray(function(){
-            var prices = [];
-            $.each(hallData.hall_markets || {}, function(index, item){
-                prices.push(new MarketModel(item));
-            });
-            prices.push(new MarketModel({hall_id: hallData.id}));
-            return prices;
-        }());
+        self.hall_prices && self.hall_prices.push(new PriceModel({hall_id: hallData.id}));
+        self.hall_markets && self.hall_markets.push(new MarketModel({hall_id: hallData.id}));
 
         self.types = [
             {id: 1, name: '节假日'},
@@ -147,14 +101,7 @@ define(function (require) {
                 return true;
             }
         };
-        self.hall_images = ko.observableArray(function(){
-            var prices = [];
-            $.each(hallData.hall_images || {}, function(index, item){
-                prices.push(new ImageModel(item));
-            });
-            prices.push(new ImageModel({hall_id: hallData.id}));
-            return prices;
-        }());
+        self.hall_images && self.hall_images.push(new ImageModel({hall_id: hallData.id}));
 
         self.area = ko.observable().extend({area:hallData});
 
@@ -245,4 +192,13 @@ define(function (require) {
 
         return self;
     };
+
+    function init(dom, hallData) {
+        var hall = new HallModel(mapping.fromJS(hallData), hallData);
+        ko.applyBindings(hall, dom);
+    }
+
+    return {
+        init: init
+    }
 });

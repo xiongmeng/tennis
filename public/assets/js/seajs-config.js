@@ -13,6 +13,7 @@ seajs.config({
         knockout_switch_case: 'plugin/knockout/plugins/knockout-switch-case.min.js',
         knockout_plupload: 'plugin/knockout/plugins/knockout_plupload.js',
         knockout_area: 'plugin/knockout/extend/area.js',
+        knockout_phpTsToDate: 'plugin/knockout/extend/phpTsToDate.js',
         plupload: 'plugin/plupload/plupload_cmd.js',
         doT:    'plugin/doT/doT_cmd.js',
         fancybox: 'plugin/fancybox/fancybox_cmd.js',

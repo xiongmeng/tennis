@@ -34,9 +34,19 @@ return array(
             'label' => '预订信息短信通知手机号码设定',
             'url' => '/set_receive_sms_telephone',
         ),
-        'nav_预约订单列表（管理员）' => array(
+        'nav_预约订单一级列表' => array(
             'label' => '预约订单',
             'url' => '/reserve_order_mgr/book_pending',
+            'children' => array(
+                'nav_新增预约订单（管理员）' => array(
+                    'label' => '新增预约订单',
+                    'url' => '/reserve/create'
+                ),
+                'nav_预约订单列表（管理员）' => array(
+                    'label' => '预约订单列表',
+                    'url' => '/reserve_order_mgr/book_pending'
+                ),
+            )
         ),
         'nav_通知列表' => array(
             'label' => '通知',
@@ -98,6 +108,8 @@ return array(
         ROLE_MGR => array(
             'nav_即时订单列表（管理员侧）',
             'nav_流水列表（管理员侧）',
+            'nav_预约订单一级列表',
+            'nav_新增预约订单（管理员）',
             'nav_预约订单列表（管理员）',
             'nav_通知列表',
             'nav_用户列表',

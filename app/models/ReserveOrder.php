@@ -3,6 +3,7 @@
 class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
 
     protected $table = 'gt_order';
+    protected $fillable = array('user_id', 'hall_id', 'event_date', 'start_time', 'end_time', 'court_num', 'cost');
     /**
      * Sets the object state
      *
@@ -29,7 +30,6 @@ class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
     public function Hall(){
         return $this->belongsTo('Hall', 'hall_id', 'id');
     }
-
 
     public function search($aQuery, $iPageSize =20){
         $query = ReserveOrder::leftJoin('gt_hall_tiny', 'gt_hall_tiny.id', '=', 'gt_order.hall_id')
@@ -59,5 +59,10 @@ class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
         return $query->orderBy('gt_order.id', 'desc')
             ->paginate($iPageSize, array('gt_order.*',
                 'gt_hall_tiny.name as hall_name', 'gt_user_tiny.nickname as buyer_name'));
+    }
+
+    public function generate($order){
+        !isset($order['stat']) && $order['stat'] = RESERVE_STAT_INIT;
+        return ReserveOrder::create($order);
     }
 }

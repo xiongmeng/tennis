@@ -4,9 +4,9 @@ function rest_success($data)
     return array('code' => 1000, 'data' => $data);
 }
 
-function rest_fail($data, $code = 500)
+function rest_fail($msg, $code = 500, $data = null)
 {
-    return array('code' => $code, 'data' => $data);
+    return array('code' => $code, 'msg' => $msg, 'data' => $data);
 }
 
 function weekday_option()
@@ -32,16 +32,17 @@ function instant_order_state_option()
     );
 }
 
-function reserve_order_status_option(){
+function reserve_order_status_option()
+{
     return array(
         '' => '请选择',
-        0=>"待处理",
-        1=>"代支付",
-        2=>"已支付",
-        3=>"待分账",
-        4=>"已结束",
-        5=>"已取消",
-        6=>"预订失败"
+        0 => "待处理",
+        1 => "代支付",
+        2 => "已支付",
+        3 => "待分账",
+        4 => "已结束",
+        5 => "已取消",
+        6 => "预订失败"
     );
 }
 
@@ -74,20 +75,21 @@ function url_wrapper($url)
 
 }
 
-function cache_account($user_id = null , $purpose = \Sports\Constant\Finance::PURPOSE_ACCOUNT){
+function cache_account($user_id = null, $purpose = \Sports\Constant\Finance::PURPOSE_ACCOUNT)
+{
     static $accounts = array();
 
     $balance = 0;
-    if($user_id === null){
+    if ($user_id === null) {
         $user = Auth::getUser();
         if (!empty($user)) {
             $user_id = $user->user_id;
         }
     }
 
-    if(!empty($user_id)){
+    if (!empty($user_id)) {
         $key = $user_id . '-' . $purpose;
-        if(!isset($accounts[$key])){
+        if (!isset($accounts[$key])) {
             $accounts[$key] = Finance::ensureAccountExisted($user_id, $purpose);
         }
         $balance = intval($accounts[$key]->getBalance());
@@ -95,11 +97,13 @@ function cache_account($user_id = null , $purpose = \Sports\Constant\Finance::PU
     return $balance;
 }
 
-function cache_balance($userId = null){
+function cache_balance($userId = null)
+{
     return cache_account($userId);
 }
 
-function cache_points($userId = null){
+function cache_points($userId = null)
+{
     return cache_account($userId, \Sports\Constant\Finance::PURPOSE_POINTS);
 }
 
@@ -115,28 +119,33 @@ function option_user_privilege($sLanguage = 'cn')
         return array(1 => "普通会员", 2 => "vip会员");
 }
 
-function option_sexy(){
+function option_sexy()
+{
     return array(1 => '女', 2 => '男');
 }
 
-function option_yes_no(){
+function option_yes_no()
+{
     return array(1 => '是', 2 => '否');
 }
 
-function option_account_type(){
+function option_account_type()
+{
     return array(
-        \Sports\Constant\Finance::PURPOSE_POINTS =>     '积分',
-        \Sports\Constant\Finance::PURPOSE_ACCOUNT =>    '余额',
+        \Sports\Constant\Finance::PURPOSE_POINTS => '积分',
+        \Sports\Constant\Finance::PURPOSE_ACCOUNT => '余额',
     );
 }
 
-function option_app_type(){
+function option_app_type()
+{
     return array(
         APP_WE_CHAT => '微信'
     );
 }
 
-function option_hall_stat(){
+function option_hall_stat()
+{
     return array(
         HALL_STAT_DRAFT => '草稿',
         HALL_STAT_PUBlISH => '已发布',
@@ -191,11 +200,19 @@ function no_money_generate_url(&$no_money_array, Recharge $recharge)
     $no_money_array['weChatPayUrl'] = sprintf('/recharge/wechatpay?recharge_id=%s', $recharge->id);
 }
 
+function adjustTimestampForOneModel($model)
+{
+    if (empty($model)) {
+        return;
+    }
+    empty($model->updated_at) && $model->updated_at = \Carbon\Carbon::now();
+    empty($model->created_at) && $model->created_at = \Carbon\Carbon::now();
+}
+
 function adjustTimeStamp($models)
 {
     foreach ($models as $model) {
-        empty($model->updated_at) && $model->updated_at = \Carbon\Carbon::now();
-        empty($model->created_at) && $model->created_at = \Carbon\Carbon::now();
+        adjustTimestampForOneModel($model);
     }
 }
 
@@ -244,9 +261,10 @@ function app_user_id()
  * @param $user_id
  * @return User
  */
-function cache_user($user_id){
+function cache_user($user_id)
+{
     static $users = array();
-    if(!isset($users[$user_id])){
+    if (!isset($users[$user_id])) {
         $users[$user_id] = User::findOrFail($user_id);
     }
     return $users[$user_id];
@@ -256,9 +274,10 @@ function cache_user($user_id){
  * @param $order_id
  * @return ReserveOrder
  */
-function cache_reserve_order($order_id){
+function cache_reserve_order($order_id)
+{
     static $orders = array();
-    if(!isset($orders[$order_id])){
+    if (!isset($orders[$order_id])) {
         $orders[$order_id] = ReserveOrder::findOrFail($order_id);
     }
     return $orders[$order_id];
@@ -268,9 +287,10 @@ function cache_reserve_order($order_id){
  * @param $order_id
  * @return InstantOrder
  */
-function cache_instant_order($order_id){
+function cache_instant_order($order_id)
+{
     static $orders = array();
-    if(!isset($orders[$order_id])){
+    if (!isset($orders[$order_id])) {
         $orders[$order_id] = InstantOrder::findOrFail($order_id);
     }
     return $orders[$order_id];
@@ -280,9 +300,10 @@ function cache_instant_order($order_id){
  * @param $hall_id
  * @return Hall
  */
-function cache_hall($hall_id){
+function cache_hall($hall_id)
+{
     static $halls = array();
-    if(!isset($halls[$hall_id])){
+    if (!isset($halls[$hall_id])) {
         $halls[$hall_id] = Hall::findOrFail($hall_id);
     }
     return $halls[$hall_id];
@@ -292,9 +313,10 @@ function cache_hall($hall_id){
  * @param $user_id
  * @return weChatUserProfile
  */
-function cache_weChat_profile($user_id){
+function cache_weChat_profile($user_id)
+{
     static $profiles = array();
-    if(!isset($profiles[$user_id])){
+    if (!isset($profiles[$user_id])) {
         $app = RelationUserApp::whereUserId($user_id)->whereAppId(APP_WE_CHAT)->first();
         $profiles[$user_id] = empty($app) ? null : weChatUserProfile::whereOpenid($app->app_user_id)->first();
     }
@@ -305,38 +327,44 @@ function cache_weChat_profile($user_id){
  * @param $recharge_id
  * @return Recharge
  */
-function cache_recharge($recharge_id){
+function cache_recharge($recharge_id)
+{
     static $recharges = array();
-    if(!isset($recharges[$recharge_id])){
+    if (!isset($recharges[$recharge_id])) {
         $recharges[$recharge_id] = Recharge::findOrFail($recharge_id);
     }
     return $recharges[$recharge_id];
 }
 
-function array_extract_one_key($arrays, $key){
+function array_extract_one_key($arrays, $key)
+{
     $result = array();
-    foreach($arrays as $id => $array){
+    foreach ($arrays as $id => $array) {
         $result[$id] = $array[$key];
     }
     return $result;
 }
 
-function option_notify_event(){
+function option_notify_event()
+{
     return array_extract_one_key(Config::get('notify.events'), 'title');
 }
 
-function option_notify_channel(){
+function option_notify_channel()
+{
     return array_extract_one_key(Config::get('notify.channels'), 'title');
 }
 
-function exception_to_array(Exception $exception){
+function exception_to_array(Exception $exception)
+{
     return array('code' => $exception->getCode(),
-            'msg' => $exception->getMessage(), 'line' => $exception->getLine(), 'file' => $exception->getFile());
+        'msg' => $exception->getMessage(), 'line' => $exception->getLine(), 'file' => $exception->getFile());
 }
 
-function db_result_ids($dbResults, $idColumn){
+function db_result_ids($dbResults, $idColumn)
+{
     $ids = array();
-    foreach($dbResults as $dbResult){
+    foreach ($dbResults as $dbResult) {
         $ids[] = $dbResult->$idColumn;
     }
     return $ids;

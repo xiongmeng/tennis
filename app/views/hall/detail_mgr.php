@@ -4,16 +4,16 @@
 <div class="row">
 <div class="col-md-12" id="worktable">
 <div class="tab-v1">
-<ul class="nav nav-tabs nav-justified" id="tablist">
-    <li><a href="#base">基本信息</a></li>
-    <li><a href="#court">场地信息</a></li>
-    <li><a href="#price">价格标准</a></li>
-    <li><a href="#market">日期时段</a></li>
-    <li><a href="#image">场馆相册</a></li>
-    <li><a href="#user">用户信息</a></li>
-    <li><a href="#map">地图信息</a></li>
-    <li><a href="#detail">详细信息</a></li>
-</ul>
+    <ul class="nav nav-tabs nav-justified" id="tablist">
+        <li><a href="#base">基本信息</a></li>
+        <li><a href="#court">场地信息</a></li>
+        <li><a href="#price">价格标准</a></li>
+        <li><a href="#market">日期时段</a></li>
+        <li><a href="#image">场馆相册</a></li>
+        <li><a href="#user">用户信息</a></li>
+        <li><a href="#map">地图信息</a></li>
+        <li><a href="#detail">详细信息</a></li>
+    </ul>
 </div>
 
 <div class="panel panel-default" id="base">
@@ -64,13 +64,16 @@
                 <label class="control-label col-md-2">地址：</label>
 
                 <div class="col-md-2">
-                    <select class="form-control" data-bind="options: area.provinces, optionsValue: 'id', optionsText: 'name', value: area.province, optionsCaption: '省份'"></select>
+                    <select class="form-control"
+                            data-bind="options: area.provinces, optionsValue: 'id', optionsText: 'name', value: area.province, optionsCaption: '省份'"></select>
                 </div>
                 <div class="col-md-2">
-                    <select class="form-control" data-bind="options: area.cities, optionsValue: 'city_id', optionsText: 'city', value: area.city, optionsCaption: '市'"></select>
+                    <select class="form-control"
+                            data-bind="options: area.cities, optionsValue: 'city_id', optionsText: 'city', value: area.city, optionsCaption: '市'"></select>
                 </div>
                 <div class="col-md-2">
-                    <select class="form-control" data-bind="options: area.counties, optionsValue: 'county_id', optionsText: 'county', value: area.county, optionsCaption: '县、区'"></select>
+                    <select class="form-control"
+                            data-bind="options: area.counties, optionsValue: 'county_id', optionsText: 'county', value: area.county, optionsCaption: '县、区'"></select>
                 </div>
                 <div class="col-md-4">
                     <input class="form-control" placeholder="详细地址" type="text" data-bind="value:area_text">
@@ -226,25 +229,25 @@
     <div class="panel-body">
         <div class="row" data-bind="foreach: hall_images">
             <div class="col-md-3 well">
-                    <!--ko if:path()-->
-                    <div class="row">
-                        <button class="btn btn-primary" data-bind="enable:id()!=$root.image(),click:$root.setEnvelope">
-                            选为首页
-                        </button>
-                        <button class="btn btn-danger" data-bind="click:$root.deleteImage">删除图片</button>
-                    </div>
-                    <div class="row">
-                        <a class="thumbnail" data-bind="attr:{href:path}" target="_blank" style="margin-top: 10px">
+                <!--ko if:path()-->
+                <div class="row">
+                    <button class="btn btn-primary" data-bind="enable:id()!=$root.image(),click:$root.setEnvelope">
+                        选为首页
+                    </button>
+                    <button class="btn btn-danger" data-bind="click:$root.deleteImage">删除图片</button>
+                </div>
+                <div class="row">
+                    <a class="thumbnail" data-bind="attr:{href:path}" target="_blank" style="margin-top: 10px">
                         <img data-bind="attr:{src:path}">
                     </a>
-                    </div>
-                    <!--/ko -->
+                </div>
+                <!--/ko -->
 
-                    <!--ko if:!path()-->
-                    <div data-bind="plupload: $root.images">
-                        <a class="js_btn btn btn-block btn-primary" href="javascript:;"><span class="btn_wrap">上传</span></a>
-                    </div>
-                    <!--/ko -->
+                <!--ko if:!path()-->
+                <div data-bind="plupload: $root.images">
+                    <a class="js_btn btn btn-block btn-primary" href="javascript:;"><span class="btn_wrap">上传</span></a>
+                </div>
+                <!--/ko -->
             </div>
         </div>
     </div>
@@ -414,8 +417,10 @@
 </div>
 
 <script>
-    seajs.use('hall/hall', function (hall) {
-        hall.init($('#worktable')[0], <?= json_encode($hall)?>);
+    seajs.use(['hall/hall'], function (HallModel) {
+        var hallData = <?= json_encode($hall)?>;
+        var hall = new HallModel(hallData);
+        ko.applyBindings(hall, $('#worktable')[0]);
     });
 
     var tabs = $('#tablist li');
