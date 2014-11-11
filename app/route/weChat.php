@@ -328,12 +328,14 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         $hallID = Input::get('hall_id');
         $hall = Hall::find($hallID);
         $user = Auth::getUser();
+        adjustTimestampForOneModel($user);
 
         $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
         $dates = array();
         for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
             $time = strtotime("+$i day");
-            $dates[date('Y-m-d', $time)] = sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]);
+            $dates[] = array('id' => $time,
+                'name' => sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]));
         }
 
         $businesses = explode('-', $hall->business);
@@ -344,8 +346,10 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             $hours[$i] = sprintf('%s时', $i, $i + 1);
         }
 
+        $order = array('user_id' =>$user->user_id, 'hall_id' => $hallID,
+            'user' => $user, 'hall' => $hall->toArray(), 'dates' => $dates);
         return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve',
-            array('hall' => $hall, 'user' => $user, 'dates' => $dates, 'hours' => $hours));
+            array('order' => $order, 'hall' => $hall, 'user' => $user, 'dates' => $dates, 'hours' => $hours));
     });
 
     Route::get('/mobile_court_buyer/{hallID?}', function ($hallID) {

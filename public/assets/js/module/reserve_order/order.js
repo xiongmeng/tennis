@@ -4,6 +4,7 @@ define(function (require) {
     require('rest');
     require('bootbox');
     require('knockout_phpTsToDate');
+    require('knockout_options');
 
     var User = require('user/user');
     var Hall = require('hall/hall');
@@ -16,7 +17,7 @@ define(function (require) {
         self.hall_id = ko.observable(order.hall_id);
         self.hall = ko.observable(new Hall(order.hall || {}));
 
-        self.event_date = ko.observable(order.event_date).extend({phpTsToDate: ''});
+        self.event_date = ko.observable(order.event_date).extend({phpTsToDate: '', options: order.dates || {}});
 
         self.start_time = ko.observable(order.start_time);
         self.start_time_option = ko.computed(function () {
@@ -46,30 +47,19 @@ define(function (require) {
         self.cost_text = ko.observable(order.cost_text);
         self.stat = ko.observable(order.stat);
 
-        function generate(preview) {
+        self.generate = function (preview) {
             var data = mapping.toJS(self);
             var url = '/reserve/create/' + data.user.user_id + '/' + data.hall.id
                 + '/' + data.event_date + '/' + data.start_time + '/' + data.end_time + '/' + data.court_num;
             var defer = $.restPost(url, {preview: preview ? 1 : 0});
             defer.done(function (res, data) {
                 self.cost(data.order.cost);
-
-                if (!preview) {
-                    window.location.href = '/reserve_order_mgr/book_pending';
-                }
             });
-            defer.fail(function (msg) {
-                bootbox.alert(msg);
-            });
-        }
-
-        self.create = function () {
-            generate(false);
-
+            return defer;
         };
 
         self.calculate = function () {
-            generate(true);
+            self.generate(true);
         };
 
         return self;

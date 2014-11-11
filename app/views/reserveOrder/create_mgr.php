@@ -176,6 +176,15 @@
 
         var model = {};
         model.reserveOrder = new ReserveOrder(<?= json_encode($order)?>);
+        model.reserveOrder.create = function(){
+            var defer = model.reserveOrder.generate(false);
+            defer.done(function(){
+                window.location.href = '/reserve_order_mgr/book_pending';
+            });
+            defer.fail(function(msg){
+                bootbox.alert(msg);
+            });
+        };
 
         model.userList = new UserList();
         model.userList.select = function(user){

@@ -1,23 +1,15 @@
-<div class="content" style="margin-top: 10px">
-    <form style="display: inline" id="form1" action="<?= url_wrapper('/submit_reserve_order') ?>" method="post">
+<div class="content" style="margin-top: 10px" id="workspace">
         <div class="form-controller">
             <div class="item">
                 <a class="label">预订人</a>
-                <input class="input-normal"
-                       type="text" name="nickname" placeholder="" readonly="readonly" class="calc"
-                       id="mynickname"
-                       value="<?= $user->nickname ?>">
-                <input type="hidden" name="user_id" value="<?= $user->user_id ?>" class="calc" id="user_id">
+                <input class="input-normal" type="text" readonly data-bind="value:user().nickname">
             </div>
         </div>
 
         <div class="form-controller">
             <div class="item">
                 <a class="label">场馆</a>
-                <input class="input-normal"
-                       type="text" name="hallname" placeholder="" readonly="readonly"
-                       value="<?= $hall->name ?>">
-                <input type="hidden" name="hall_id" value="<?= $hall->id ?>" class="calc" id="select_order_court">
+                <input class="input-normal" type="text" readonly data-bind="value:hall().name">
             </div>
         </div>
 
@@ -25,54 +17,34 @@
             <div class="item">
                 <a class="label">日期</a>
 
-                <select name="event_date" class="input-normal" id="stimestart">
-                    <?php foreach ($dates as $key => $date) { ?>
-
-                        <option class="calc" value="<?= $key ?>"><?= $date ?></option>
-                    <?php } ?>
-                </select>
+                <select class="input-normal" data-bind="options:event_date.options, optionsText:'name', optionsValue:'id', value:event_date"></select>
             </div>
         </div>
 
         <div class="form-controller">
             <div class="item">
                 <a class="label">时段</a>
-
-                <select name="start_time" id="start_time" style="width: 31%;">
-                    <?php foreach ($hours as $key => $hour) { ?>
-                        <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
-                    <?php } ?>
-                </select>
+                <select style="width: 31%;" data-bind="options:start_time_option, value:start_time"></select>
                 <a style="width: 15%;font-size:15px;">&nbsp;-&nbsp;</a>
-
-                <select name="end_time" id="end_time" style="width: 32%;">
-
-                    <?php foreach ($hours as $key => $hour) { ?>
-                        <option class="calc" value="<?= $key ?>"><?= $hour ?></option>
-                    <?php } ?>
-
-                </select>
+                <select style="width: 31%;" data-bind="options:end_time_option, value:end_time"></select>
             </div>
         </div>
 
         <div class="form-controller">
             <a class="label">片数</a>
-
-            <select name="court_num" class="calc input-normal" id="court_num">
-                <option value="1">1片</option>
-                <option value="2">2片</option>
-                <option value="3">3片</option>
-                <option value="4">4片</option>
-            </select>
+            <select class="input-normal" data-bind="options:court_num_option, value:court_num"></select>
         </div>
         <div class="form-controller">
             <a class="label">金额(元)</a>
             <input style="width: 36%;font-size:15px;"
-                   type="text" name="price" class="pull-left" placeholder="自动生成" readonly="readonly"
-                   id="order_cost">
-            <input type="button" id="cost" style="width: 31%; margin-left: 10px;font-size: 15px;height: 35px" class="btn btn-primary" value="计算金额">
+                   type="text" class="pull-left" placeholder="自动生成" readonly data-bind="value:cost">
+            <input type="button" data-bind="click:calculate,
+                                    enable:user() && hall() && event_date() && start_time() && end_time() && court_num()"
+                   style="width: 31%; margin-left: 10px;font-size: 15px;height: 35px" class="btn btn-primary" value="计算金额">
         </div>
-        <input type="button" id="ok2" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
+        <input type="button" style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
+                data-bind="click:preview,
+                    enable:user() && hall() && event_date() && start_time() && end_time() && court_num() && cost()"
                value="预订">
 
 </div>
@@ -92,48 +64,33 @@
                     <table>
                         <tr>
                             <td width="230" height="50" align="right">预订人：</td>
-                            <td width="300" align="left"><?= $user->nickname ?>
-                            </td>
+                            <td width="300" align="left" data-bind="text: user().nickname"></td>
                         </tr>
                         <tr>
                             <td width="230" height="50" align="right">预订场馆：</td>
-                            <td align="left"><?= $hall->name ?>
-                            </td>
+                            <td align="left" data-bind="text: hall().name"></td>
                         </tr>
                         <tr>
                             <td width="230" height="50" align="right">活动日期：</td>
-                            <td align="left"><span id="pre_date"></span>
-                            </td>
+                            <td align="left" data-bind="text: event_date.text"></td>
                         </tr>
                         <tr>
                             <td width="230" height="50" align="right">时间段：</td>
-                            <td align="left"><span id="pre_time"></span>
-                            </td>
+                            <td align="left" data-bind="text: start_time() + '时-' + end_time() + '时'"></td>
                         </tr>
                         <tr>
                             <td width="230" height="50" align="right">场地片数：</td>
-                            <td align="left"><span id="pre_court_num"></span>
-                            </td>
+                            <td align="left"><span data-bind="text: court_num"></span>片</td>
                         </tr>
                         <tr>
                             <td width="230" height="50" align="right">金额：</td>
-                            <td align="left"><span id="pre_order_cost"></span>元
-                            </td>
+                            <td align="left"><span data-bind="text: cost"></span>元</td>
                         </tr>
-
-                        <!--<tr><td width="100" height="20" align="right" class="textgreen textweight" style="line-height: 120%">温馨提示：</td>-->
-                        <!--<td align="left" class="textblack" style="line-height: 120%">请问您是否需要客服人员与您电话确认订单？</td></tr>-->
-
-                        <!--<tr class="textlineheight textblack"><td height="20">&nbsp;</td>-->
-                        <!--<td align="left"><input type="radio" name="is_need_tel" id="need" value="1" checked="checked"/>-->
-                        <!--<label for="radio">需要</label>-->
-                        <!--<input type="radio" name="is_need_tel" id="noneed" value="2"/>-->
-                        <!--<label for="radio">不用</label></td>-->
-                        <!--</tr>-->
-
                     </table>
 
-                    <input type="submit" id="ok" style="width: 45%; margin-top: 20%" class="btn btn-primary btn-block"
+                    <input type="submit" style="width: 45%; margin-top: 20%" class="btn btn-primary btn-block"
+                           data-bind="click:create,
+                                    enable:user() && hall() && event_date() && start_time() && end_time() && court_num() && cost()"
                            value="确认预订">
 
                 </td>
@@ -142,99 +99,31 @@
 
     </div>
 </div>
-</form>
-<script>
-    $('#cost').click(function () {
-        ajaxCalcCost();
+
+<script type="text/javascript">
+    seajs.use(['reserve_order/order'], function (ReserveOrder) {
+        var reserveOrder = new ReserveOrder(<?= json_encode($order)?>);
+        reserveOrder.preview = function(){
+            var defer = reserveOrder.generate(false);
+            defer.done(function(){
+                $('#previewModal').addClass('active');
+            });
+            defer.fail(function(msg){
+                alert(msg);
+            });
+        };
+
+        ko.applyBindings(reserveOrder, $('#workspace')[0]);
+        ko.applyBindings(reserveOrder, $('#previewModal')[0]);
+
+        reserveOrder.create = function(){
+            var defer = reserveOrder.generate(false);
+            defer.done(function(){
+                window.location.href = '/reserve_order_buyer?stat=0';
+            });
+            defer.fail(function(msg){
+                alert(msg);
+            });
+        };
     });
-    /**
-     * ajax获取服务器端自动计算出的消费金额
-     */
-    function ajaxCalcCost() {
-        $('#order_cost').val();
-        var endtime = $('#end_time').val();
-        var starttime = $('#start_time').val();
-        var eventdate = $('#stimestart').val();
-        if (!((endtime - starttime) > 0)) {
-            if (endtime == 0 && starttime == 0) {
-                alert("还没有选择时段哦")
-            } else {
-                alert("时段 结束时间要大于开始时间哦！")
-            }
-        }
-
-
-        //填充json数据
-        var params = {};
-        params[$('#user_id').attr("name")] = $('#user_id').val();
-        params[$('#select_order_court').attr("name")] = $('#select_order_court').val();
-
-        params[$('#stimestart').attr("name")] = $('#stimestart').val();
-        params[$('#start_time').attr("name")] = $('#start_time').val();
-        params[$('#end_time').attr("name")] = $('#end_time').val();
-        params[$('#court_num').attr("name")] = $('#court_num').val();
-
-        $.ajax
-        ({
-            url: "http://www.wangqiuer.com/ajax/court_queryCost",
-            type: "POST",
-            dataType: 'json',
-            timeout: 3000,
-            data: params,
-            beforeSend: function (XMLHttpRequest) {
-            },
-            success: function (data, textStatus) {
-                ajax_res = data.res;
-//                if (ajax_res.code != 0) {
-//                    art.dialog({
-//                        title: "提示",
-//                        content: ajax_res.desc,
-//                        lock: true, //开启锁屏遮罩
-//                        fixed: true, //开启固定定位
-//                        okValue: "确定",
-//                        ok: function () {
-//                            return true;
-//                        }
-//                    });
-////					alert(ajax_res.desc);
-//                    return false;
-//                }
-                cost = data.cost_result;
-                $('#order_cost').val(cost.i_cost);
-                $('#order_cost_text').val(cost.s_cost);
-            },
-            complete: function (XMLHttpRequest, textStatus) {
-            },
-            error: function () {
-                alert("网络错误，请稍后再试！~");
-            }
-        });
-        return true;
-    }
-
-    $('#ok2').click(function () {
-        var cost = $('#order_cost').val();
-
-        if (!cost) {
-            alert("您还没有计算金额哦！")
-
-        }
-        else {
-            order_preview();
-        }
-
-    });
-    function order_preview() {
-        var time = $('#start_time').val() + "点-" + $('#end_time').val() + "点";
-
-
-        $('#pre_date').text($('#stimestart').val());
-        $('#pre_time').text(time);
-
-        $('#pre_court_num').text($('#court_num').val());
-        $('#pre_order_cost').text($('#order_cost').val());
-        $('#previewModal').addClass('active');
-    }
-
-
 </script>
