@@ -1,4 +1,3 @@
-
 <!--=== Content ===-->
 <div class="container">
     <div class="row">
@@ -7,28 +6,34 @@
             <?= Form::open(array('method' => 'GET', 'class' => 'form-inline')) ?>
             <?= Form::model($queries) ?>
             <div class="form-group">
-                <?= Form::input('text', 'id', null,
+                <?=
+                Form::input('text', 'id', null,
                     array('class' => 'form-control', 'placeholder' => '订单号'))?>
             </div>
             <div class="form-group">
-                <?= Form::input('text', 'event_date_start', null,
+                <?=
+                Form::input('text', 'event_date_start', null,
                     array('class' => 'form-control datepicker', 'placeholder' => '活动开始时间'))?>
             </div>
             -
             <div class="form-group">
-                <?= Form::input('text', 'event_date_end', null,
+                <?=
+                Form::input('text', 'event_date_end', null,
                     array('class' => 'form-control datepicker', 'placeholder' => '活动结束时间'))?>
             </div>
             <div class="form-group">
-                <?= Form::input('text', 'hall_name', null,
+                <?=
+                Form::input('text', 'hall_name', null,
                     array('class' => 'form-control', 'placeholder' => '场馆名称'))?>
             </div>
             <div class="form-group">
-                <?= Form::input('text', 'buyer_name', null,
+                <?=
+                Form::input('text', 'buyer_name', null,
                     array('class' => 'form-control', 'placeholder' => '预订人'))?>
             </div>
             <div class="form-group">
-                <?= Form::select('stat', $states, null,
+                <?=
+                Form::select('stat', $states, null,
                     array('class' => 'form-control', 'placeholder' => '买家名称'))?>
             </div>
             <div class="form-group">
@@ -53,7 +58,8 @@
                     <th width="20%">场馆</th>
                     <th width="8%">活动时间</th>
                     <th width="6%">时段</th>
-                    <th width="5%">售价</th>
+                    <th width="6%">片数</th>
+                    <th width="5%">金额</th>
                     <th width="12%">预订人</th>
                     <th width="8%">状态</th>
                     <th width="10%">操作</th>
@@ -61,25 +67,32 @@
                 </tr>
                 </thead>
                 <tbody>
+                <?php $fsm = new ReserveOrderFsm(); ?>
                 <?php foreach ($reserves as $reserve) { ?>
-                        <tr>
-                            <td><?php echo $reserve->id; ?></td>
-                            <td><?= href_hall_detail($reserve->hall_id, $reserve->hall_name); ?></td>
-                            <td><?= date('m-d', $reserve->event_date); ?></td>
-                            <td><?= display_time_interval($reserve->start_time, $reserve->end_time); ?></td>
-                            <td><?= $reserve->cost; ?></td>
-                            <td><?= href_user_detail($reserve->user_id, $reserve->buyer_name)?></td>
-                            <td><?= $states[$reserve->stat]; ?></td>
-                            <td></td>
-                            <td>
-                                <?= href_notify_create(NOTIFY_TYPE_ORDER_FAILED, $reserve->id, '无场地')?> |
-                                <?= href_notify_create(NOTIFY_TYPE_ORDER_UNPAY, $reserve->id, '预订')?> |
-                                <?= href_notify_create(NOTIFY_TYPE_ORDER_PAYED, $reserve->id, '支付')?> |
-                                <?= href_notify_create(NOTIFY_TYPE_ORDER_CANCEL, $reserve->id, '取消')?>
-                            </td>
-                        </tr>
+                    <?php $fsm->resetObject($reserve); ?>
+                    <tr>
+                        <td><?= href_reserve_detail($reserve->id); ?></td>
+                        <td><?= href_hall_detail($reserve->hall_id, $reserve->hall_name); ?></td>
+                        <td><?= date('m-d', $reserve->event_date); ?></td>
+                        <td><?= display_time_interval($reserve->start_time, $reserve->end_time); ?></td>
+                        <td><?= $reserve->court_num; ?>片</td>
+                        <td><?= $reserve->cost; ?></td>
+                        <td><?= href_user_detail($reserve->user_id, $reserve->buyer_name) ?></td>
+                        <td><?= $states[$reserve->stat]; ?></td>
+                        <td>
+                            <?php if ($fsm->can('modify')) { ?>
+                                <a href="/reserve/modify/<?= $reserve->id ?>" target="_blank">修改</a>
+                            <?php } ?>
+                        </td>
+                        <td>
+                            <?= href_notify_create(NOTIFY_TYPE_ORDER_FAILED, $reserve->id, '无场地') ?> |
+                            <?= href_notify_create(NOTIFY_TYPE_ORDER_UNPAY, $reserve->id, '预订') ?> |
+                            <?= href_notify_create(NOTIFY_TYPE_ORDER_PAYED, $reserve->id, '支付') ?> |
+                            <?= href_notify_create(NOTIFY_TYPE_ORDER_CANCEL, $reserve->id, '取消') ?>
+                        </td>
+                    </tr>
 
-                    <?php } ?>
+                <?php } ?>
 
 
                 </tbody>
@@ -101,8 +114,8 @@
 <!--=== End Content ===-->
 
 <script type="text/javascript">
-    $(document).ready(function(){
-        seajs.use('datetimePicker', function(){
+    $(document).ready(function () {
+        seajs.use('datetimePicker', function () {
             $('.datepicker').datetimepicker({
                 format: 'yyyy-mm-dd',
                 language: 'zh-CN',

@@ -369,3 +369,11 @@ function db_result_ids($dbResults, $idColumn)
     }
     return $ids;
 }
+
+/**
+ * @param $hall Hall | array
+ * @return string
+ */
+function area_hall($hall){
+    return Area::area($hall['area_text'], $hall['county'], $hall['city'], $hall['province']);
+}

@@ -61,14 +61,14 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-4 col-md-offset-3">
-                                <button class="btn btn-warning" data-bind="click:calculate,
-                                    enable:user() && hall() && event_date() && start_time() && end_time() && court_num()">计算金额</button>
-                            </div>
-
-                            <div class="col-md-4">
+                            <div class="col-md-3 pull-right">
                                 <button class="btn btn-primary" data-bind="click:create,
                                     enable:user() && hall() && event_date() && start_time() && end_time() && court_num() && cost()">提交保存</button>
+                            </div>
+
+                            <div class="col-md-3 pull-right">
+                                <button class="btn btn-warning" data-bind="click:calculate,
+                                    enable:user() && hall() && event_date() && start_time() && end_time() && court_num()">计算金额</button>
                             </div>
                         </div>
                     </form>
@@ -171,23 +171,12 @@
 
 <script type="text/javascript">
     seajs.use(['hall/list', 'user/list', 'reserve_order/order'], function (HallList, UserList, ReserveOrder) {
+        var order = <?= json_encode($order)?>;
 
         var model = {};
-        model.reserveOrder = new ReserveOrder(<?= json_encode($order)?>);
-        model.reserveOrder.create = function(){
-            var defer = model.reserveOrder.generate(false);
-            defer.done(function(){
-                window.location.href = '/reserve_order_mgr/book_pending';
-            });
-            defer.fail(function(msg){
-                bootbox.alert(msg);
-            });
-        };
-        model.reserveOrder.calculate = function(){
-            var defer = model.reserveOrder.generate(true);
-            defer.fail(function(msg){
-                bootbox.alert(msg);
-            });
+        model.reserveOrder = new ReserveOrder(order);
+        model.reserveOrder.callback_saved = function(createdOrder){
+            window.location.href = '/reserve/detail/' + createdOrder.id;
         };
 
         model.userList = new UserList();
@@ -207,6 +196,16 @@
         });
 
         ko.applyBindings(model, $('#workspace')[0]);
+
+        if(order.user_id){
+            model.userList.queries.user_id(order.user_id);
+            model.userList.search();
+        }
+
+        if(order.hall_id){
+            model.hallList.queries.id(order.hall_id);
+            model.hallList.search();
+        }
     });
 
 

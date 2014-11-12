@@ -7,7 +7,7 @@
             <?= Form::model($queries) ?>
             <div class="form-group">
                 <?=
-                Form::input('text', 'id', null,
+                Form::input('text', 'user_id', null,
                     array('class' => 'form-control', 'placeholder' => '用户ID'))?>
             </div>
             <div class="form-group">

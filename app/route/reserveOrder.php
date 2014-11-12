@@ -28,12 +28,11 @@ Route::get('/reserve_order_mgr/{curTab}', array('before' => 'auth', function ($c
         array('reserves' => $reserves, 'queries' => $queries, 'states' => $states, 'curTab' => $curTab, 'tabs' => $tabs));
 }));
 
-Route::get('/reserveOrder/operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
+Route::get('/reserve/operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
     $reserveOrder = ReserveOrder::findOrFail($id);
     $fsm = new ReserveOrderFsm($reserveOrder);
     $result = $fsm->apply($operate);
     return rest_success($result);
-
 }));
 
 Route::any('reserveOrder/pay', array('before' => 'auth', function () {
@@ -52,88 +51,76 @@ Route::any('reserveOrder/pay', array('before' => 'auth', function () {
     }
 }));
 
-Route::get('/reserve/create', array('before' => 'auth', function () {
+/**
+ * 创建预约订单
+ */
+Route::any('/reserve/create', array('before' => 'auth', function () {
     Layout::setHighlightHeader('nav_新增预约订单（管理员）');
     $order = Input::only(array('user_id', 'hall_id', 'event_date', 'start_time', 'end_time', 'court_num'));
+    return View::make('layout')->nest('content', 'reserveOrder.create_mgr', array('order' => $order));
+}));
 
-    if (!empty($order['user_id'])) {
-        $order['user'] = User::find($order['user_id']);
-        adjustTimestampForOneModel($order['user']);
-    }
-    if (!empty($order['hall_id'])) {
-        $order['hall'] = Hall::find($order['hall_id']);
-        adjustTimestampForOneModel($order['hall']);
-    }
+/**
+ * 计算金额
+ */
+Route::any('/reserve/calculate', function () {
+    $order = Input::only(array('user_id', 'hall_id', 'event_date', 'start_time', 'end_time', 'court_num'));
+    //计算结果值
+    $reserveOrder = new ReserveOrderManager();
+    $result = $reserveOrder->calculate($order);
+    //返回结果
+    return rest_success($result);
+});
+
+/**
+ * 更新订单
+ */
+Route::any('/reserve/modify/{orderId}', array('before' => 'auth', function($orderId){
+    $order = ReserveOrder::findOrFail($orderId);
+    Layout::setHighlightHeader('nav_预约订单一级列表');
+    Layout::appendBreadCrumbs('修改订单');
 
     return View::make('layout')->nest('content', 'reserveOrder.create_mgr',
         array('order' => $order));
 }));
 
-//创建预约订单
-Route::post('/reserve/create/{userId}/{hallId}/{eventDate}/{startTime}/{endTime}/{courtNum}',
-    function ($userId, $hallId, $eventDate, $startTime, $endTime, $courtNum) {
-        $hallMarkets = HallMarket::with('HallPrice')->whereHallId($hallId)->get();
+Route::post('/reserve/save', array('before' => 'auth', function(){
+    $orderId = Input::get('id');
 
-        $user = User::findOrFail($userId);
-        adjustTimestampForOneModel($user);
+    $orderInput = Input::only(array('user_id', 'hall_id', 'event_date', 'start_time', 'end_time', 'court_num'));
+    //计算价格
+    $reserveOrder = new ReserveOrderManager();
+    $result = $reserveOrder->calculate($orderInput);
 
-        $eventDate = strtotime(date('Y-m-d', $eventDate));
-        $holiday = LegalHolidays::whereDate($eventDate)->first();
-        $week = intval(date('N', $eventDate));
+    if(!empty($orderId)){
+        ReserveOrder::whereId($orderId)->update($orderInput);
+        $order = ReserveOrder::findOrFail($orderId);
+    }else{
+        //生成订单
+        $orderModel = new ReserveOrder();
+        $order = $orderModel->create($orderInput);
+        //发送消息
+        Notify::sendWithBusiness(NOTIFY_TYPE_ORDER_NOTICE, $order->id);
+    }
+    $result['order'] = $order;
 
-        //查找指定日期所在的市场
-        $dateHitMarkets = array();
-        if ($holiday instanceof LegalHolidays) {
-            foreach ($hallMarkets as $hallMarket) {
-                if ($hallMarket->type == $holiday->type) {
-                    $dateHitMarkets[] = $hallMarket;
-                }
-            }
-        } else {
-            foreach ($hallMarkets as $hallMarket) {
-                if (($hallMarket->start_week <= $week) && ($hallMarket->end_week >= $week)) {
-                    $dateHitMarkets[] = $hallMarket;
-                }
-            }
-        }
+    return rest_success($result);
+}));
 
-        //查找指定时间段所在的市场
-        $hourHitMarkets = array();
-        for ($timeIndex = $startTime; $timeIndex < $endTime; $timeIndex++) {
-            $existed = false;
-            foreach ($dateHitMarkets as $market) {
-                if ($market['start'] <= $timeIndex && $market['end'] >= $timeIndex + 1) {
-                    $hourHitMarkets[] = $market;
-                    $existed = true;
-                }
-            }
-            if (!$existed) {
-                throw new Exception(sprintf("未找见指定的时间段%s-%s", $timeIndex, $timeIndex + 1));
-            }
-        }
+/**
+ * 预约订单详情
+ */
+Route::get('/reserve/detail/{orderId}', array('before' => 'auth', function($orderId){
+    $order = ReserveOrder::findOrFail($orderId);
 
-        //计算结果值
-        $costs = array('market' => 0, 'member' => 0, 'vip' => 0, 'purchase' => 0);
-        foreach ($hourHitMarkets as $market) {
-            $costs['market'] += $market->HallPrice->market * $courtNum;
-            $costs['member'] += $market->HallPrice->member * $courtNum;
-            $costs['vip'] += $market->HallPrice->vip * $courtNum;
-            $costs['purchase'] += $market->HallPrice->purchase * $courtNum;
-        }
+    $user = User::remember(CACHE_HOUR)->findOrFail($order['user_id']);
+    $user->balance = cache_balance($order['user_id']);
+    adjustTimestampForOneModel($user);
+    $order['user'] = $user->toArray();
 
-        //组装订单结构
-        $cost = $user->privilege == PRIVILEGE_GOLD ? $costs['vip'] : $costs['member'];
-        $orderData = array('user_id' => $userId, 'hall_id' => $hallId, 'event_date' => $eventDate,
-            'start_time' => $startTime, 'end_time' => $endTime, 'cost' => $cost, 'court_num' => $courtNum);
-        $preview = Input::get('preview');
-        if (!$preview) {
-            $order = new ReserveOrder();
-            $orderData = $order->create($orderData);
+    $hall = Hall::remember(CACHE_HOUR)->find($order['hall_id']);
+    adjustTimestampForOneModel($hall);
+    $order['hall'] = $hall->toArray();
 
-            Notify::sendWithBusiness(NOTIFY_TYPE_ORDER_NOTICE, $orderData->id);
-        }
-
-        $result = array('hall_markets' => $hallMarkets, 'date_hit_markets' => $dateHitMarkets, 'week' => $week,
-            'costs' => $costs, 'holiday' => $holiday, 'hour_hit_markets' => $hourHitMarkets, 'order' => $orderData);
-        return rest_success($result);
-    });
+    return View::make('layout')->nest('content', 'reserveOrder.detail_mgr', array('order' => $order));
+}));

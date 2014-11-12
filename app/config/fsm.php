@@ -266,8 +266,11 @@ return array(
             )
         ),
         'transitions' => array(
+            'modify' => array('from' => array(RESERVE_STAT_INIT), 'to' => RESERVE_STAT_INIT),
             'pay_success' => array('from' => array(RESERVE_STAT_UNPAY), 'to' => RESERVE_STAT_PAYED), //buyer
             'book_success' => array('from' => array(RESERVE_STAT_INIT), 'to' => RESERVE_STAT_UNPAY),
+            'book_fail' => array('from' => array(RESERVE_STAT_INIT), 'to' => RESERVE_STAT_FAILED),
+            'cancel' => array('from' => array(RESERVE_STAT_PAYED), 'to' => RESERVE_STAT_CANCELED),
         ),
         'callbacks' => array(
             'before' => array(
@@ -275,9 +278,16 @@ return array(
                     'from' => RESERVE_STAT_UNPAY,
                     'to' => RESERVE_STAT_PAYED,
                     'do' => function (ReserveOrder $reserve, \Finite\Event\TransitionEvent $e) {
-                            //冻结会员相应金额
                             $reserveOrderFinance = new ReserveOrderFinance($reserve);
                             $reserveOrderFinance->buy();
+                        }
+                ),
+                array( //已支付->取消
+                    'from' => RESERVE_STAT_PAYED,
+                    'to' => RESERVE_STAT_CANCELED,
+                    'do' => function (ReserveOrder $reserve, \Finite\Event\TransitionEvent $e) {
+                            $reserveOrderFinance = new ReserveOrderFinance($reserve);
+                            $reserveOrderFinance->cancel();
                         }
                 )
             ),

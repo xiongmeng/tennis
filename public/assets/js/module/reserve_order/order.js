@@ -11,6 +11,7 @@ define(function (require) {
 
     return function (order) {
         var self = this;
+        self.id = ko.observable(order.id);
         self.user_id = ko.observable(order.user_id);
         self.user = ko.observable(new User(order.user || {}));
 
@@ -47,13 +48,41 @@ define(function (require) {
         self.cost_text = ko.observable(order.cost_text);
         self.stat = ko.observable(order.stat);
 
-        self.generate = function (preview) {
+        self.callback_saved = function(){
+
+        };
+
+        function generateOrderData(){
             var data = mapping.toJS(self);
-            var url = '/reserve/create/' + data.user.user_id + '/' + data.hall.id
-                + '/' + data.event_date + '/' + data.start_time + '/' + data.end_time + '/' + data.court_num;
-            var defer = $.restPost(url, {preview: preview ? 1 : 0});
+            return {
+                id: data.id,
+                user_id : data.user.user_id,
+                hall_id : data.hall.id,
+                event_date: data.event_date,
+                start_time: data.start_time,
+                end_time: data.end_time,
+                court_num: data.court_num
+            }
+        }
+
+        self.create = function () {
+            var defer = $.restPost('/reserve/save', generateOrderData());
+            defer.done(function(res, data){
+                self.callback_saved(data.order);
+            });
+            defer.fail(function(msg){
+                alert(msg);
+            });
+            return defer;
+        };
+
+        self.calculate = function(){
+            var defer = $.restPost('/reserve/calculate', generateOrderData());
             defer.done(function (res, data) {
                 self.cost(data.order.cost);
+            });
+            defer.fail(function(msg){
+                alert(msg);
             });
             return defer;
         };

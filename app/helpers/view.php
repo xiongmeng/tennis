@@ -13,6 +13,10 @@ function href_notify_create($events, $object_id, $name){
     return sprintf("<a target='_blank' href='/notify/create?events=%s&object=%s'>%s</a>", $events, $object_id, $name);
 }
 
+function href_reserve_detail($order_id){
+    return sprintf("<a target='_blank' href='/reserve/detail/%s'>%s</a>", $order_id, $order_id);
+}
+
 function display_time_interval($start, $end){
     return sprintf('%02d-%02d', $start, $end);
 }

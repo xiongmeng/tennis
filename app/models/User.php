@@ -31,8 +31,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
             $join->on('gt_account.user_id', '=', 'gt_user_tiny.user_id')
                 ->where('gt_account.purpose', '=', \Sports\Constant\Finance::PURPOSE_ACCOUNT);
         });
-        if(!empty($aQuery['id'])){
-            $query->where('gt_user_tiny.user_id', '=', $aQuery['id']);
+        if(!empty($aQuery['user_id'])){
+            $query->where('gt_user_tiny.user_id', '=', $aQuery['user_id']);
         }
         if(!empty($aQuery['nickname'])){
             $query->where('gt_user_tiny.nickname', 'like', '%' . $aQuery['nickname'] . '%');
