@@ -31,7 +31,7 @@ define(function (require) {
 
         self.search = function(){
             var queries = mapping.toJS(self.queries);
-            var defer = $.restGet('/hall/list/all', queries);
+            var defer = $.restGet('/hall/list/published', queries);
             defer.done(function(res, data){
                 initListFromJs(data.halls.data);
             });

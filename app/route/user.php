@@ -24,10 +24,9 @@ Route::get('/user', function(){
 
     $sexy = option_sexy();
 
-    $res = array('users' => $users->toArray(), 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy);
-
     if(Input::get('ajax') || Request::ajax()){
-        return rest_success($res);
+        return rest_success(
+            array('users' => $users->toArray(), 'queries' => $queries));
     }else{
         return View::make('layout')->nest('content', 'user.user_mgr',
             array('users' => $users, 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy));

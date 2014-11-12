@@ -112,8 +112,8 @@
                         <tr data-bind="click: $parent.select,css:{success:user_id()==$root.reserveOrder.user().user_id()}">
                             <td data-bind="text:user_id"></td>
                             <td data-bind="text:telephone"></td>
-                            <td data-bind="text:nickname"></td>
-                            <td>TBD</td>
+                            <td><a data-bind="attr:{href:detail_url}, text:nickname" target="_blank"></a></td>
+                            <td data-bind="text:privilege.text"></td>
                             <td data-bind="text:balance"></td>
                         </tr>
                         </tbody>
@@ -146,7 +146,6 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th>ID</th>
                             <th>名称</th>
                             <th>地址</th>
                             <th>电话</th>
@@ -155,9 +154,8 @@
                         </thead>
                         <tbody data-bind="foreach: hallList">
                             <tr data-bind="click: $parent.select,css:{success:id()==$root.reserveOrder.hall().id()}">
-                                <td data-bind="text:id"></td>
-                                <td data-bind="text:name"></td>
-                                <td>TBD</td>
+                                <td><a data-bind="attr:{href:detail_url}, text:name" target="_blank"></a></td>
+                                <td data-bind="text:area"></td>
                                 <td data-bind="text:telephone"></td>
                                 <td><span data-bind="text:court_name"></span>:<span data-bind="text:court_num"></span>片</td>
                             </tr>
@@ -181,6 +179,12 @@
             defer.done(function(){
                 window.location.href = '/reserve_order_mgr/book_pending';
             });
+            defer.fail(function(msg){
+                bootbox.alert(msg);
+            });
+        };
+        model.reserveOrder.calculate = function(){
+            var defer = model.reserveOrder.generate(true);
             defer.fail(function(msg){
                 bootbox.alert(msg);
             });

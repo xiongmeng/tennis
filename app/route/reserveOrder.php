@@ -69,12 +69,14 @@ Route::get('/reserve/create', array('before' => 'auth', function () {
         array('order' => $order));
 }));
 
+//创建预约订单
 Route::post('/reserve/create/{userId}/{hallId}/{eventDate}/{startTime}/{endTime}/{courtNum}',
     function ($userId, $hallId, $eventDate, $startTime, $endTime, $courtNum) {
         $hallMarkets = HallMarket::with('HallPrice')->whereHallId($hallId)->get();
 
         $user = User::findOrFail($userId);
         adjustTimestampForOneModel($user);
+
         $eventDate = strtotime(date('Y-m-d', $eventDate));
         $holiday = LegalHolidays::whereDate($eventDate)->first();
         $week = intval(date('N', $eventDate));
@@ -110,6 +112,7 @@ Route::post('/reserve/create/{userId}/{hallId}/{eventDate}/{startTime}/{endTime}
             }
         }
 
+        //计算结果值
         $costs = array('market' => 0, 'member' => 0, 'vip' => 0, 'purchase' => 0);
         foreach ($hourHitMarkets as $market) {
             $costs['market'] += $market->HallPrice->market * $courtNum;
@@ -118,19 +121,17 @@ Route::post('/reserve/create/{userId}/{hallId}/{eventDate}/{startTime}/{endTime}
             $costs['purchase'] += $market->HallPrice->purchase * $courtNum;
         }
 
+        //组装订单结构
         $cost = $user->privilege == PRIVILEGE_GOLD ? $costs['vip'] : $costs['member'];
         $orderData = array('user_id' => $userId, 'hall_id' => $hallId, 'event_date' => $eventDate,
             'start_time' => $startTime, 'end_time' => $endTime, 'cost' => $cost, 'court_num' => $courtNum);
-
-        $reference = array('hall_markets' => $hallMarkets, 'date_hit_markets' => $dateHitMarkets, 'week' => $week,
-            'costs' => $costs, 'holiday' => $holiday, 'hour_hit_markets' => $hourHitMarkets);
-
         $preview = Input::get('preview');
         if (!$preview) {
             $order = new ReserveOrder();
             $orderData = $order->create($orderData);
         }
-        $reference['order'] = $orderData;
 
-        return rest_success($reference);
+        $result = array('hall_markets' => $hallMarkets, 'date_hit_markets' => $dateHitMarkets, 'week' => $week,
+            'costs' => $costs, 'holiday' => $holiday, 'hour_hit_markets' => $hourHitMarkets, 'order' => $orderData);
+        return rest_success($result);
     });

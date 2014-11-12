@@ -70,7 +70,7 @@
                             <td><?= $hall->sort; ?></td>
                             <td><?= $hall->id ?></td>
                             <td><?= href_hall_detail($hall->id, $hall->name); ?></td>
-                            <td><?= Area::area($hall->area_text, $hall->county, $hall->city, $hall->province) ?></td>
+                            <td><?= $hall->area ?></td>
                             <td><?= $hall->telephone; ?></td>
                             <td><?= $hall->court_name . ' ' . $hall->court_num ?>片</td>
                             <td><?= date("Y-m-d", $hall->createtime) ?></td>

@@ -104,7 +104,7 @@
     seajs.use(['reserve_order/order'], function (ReserveOrder) {
         var reserveOrder = new ReserveOrder(<?= json_encode($order)?>);
         reserveOrder.preview = function(){
-            var defer = reserveOrder.generate(false);
+            var defer = reserveOrder.generate(true);
             defer.done(function(){
                 $('#previewModal').addClass('active');
             });
@@ -112,9 +112,6 @@
                 alert(msg);
             });
         };
-
-        ko.applyBindings(reserveOrder, $('#workspace')[0]);
-        ko.applyBindings(reserveOrder, $('#previewModal')[0]);
 
         reserveOrder.create = function(){
             var defer = reserveOrder.generate(false);
@@ -125,5 +122,15 @@
                 alert(msg);
             });
         };
+
+        reserveOrder.calculate = function(){
+            var defer = reserveOrder.generate(true);
+            defer.fail(function(msg){
+                alert(msg);
+            });
+        };
+
+        ko.applyBindings(reserveOrder, $('#workspace')[0]);
+        ko.applyBindings(reserveOrder, $('#previewModal')[0]);
     });
 </script>

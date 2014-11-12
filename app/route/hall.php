@@ -52,17 +52,17 @@ Route::get('/hall/list/{curTab}', array("before"=>'auth' ,function($curTab){
     foreach($halls as $hall){
         $hall->is_latest = in_array($hall->id, $latestIds);
         $hall->is_recommend = in_array($hall->id, $recommendIds);
+        $hall->area = Area::area($hall->area_text, $hall->county, $hall->city, $hall->province);
     }
 
     $stats = option_hall_stat();
     $stats[''] = '状态';
 
-    $res = array('halls' => $halls->toArray(),
-        'queries' => $queries, 'stats'=>$stats, 'tabs' => $tabs, 'curTab' => $curTab);
     if(Request::ajax()){
-        return rest_success($res);
+        return rest_success(array('halls' => $halls->toArray(),'queries' => $queries));
     }else{
-        return View::make('layout')->nest('content', 'hall.hall_mgr', $res);
+        return View::make('layout')->nest('content', 'hall.hall_mgr', array(
+            'halls' => $halls, 'queries' => $queries, 'stats'=>$stats, 'tabs' => $tabs, 'curTab' => $curTab));
     }
 }));
 

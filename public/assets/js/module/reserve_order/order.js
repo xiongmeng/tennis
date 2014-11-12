@@ -58,10 +58,6 @@ define(function (require) {
             return defer;
         };
 
-        self.calculate = function () {
-            self.generate(true);
-        };
-
         return self;
     };
 });

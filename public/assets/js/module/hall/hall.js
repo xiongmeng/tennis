@@ -64,7 +64,11 @@ define(function (require) {
 
     return function (hallData) {
         var self = this;
+
         self.id = ko.observable(hallData.id);
+        self.detail_url = ko.computed(function(){
+            return '/hall/detail/' + self.id();
+        });
         self.name = ko.observable(hallData.name);
         self.code = ko.observable(hallData.code);
         self.telephone = ko.observable(hallData.telephone);
@@ -156,7 +160,7 @@ define(function (require) {
             return prices;
         }());
 
-        self.area = ko.observable().extend({area:hallData});
+        self.area = ko.observable(hallData.area).extend({area:hallData});
 
         self.generateUser = function () {
             var $user = mapping.toJS(self.user);
