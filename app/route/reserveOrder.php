@@ -129,6 +129,8 @@ Route::post('/reserve/create/{userId}/{hallId}/{eventDate}/{startTime}/{endTime}
         if (!$preview) {
             $order = new ReserveOrder();
             $orderData = $order->create($orderData);
+
+            Notify::sendWithBusiness(NOTIFY_TYPE_ORDER_NOTICE, $orderData->id);
         }
 
         $result = array('hall_markets' => $hallMarkets, 'date_hit_markets' => $dateHitMarkets, 'week' => $week,

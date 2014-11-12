@@ -338,18 +338,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 'name' => sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]));
         }
 
-        $businesses = explode('-', $hall->business);
-        $start = count($businesses) > 0 ? max(intval(str_replace(':00', '', $businesses[0])), 0) : 7;
-        $end = count($businesses) > 1 ? min(intval(str_replace(':00', '', $businesses[1])), 24) : 24;
-        $hours = array('不限');
-        for ($i = $start; $i <= $end; $i++) {
-            $hours[$i] = sprintf('%s时', $i, $i + 1);
-        }
-
         $order = array('user_id' =>$user->user_id, 'hall_id' => $hallID,
             'user' => $user, 'hall' => $hall->toArray(), 'dates' => $dates);
-        return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve',
-            array('order' => $order, 'hall' => $hall, 'user' => $user, 'dates' => $dates, 'hours' => $hours));
+        return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve', array('order' => $order));
     });
 
     Route::get('/mobile_court_buyer/{hallID?}', function ($hallID) {
@@ -386,25 +377,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             'activeDate' => $activeDate, 'courts' => $courts, 'formattedInstants' => $formattedInstants,
             'loginUserId' => Auth::getUser()->user_id, 'instantOrders' => $instantOrders, 'noMoney' => no_money_array()
         ));
-    });
-
-    Route::post('/submit_reserve_order', function () {
-        $queries = Input::all();
-        $order = new ReserveOrder;
-        $order->hall_id = $queries['hall_id'];
-        $order->user_id = $queries['user_id'];
-        $order->start_time = $queries['start_time'];
-        $order->end_time = $queries['end_time'];
-        $order->createtime = time();
-        $order->cost = $queries['price'];
-        $order->court_num = $queries['court_num'];
-        $order->event_date = strtotime($queries['event_date']);
-        $order->createuser = $queries['user_id'];
-        $order->save();
-
-        Notify::sendWithBusiness(NOTIFY_TYPE_ORDER_NOTICE, $order->id);
-
-        return Redirect::to(url_wrapper('/reserve_order_buyer'));
     });
 
     Route::get('/reserve_order_buyer', function () {
