@@ -16,7 +16,7 @@
 <!--<script src="/mobile/js/ratchet.js"></script>-->
 
 <script type="text/javascript" src="/assets/plugins/seajs/sea.js"></script>
-<script type="text/javascript" src="/assets/js/seajs-config.js"></script>
+<script type="text/javascript" src="/assets/js/seajs-config.js?201411121121"></script>
 <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
 
 <script type="text/javascript">
