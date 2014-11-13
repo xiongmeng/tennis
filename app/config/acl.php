@@ -81,6 +81,10 @@ return array(
                 'nav_新增场馆' => array(
                     'label' => '新增场馆',
                     'url' => '/hall/create'
+                ),
+                'nav_法定节假日' => array(
+                    'label' => '法定节假日',
+                    'url' => '/holiday'
                 )
             )
         ),
@@ -119,6 +123,7 @@ return array(
             'nav_场馆一级菜单',
             'nav_场馆列表（管理员）',
             'nav_新增场馆',
+            'nav_法定节假日',
         ),
         ROLE_HALL => array(
             'nav_已售场地列表（场馆侧）',

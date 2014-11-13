@@ -205,7 +205,7 @@ Route::any('/hall/create', array('before' => 'auth', function(){
     return View::make('layout')->nest('content', 'hall.create');
 }));
 
-Route::any('hall/active/operate/{hallId}/{type}/{online}', function($hallId, $type, $online){
+Route::any('/hall/active/operate/{hallId}/{type}/{online}', function($hallId, $type, $online){
     HallActive::whereHallId($hallId)->whereType($type)->delete();
     if($online){
         HallActive::create(array('hall_id'=> $hallId, 'type' => $type));
@@ -213,7 +213,32 @@ Route::any('hall/active/operate/{hallId}/{type}/{online}', function($hallId, $ty
     return Redirect::to(URL::previous());
 });
 
-Route::any('hall/publish/{hallId}/{online}', function($hallId, $online){
+Route::any('/hall/publish/{hallId}/{online}', function($hallId, $online){
     Hall::whereId($hallId)->update(array('stat' => $online ? HALL_STAT_PUBlISH : HALL_STAT_DRAFT));
     return Redirect::to(URL::previous());
 });
+
+Route::get('/holiday', function(){
+    Layout::setHighlightHeader('nav_法定节假日');
+    $holidays = LegalHolidays::orderBy('date', 'desc')->paginate(10);
+    return View::make('layout')->nest('content', 'hall.holidays', array('holidays' => $holidays->getItems()));
+});
+
+Route::post('/holiday/save', array('before' => 'auth', function(){
+    $holidayData = Input::only(array('type', 'date'));
+    $holidayData['date'] = strtotime(date('Y-m-d', $holidayData['date']));
+
+    $id = Input::get('id');
+    if(!empty($id)){
+        $res = LegalHolidays::whereId($id)->update($holidayData);
+    }else{
+        $res = LegalHolidays::create($holidayData);
+    }
+
+    return rest_success($res);
+}));
+
+Route::post('/holiday/remove/{id}', array('before' => 'auth', function($id){
+    $res = LegalHolidays::whereId($id)->delete();
+    return rest_success($res);
+}));
