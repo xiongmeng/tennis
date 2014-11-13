@@ -55,11 +55,11 @@
                 <thead>
                 <tr>
                     <th width="6%">订单号</th>
-                    <th width="15%">创建时间</th>
-                    <th width="20%">场馆</th>
+                    <th width="13%">创建时间</th>
+                    <th width="23%">场馆</th>
                     <th width="8%">活动时间</th>
                     <th width="6%">时段</th>
-                    <th width="6%">片数</th>
+                    <th width="5%">片数</th>
                     <th width="5%">金额</th>
                     <th width="12%">预订人</th>
                     <th width="8%">状态</th>
