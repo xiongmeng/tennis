@@ -1,5 +1,5 @@
-var lib_last_modify = '201409231739',
-    module_common_last_modify = '201409231739';
+var lib_last_modify = '201411130928',
+    module_common_last_modify = '201411130928';
 
 seajs.config({
     debug: true,
@@ -25,8 +25,8 @@ seajs.config({
     },
     charset: 'utf-8',
     map: [
-        [/(.*\/js\/module_common\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + module_common_last_modify],
-        [/(.*\/js\/lib\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + lib_last_modify]
+        [/(.*\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + module_common_last_modify],
+        [/(.*\/assets\/plugins\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + lib_last_modify]
     ]
 });
 
