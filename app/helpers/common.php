@@ -336,6 +336,19 @@ function cache_recharge($recharge_id)
     return $recharges[$recharge_id];
 }
 
+/**
+ * @param $finance_custom_id
+ * @return FinanceCustom
+ */
+function cache_finance_custom($finance_custom_id)
+{
+    static $financeCustoms = array();
+    if (!isset($financeCustoms[$finance_custom_id])) {
+        $financeCustoms[$finance_custom_id] = FinanceCustom::findOrFail($finance_custom_id);
+    }
+    return $financeCustoms[$finance_custom_id];
+}
+
 function array_extract_one_key($arrays, $key)
 {
     $result = array();
@@ -353,6 +366,22 @@ function option_notify_event()
 function option_notify_channel()
 {
     return array_extract_one_key(Config::get('notify.channels'), 'title');
+}
+
+function option_recharge_type(){
+    return array(
+        PAY_TYPE_ALI => '支付宝',
+        PAY_TYPE_MGR => '后台手工充值',
+        PAY_TYPE_WE_CHAT => '微信支付',
+    );
+}
+
+function option_recharge_status(){
+    return array(
+        RECHARGE_INIT => '未充值',
+        RECHARGE_SUCCESS => '充值成功',
+        RECHARGE_FAIL => '充值失败',
+    );
 }
 
 function exception_to_array(Exception $exception)

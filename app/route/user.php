@@ -66,39 +66,6 @@ Route::get('/app', function(){
         array('appUsers' => $appUsers, 'queries' => $queries , 'appTypes' => $appTypes));
 });
 
-Route::get('/billing_mgr/{curTab?}', array('before' => 'auth', function ($curTab) {
-    Layout::setHighlightHeader('nav_流水列表（管理员侧）');
-
-    $tabs = array(
-        'account_balance' => array(
-            'label' => '账户收支明细',
-            'url' => '/billing_mgr/account_balance',
-            'query' => array(
-                'purpose' => \Sports\Constant\Finance::PURPOSE_ACCOUNT,
-                'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
-            )
-        ),
-        'points_balance' => array(
-            'label' => '积分明细',
-            'url' => '/billing_mgr/points_balance',
-            'query' => array(
-                'purpose' => \Sports\Constant\Finance::PURPOSE_POINTS,
-                'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
-            )
-        ),
-    );
-
-    $queries = Input::all();
-
-    $queries = array_merge($queries, $tabs[$curTab]['query']);
-
-    $billingStagingModel = new BillingStaging();
-    $billingStagings = $billingStagingModel->search($queries, 20);
-
-    return View::make('layout')->nest('content', 'user.billing_mgr',
-        array('tabs' => $tabs, 'curTab' => $curTab, 'queries' => $queries, 'billingStagings' => $billingStagings));
-}));
-
 Route::any('/set_receive_sms_telephone', array('before' => 'auth', function(){
     Layout::setHighlightHeader('nav_预订信息短信通知手机号码设定');
 

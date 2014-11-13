@@ -27,6 +27,20 @@ function get_who_from_user_and_channel($user_id, $channel){
 
 return array(
     'events' => array(
+        //自定义扣款中，为扣款人发送短信
+        NOTIFY_TYPE_FINANCE_CUSTOM_DEBTOR => array(
+            'who' => function ($finance_custom_id, $channel) {
+                    $financeCustom = cache_finance_custom($finance_custom_id);
+                    return get_who_from_user_and_channel($financeCustom->debtor, $channel);
+                },
+            'msg' => function ($finance_custom_id, $channel) {
+                    $financeCustom = cache_finance_custom($finance_custom_id);
+                    $user = cache_user($financeCustom->debtor);
+                    return sprintf("%s%s", $financeCustom->reason, contactFinanceInfo($user));
+                },
+            'channels' => array(NOTIFY_CHANNEL_SMS_ASYNC, NOTIFY_CHANNEL_WX_SYNC),
+            'title' => '扣款人短信提醒',
+        ),
         //充值
         NOTIFY_TYPE_RECHARGE => array(
             'who' => function ($recharge_id, $channel) {

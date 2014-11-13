@@ -18,6 +18,11 @@ const PAY_TYPE_999=3;//块钱
 const PAY_TYPE_MGR=4;//后台手工充值
 const PAY_TYPE_WE_CHAT = 8; //微信支付
 
+const RECHARGE_INIT = 1;//充值记录初始化
+const RECHARGE_SUCCESS = 2;//充值成功
+const RECHARGE_FAIL = 3;//充值失败
+const RECHARGE_ASSIGN = 4;//充值已充到用户账户上 - 不知道有没有用上
+
 const CACHE_PREFIX_VALID_CODE = 'valid_code_';
 
 const ROLE_USER = 1;//用户会员角色

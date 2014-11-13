@@ -16,4 +16,34 @@ class Recharge extends Eloquent {
         $this->type = PAY_TYPE_MGR; //默认为管理员线下充值
         $this->save();
     }
+
+    public function User(){
+        return $this->belongsTo('User', 'user_id', 'user_id');
+    }
+
+    public function search($aQuery, $iPageSize =20){
+        $query = Recharge::leftJoin('gt_user_tiny', 'gt_user_tiny.user_id', '=', 'gt_recharge.user_id');
+        if(!empty($aQuery['id'])){
+            $query->where('gt_recharge.id', '=', $aQuery['id']);
+        }
+        if(isset($aQuery['stat'])){
+            if(is_array($aQuery['stat'])){
+                $query->whereIn('gt_recharge.stat', $aQuery['stat']);
+            }else if(!empty($aQuery['stat'])){
+                $query->where('gt_recharge.stat', '=', $aQuery['stat']);
+            }
+        }
+        if(isset($aQuery['type'])){
+            if(is_array($aQuery['type'])){
+                $query->whereIn('gt_recharge.type', $aQuery['type']);
+            }else if(!empty($aQuery['type'])){
+                $query->where('gt_recharge.type', '=', $aQuery['type']);
+            }
+        }
+        if(!empty($aQuery['user_name'])){
+            $query->where('gt_user_tiny.nickname', 'like', '%' . $aQuery['user_name'] . '%');
+        }
+        return $query->orderBy('gt_recharge.id', 'desc')
+            ->paginate($iPageSize, array('gt_recharge.*', 'gt_user_tiny.nickname as user_name'));
+    }
 }

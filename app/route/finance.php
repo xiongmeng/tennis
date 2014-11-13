@@ -232,3 +232,68 @@ Route::any('/finance/consume', array('before' => 'auth', function(){
         return View::make('layout')->nest('content', 'finance.consume_mgr', array('custom' => $customInput));
     }
 }));
+
+Route::get('/billing_mgr/{curTab?}', array('before' => 'auth', function ($curTab) {
+    Layout::setHighlightHeader('nav_流水列表（管理员侧）');
+
+    $tabs = array(
+        'account_balance' => array(
+            'label' => '账户收支明细',
+            'url' => '/billing_mgr/account_balance',
+            'query' => array(
+                'purpose' => \Sports\Constant\Finance::PURPOSE_ACCOUNT,
+                'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
+            )
+        ),
+        'points_balance' => array(
+            'label' => '积分明细',
+            'url' => '/billing_mgr/points_balance',
+            'query' => array(
+                'purpose' => \Sports\Constant\Finance::PURPOSE_POINTS,
+                'billing_type' => \Sports\Constant\Finance::ACCOUNT_BALANCE
+            )
+        ),
+    );
+
+    $queries = Input::all();
+
+    $queries = array_merge($queries, $tabs[$curTab]['query']);
+
+    $billingStagingModel = new BillingStaging();
+    $billingStagings = $billingStagingModel->search($queries, 20);
+
+    return View::make('layout')->nest('content', 'user.billing_mgr',
+        array('tabs' => $tabs, 'curTab' => $curTab, 'queries' => $queries, 'billingStagings' => $billingStagings));
+}));
+
+Route::get('/finance/recharge/list', array('before' => 'auth', function(){
+    Layout::setHighlightHeader('nav_充值记录');
+
+    $queries = Input::all();
+    !isset($queries['stat']) && $queries['stat'] = RECHARGE_SUCCESS;
+    !isset($queries['type']) && $queries['type'] = PAY_TYPE_MGR;
+
+    $rechargeModel = new Recharge();
+    $recharges = $rechargeModel->search($queries);
+
+    $types = option_recharge_type();
+    $types[''] = '请选择：充值方式';
+
+    $status = option_recharge_status();
+    $status[''] = '请选择：充值结果';
+
+    return View::make('layout')->nest('content', 'finance.recharge_list',
+        array('queries' => $queries, 'recharges' => $recharges, 'types' => $types, 'status' => $status));
+}));
+
+Route::get('/finance/consume/list', array('before' => 'auth', function(){
+    Layout::setHighlightHeader('nav_扣款记录');
+
+    $queries = Input::all();
+
+    $customModel = new FinanceCustom();
+    $customs = $customModel->search($queries);
+
+    return View::make('layout')->nest('content', 'finance.custom_list',
+        array('queries' => $queries, 'customs' => $customs));
+}));

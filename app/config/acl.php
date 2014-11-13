@@ -104,6 +104,14 @@ return array(
                     'label' => '流水列表',
                     'url' => '/billing_mgr/account_balance',
                 ),
+                'nav_充值记录' => array(
+                    'label' => '充值记录',
+                    'url' => '/finance/recharge/list'
+                ),
+                'nav_扣款记录' => array(
+                    'label' => '扣款记录',
+                    'url' => '/finance/consume/list'
+                ),
             )
         ),
     ),
@@ -146,6 +154,8 @@ return array(
             'nav_财务一级菜单',
             'nav_补款',
             'nav_扣款',
+            'nav_充值记录',
+            'nav_扣款记录',
         ),
         ROLE_HALL => array(
             'nav_已售场地列表（场馆侧）',
