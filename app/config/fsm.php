@@ -263,6 +263,22 @@ return array(
             RESERVE_STAT_PAYED => array( //已支付
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
                 'properties' => array(),
+            ),
+            RESERVE_STAT_SUBED => array( //已分账
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+                'properties' => array(),
+            ),
+            RESERVE_STAT_CLOSED => array( //已结束
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+                'properties' => array(),
+            ),
+            RESERVE_STAT_CANCELED => array( //已取消
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+                'properties' => array(),
+            ),
+            RESERVE_STAT_FAILED => array( //预订失败
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+                'properties' => array(),
             )
         ),
         'transitions' => array(
