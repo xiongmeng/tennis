@@ -52,11 +52,11 @@
                             <?php if ($user instanceof User) { ?>
                                 <tr>
                                     <td><?= $user->user_id; ?></td>
-                                    <td><?php if ($user->created_at) {
-                                            echo substr($user->created_at, 0, 10);
-                                        } elseif ($user->createtime) {
+                                    <td><?php if ($user->createtime) {
                                             echo date('Y-m-d', $user->createtime);
-                                        } ?></td>
+                                        } else if ($user->created_at) {
+                                            echo substr($user->created_at, 0, 10);
+                                        }?></td>
                                     <td><?= isset($privileges[$user->privilege]) ? $privileges[$user->privilege] : '普通会员'; ?></td>
                                     <td><?= href_user_detail($user->user_id, $user->nickname);?></td>
                                     <td><?= $user->telephone; ?></td>
