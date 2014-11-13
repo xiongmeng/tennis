@@ -55,6 +55,7 @@
                 <thead>
                 <tr>
                     <th width="6%">订单号</th>
+                    <th width="15%">创建时间</th>
                     <th width="20%">场馆</th>
                     <th width="8%">活动时间</th>
                     <th width="6%">时段</th>
@@ -62,7 +63,7 @@
                     <th width="5%">金额</th>
                     <th width="12%">预订人</th>
                     <th width="8%">状态</th>
-                    <th width="10%">操作</th>
+                    <th width="5%">操作</th>
                     <th width="15%">通知</th>
                 </tr>
                 </thead>
@@ -72,6 +73,12 @@
                     <?php $fsm->resetObject($reserve); ?>
                     <tr>
                         <td><?= href_reserve_detail($reserve->id); ?></td>
+                        <td><?php if ($reserve->createtime) {
+                                echo date('Y-m-d H:i', $reserve->createtime);
+                            } else if ($reserve->created_at) {
+                                echo substr($reserve->created_at, 0, 16);
+                            }?>
+                        </td>
                         <td><?= href_hall_detail($reserve->hall_id, $reserve->hall_name); ?></td>
                         <td><?= date('m-d', $reserve->event_date); ?></td>
                         <td><?= display_time_interval($reserve->start_time, $reserve->end_time); ?></td>
