@@ -11,11 +11,11 @@
                         <thead>
                         <tr>
                             <th width="5%">ID</th>
-                            <th width="8%">日期</th>
-                            <th width="10%">类型</th>
-                            <th width="10%">操作</th>
-                            <th width="10%">创建时间</th>
-                            <th width="10%">修改时间</th>
+                            <th width="20%">日期</th>
+                            <th width="15%">类型</th>
+                            <th width="15%">操作</th>
+                            <th width="15%">创建时间</th>
+                            <th width="15%">修改时间</th>
                         </tr>
                         </thead>
                         <tbody data-bind="foreach: holidays">
