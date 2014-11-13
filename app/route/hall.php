@@ -242,3 +242,12 @@ Route::post('/holiday/remove/{id}', array('before' => 'auth', function($id){
     $res = LegalHolidays::whereId($id)->delete();
     return rest_success($res);
 }));
+
+Route::get('/hall/register/list', array("before"=>'auth' ,function(){
+    Layout::setHighlightHeader('nav_已登记场馆');
+
+    $registers = HallRegister::orderBy('id', 'desc')->paginate(20);
+
+    return View::make('layout')->nest('content', 'hall.register_list', array('registers' => $registers));
+
+}));
