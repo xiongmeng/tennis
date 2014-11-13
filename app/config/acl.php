@@ -14,10 +14,6 @@ return array(
             'label' => '账户明细',
             'url' => '/billing_buyer/account_balance',
         ),
-        'nav_流水列表（管理员侧）' => array(
-            'label' => '流水',
-            'url' => '/billing_mgr/account_balance',
-        ),
         'nav_即时订单列表（管理员侧）' => array(
             'label' => '即时订单',
             'url' => '/instant_order_mgr/payed',
@@ -92,6 +88,24 @@ return array(
                 )
             )
         ),
+        'nav_财务一级菜单' => array(
+            'label' => '财务',
+            'url' => '#',
+            'children' => array(
+                'nav_补款' => array(
+                    'label' => '补款',
+                    'url' => '/finance/recharge'
+                ),
+                'nav_扣款' => array(
+                    'label' => '扣款',
+                    'url' => '/finance/consume'
+                ),
+                'nav_流水列表（管理员侧）' => array(
+                    'label' => '流水列表',
+                    'url' => '/billing_mgr/account_balance',
+                ),
+            )
+        ),
     ),
 
     'roles' => array(
@@ -129,6 +143,9 @@ return array(
             'nav_新增场馆',
             'nav_法定节假日',
             'nav_已登记场馆',
+            'nav_财务一级菜单',
+            'nav_补款',
+            'nav_扣款',
         ),
         ROLE_HALL => array(
             'nav_已售场地列表（场馆侧）',

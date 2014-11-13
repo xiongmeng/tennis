@@ -39,7 +39,7 @@ class UserFinance
             $recharge = Recharge::findOrFail($recharge->id);
 
             //执行一次充值
-            $this->addbalancefromrecharge($recharge);
+            $this->addBalanceFromRecharge($recharge);
 
             DB::beginTransaction();
             try {

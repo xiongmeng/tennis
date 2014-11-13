@@ -182,3 +182,53 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         echo $returnXml;
     });
 });
+
+Route::any('/finance/recharge', array('before' => 'auth', function(){
+    $rechargeInput = Input::only(array('user_id', 'money'));
+    if(Request::isMethod('POST')){
+        $rules = array(
+            'user_id' => 'required',
+            'money' => 'required|integer|min:1'
+        );
+
+        $validator = Validator::make(Input::all(), $rules);
+        if ($validator->fails()) {
+            return rest_fail(json_encode($validator->messages()));
+        }
+
+        $recharge = new Recharge();
+        $recharge->generate($rechargeInput['money'], $rechargeInput['user_id'], user_id());
+
+        $finance = new UserFinance();
+        $finance->doPaySuccess($recharge, '线下现金充值', $rechargeInput['money']);
+
+        return rest_success($recharge);
+    }else{
+        Layout::setHighlightHeader('nav_补款');
+        return View::make('layout')->nest('content', 'finance.recharge_mgr', array('recharge' => $rechargeInput));
+    }
+}));
+
+Route::any('/finance/consume', array('before' => 'auth', function(){
+    $customInput = Input::only(array('debtor', 'amount', 'reason'));
+    if(Request::isMethod('POST')){
+        $rules = array(
+            'debtor' => 'required',
+            'amount' => 'required|integer|min:1',
+            'reason' => 'required',
+        );
+
+        $validator = Validator::make(Input::all(), $rules);
+        if ($validator->fails()) {
+            return rest_fail(json_encode($validator->messages()));
+        }
+
+        $finance = new UserFinance();
+        $res = $finance->transfer($customInput['debtor'], null, $customInput['amount'], $customInput['reason']);
+
+        return rest_success(1);
+    }else{
+        Layout::setHighlightHeader('nav_扣款');
+        return View::make('layout')->nest('content', 'finance.consume_mgr', array('custom' => $customInput));
+    }
+}));

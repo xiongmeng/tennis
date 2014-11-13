@@ -13,6 +13,7 @@ class Recharge extends Eloquent {
         $this->callback_action_type = $actionType; //购买预约订单
         $this->app_user_id = $appUserId;
         $this->app_id = (empty($appId) ? app_id() : $appId);
+        $this->type = PAY_TYPE_MGR; //默认为管理员线下充值
         $this->save();
     }
 }
