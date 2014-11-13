@@ -71,28 +71,28 @@
                             <?php $fsm = new ReserveOrderFsm($order); ?>
                             <?php if ($fsm->can('book_fail')) { ?>
                                 <div class="col-md-3 pull-right">
-                                    <a class="btn btn-primary" href="/reserve/operate/<?= $order->id ?>/book_fail" target="_blank">预订失败</a>
+                                    <a class="btn btn-primary" href="/reserve/operate/<?= $order->id ?>/book_fail">预订失败</a>
                                 </div>
                             <?php } ?>
 
                             <?php if ($fsm->can('book_success')) { ?>
                                 <div class="col-md-3 pull-right">
                                     <a class="btn btn-primary" href="/reserve/operate/<?= $order->id ?>/book_success"
-                                       target="_blank">预订成功</a>
+                                       >预订成功</a>
                                 </div>
                             <?php } ?>
 
                             <?php if ($fsm->can('pay_success')) { ?>
                                 <div class="col-md-3 pull-right">
                                     <a class="btn btn-primary" href="/reserve/operate/<?= $order->id ?>/pay_success"
-                                       target="_blank">待支付</a>
+                                       >待支付</a>
                                 </div>
                             <?php } ?>
 
                             <?php if ($fsm->can('cancel')) { ?>
                                 <div class="col-md-3 pull-right">
                                     <a class="btn btn-primary" href="/reserve/operate/<?= $order->id ?>/cancel"
-                                       target="_blank">取消订单</a>
+                                       >取消订单</a>
                                 </div>
                             <?php } ?>
                         </div>

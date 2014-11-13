@@ -32,7 +32,7 @@ Route::get('/reserve/operate/{id?}/{operate?}', array('before' => 'auth', functi
     $reserveOrder = ReserveOrder::findOrFail($id);
     $fsm = new ReserveOrderFsm($reserveOrder);
     $result = $fsm->apply($operate);
-    return rest_success($result);
+    return Redirect::to(URL::previous());
 }));
 
 Route::any('reserveOrder/pay', array('before' => 'auth', function () {
@@ -112,6 +112,8 @@ Route::post('/reserve/save', array('before' => 'auth', function(){
  */
 Route::get('/reserve/detail/{orderId}', array('before' => 'auth', function($orderId){
     $order = ReserveOrder::findOrFail($orderId);
+    Layout::setHighlightHeader('nav_预约订单一级列表');
+    Layout::appendBreadCrumbs('订单详情');
 
     $user = User::remember(CACHE_HOUR)->findOrFail($order['user_id']);
     $user->balance = cache_balance($order['user_id']);
