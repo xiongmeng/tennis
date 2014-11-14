@@ -112,6 +112,7 @@ Route::post('/reserve/save', array('before' => 'auth', function(){
  */
 Route::get('/reserve/detail/{orderId}', array('before' => 'auth', function($orderId){
     $order = ReserveOrder::findOrFail($orderId);
+    adjustTimestampForOneModel($order);
     Layout::setHighlightHeader('nav_预约订单一级列表');
     Layout::appendBreadCrumbs('订单详情');
 
