@@ -106,6 +106,9 @@ return array(
                             //清除买家标志
                             $instant->buyer = $instant->buyer_name = null;
                             $instant->save();
+
+                            //给场馆发送取消通知
+                            Notify::sendWithBusiness(NOTIFY_TYPE_HALL_INSTANT_ORDER_CANCELED, $instant->id);
                         }
                 ),
             ),
