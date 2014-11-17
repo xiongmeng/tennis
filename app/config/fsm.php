@@ -117,7 +117,7 @@ return array(
                             //记录expire_time=活动开始时间及卖家ID
                             $user = Auth::getUser();
                             if ($user instanceof User) {
-                                $instant->seller = $user->user_id;
+                                empty($instant->seller) && $instant->seller = $user->user_id;
                                 //记录expire_time=活动开始时间)
                                 $expireTime = strtotime($instant->event_date) + (($instant->start_hour) * 3600);
                                 $instant->expire_time = $expireTime;
@@ -313,6 +313,63 @@ return array(
                     'to' => 'payed',
                     'do' => function (ReserveOrder $reserve, \Finite\Event\TransitionEvent $e) {
                             Log::debug('reserve order pay after');
+                        }
+                )
+            )
+        )
+    ),
+
+    'seeking' => array(
+        'states' => array(
+            SEEKING_STATE_CLOSED => array( //初始化 关门
+                'type' => Finite\State\StateInterface::TYPE_INITIAL,
+            ),
+            SEEKING_STATE_OPENED => array( //开门
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+            ),
+            SEEKING_STATE_FULLED => array( //满员
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+            ),
+            SEEKING_STATE_EXPIRED => array( //已过期
+                'type' => Finite\State\StateInterface::TYPE_FINAL,
+            ),
+            SEEKING_STATE_FULL_CHECKING => array(//满员检测状态
+                'type' => Finite\State\StateInterface::TYPE_NORMAL,
+            )
+        ),
+        'transitions' => array(
+            'modify' => array('from' => array(SEEKING_STATE_CLOSED), 'to' => SEEKING_STATE_CLOSED),
+            'open' => array('from' => array(SEEKING_STATE_CLOSED), 'to' => SEEKING_STATE_OPENED),
+            'close' => array('from' => array(SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_CLOSED),
+
+            'increase' => array('from' => array(
+                SEEKING_STATE_OPENED, SEEKING_STATE_FULLED), 'to' => SEEKING_STATE_OPENED),
+            'decrease' => array('from' => array(SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_FULL_CHECKING),
+
+            'auto_open' => array('from' => array(SEEKING_STATE_FULL_CHECKING), 'to' => SEEKING_STATE_OPENED),
+            'auto_full' => array('from' => array(SEEKING_STATE_FULL_CHECKING), 'to' => SEEKING_STATE_FULLED),
+
+            'expire' => array('from' => array(
+                SEEKING_STATE_CLOSED, SEEKING_STATE_OPENED, SEEKING_STATE_FULLED), 'to' => SEEKING_STATE_EXPIRED),
+
+        ),
+        'callbacks' => array(
+            'before' => array(
+                array( //
+                    'to' => SEEKING_STATE_OPENED,
+                    'do' => function (Seeking $seeking, \Finite\Event\TransitionEvent $e) {
+                            if($seeking->sold > $seeking->store){
+                                throw new Exception('售出已超过总数目！');
+                            }
+                        }
+                ),
+            ),
+            'after' => array(
+                array(
+                    'to' => SEEKING_STATE_FULL_CHECKING,
+                    'do' => function (Seeking $seeking, \Finite\Event\TransitionEvent $e) {
+                            $fsm = new SeekingFsm($seeking);
+                            $fsm->apply($seeking->sold == $seeking->store ? 'auto-full' : 'auto_open');
                         }
                 )
             )
