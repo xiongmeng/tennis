@@ -72,6 +72,8 @@ const NOTIFY_TYPE_PASSWORD_RESET = 8873;//为用户发送密码重置短信
 const NOTIFY_TYPE_FINANCE_CUSTOM_DEBTOR = 8872;//自定义扣款中，为扣款人发送短信
 const NOTIFY_TYPE_USER_INSTANT_ORDER_PAYED = 9000;    //即时订单购买成功后用户的消息
 const NOTIFY_TYPE_HALL_INSTANT_ORDER_SOLD = 9001;     //即时订单购买成功后场馆侧的消息提醒
+const NOTIFY_TYPE_HALL_INSTANT_ORDER_CANCELED = 9002;     //即时订单取消后场馆侧的消息提醒
+
 
 const USER_PRIVILEGE_NORMAL = 1;    //普通会员
 const USER_PRIVILEGE_VIP = 2;   //VIP会员
@@ -93,3 +95,9 @@ const HALL_ACTIVE_LATEST = 3; //最新
 
 const CACHE_DAY = 720;
 const CACHE_HOUR = 60;
+
+const SEEKING_STATE_CLOSED = 'closed'; //已关门
+const SEEKING_STATE_OPENED = 'opened'; //已开门
+const SEEKING_STATE_FULLED = 'fulled'; //已满员
+const SEEKING_STATE_EXPIRED = 'expired'; //已结束
+const SEEKING_STATE_FULL_CHECKING = 'full_checking'; //检测满员状态，这是一个中间状态，如果满则去已满员状态，否则去opened状态

@@ -186,6 +186,22 @@ return array(
                 },
             'channels' => array(NOTIFY_CHANNEL_SMS_SYNC),
             'title' => '即时订单售卖成功（场馆侧）'
+        ),
+        //即时订单取消后场馆侧的消息提醒
+        NOTIFY_TYPE_HALL_INSTANT_ORDER_CANCELED => array(
+            'who' => function($instant_order_id, $channel){
+                    $order = cache_instant_order($instant_order_id);
+                    $user = cache_user($order->seller);
+                    return $user->receive_sms_telephone;
+                },
+            'msg' => function ($instant_order_id, $channel) {
+                    $order = cache_instant_order($instant_order_id);
+                    $hall = $order->Hall;
+                    return sprintf("已取消%s%s日%s点-%s点%s号场地，订单号%s。", $hall->name, substr($order->event_date, 0, 10),
+                        $order->start_hour, $order->end_hour, $order->court_number, $order->id);
+                },
+            'channels' => array(NOTIFY_CHANNEL_SMS_SYNC),
+            'title' => '即时订单取消（场馆侧）'
         )
     ),
 
