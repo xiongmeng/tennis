@@ -227,29 +227,29 @@
 <div class="panel panel-default" id="image">
     <div class="panel-heading">场馆相册</div>
     <div class="panel-body">
-        <div class="row" data-bind="foreach: hall_images">
-            <div class="col-md-3 well">
-                <!--ko if:path()-->
-                <div class="row">
-                    <button class="btn btn-primary" data-bind="enable:id()!=$root.image(),click:$root.setEnvelope">
-                        选为首页
-                    </button>
-                    <button class="btn btn-danger" data-bind="click:$root.deleteImage">删除图片</button>
-                </div>
-                <div class="row">
-                    <a class="thumbnail" data-bind="attr:{href:path}" target="_blank" style="margin-top: 10px">
-                        <img data-bind="attr:{src:path}">
-                    </a>
-                </div>
-                <!--/ko -->
-
-                <!--ko if:!path()-->
-                <div data-bind="plupload: $root.images">
-                    <a class="js_btn btn btn-block btn-primary" href="javascript:;"><span class="btn_wrap">上传</span></a>
-                </div>
-                <!--/ko -->
-            </div>
-        </div>
+<!--        <div class="row" data-bind="foreach: hall_images">-->
+<!--            <div class="col-md-3 well">-->
+<!--                <!--ko if:path()-->-->
+<!--                <div class="row">-->
+<!--                    <button class="btn btn-primary" data-bind="enable:id()!=$root.image(),click:$root.setEnvelope">-->
+<!--                        选为首页-->
+<!--                    </button>-->
+<!--                    <button class="btn btn-danger" data-bind="click:$root.deleteImage">删除图片</button>-->
+<!--                </div>-->
+<!--                <div class="row">-->
+<!--                    <a class="thumbnail" data-bind="attr:{href:path}" target="_blank" style="margin-top: 10px">-->
+<!--                        <img data-bind="attr:{src:path}">-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                <!--/ko -->-->
+<!---->
+<!--                <!--ko if:!path()-->-->
+<!--                <div data-bind="plupload: $root.images">-->
+<!--                    <a class="js_btn btn btn-block btn-primary" href="javascript:;"><span class="btn_wrap">上传</span></a>-->
+<!--                </div>-->
+<!--                <!--/ko -->-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </div>
 

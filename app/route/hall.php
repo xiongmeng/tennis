@@ -75,6 +75,8 @@ Route::post('/hall/generateUser/{hallId}', array('before' => 'auth', function($h
     if(empty($user['user_id'])){
         $hall = new Hall();
         $generateUser = $hall->generateUser($hallId, $user['nickname'], $user['init_password']);
+        //重新生成数据
+        Artisan::call('instantOrder:refresh');
     }else{
         return rest_success($user);
     }
