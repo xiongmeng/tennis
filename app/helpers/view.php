@@ -17,6 +17,10 @@ function href_reserve_detail($order_id){
     return sprintf("<a target='_blank' href='/reserve/detail/%s'>%s</a>", $order_id, $order_id);
 }
 
+function href_seeking_detail($id){
+    return sprintf("<a target='_blank' href='/seeking/detail/%s'>%s</a>", $id, $id);
+}
+
 function display_time_interval($start, $end){
     return sprintf('%02d-%02d', $start, $end);
 }

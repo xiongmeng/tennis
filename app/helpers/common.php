@@ -14,6 +14,21 @@ function weekday_option()
     return array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
 }
 
+function option_published_halls(){
+    return Hall::whereStat(HALL_STAT_PUBlISH)->remember(CACHE_HOUR)->get(array('id', 'name'));
+}
+
+function option_seeking_state(){
+    return array(
+        SEEKING_STATE_CLOSED => '已关门',
+        SEEKING_STATE_OPENED => '已开门',
+        SEEKING_STATE_OPENED_EXPIRED => '开门已过期',
+        SEEKING_STATE_FULLED => '已满员',
+        SEEKING_STATE_EXPIRED => '已结束',
+        SEEKING_STATE_FULL_CHECKING => '满员检测中'
+    );
+}
+
 function instant_order_state_option()
 {
     return array(

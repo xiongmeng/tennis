@@ -98,6 +98,13 @@ const CACHE_HOUR = 60;
 
 const SEEKING_STATE_CLOSED = 'closed'; //已关门
 const SEEKING_STATE_OPENED = 'opened'; //已开门
+const SEEKING_STATE_OPENED_EXPIRED = 'open_expired'; //开门已过期-为了让发起人时不时的去看一下
 const SEEKING_STATE_FULLED = 'fulled'; //已满员
 const SEEKING_STATE_EXPIRED = 'expired'; //已结束
 const SEEKING_STATE_FULL_CHECKING = 'full_checking'; //检测满员状态，这是一个中间状态，如果满则去已满员状态，否则去opened状态
+
+const SEEKING_ORDER_STATE_DISPOSING = 'disposing'; //处理中
+const SEEKING_ORDER_STATE_DISPOSE_EXPIRED = 'dispose_expired'; //过期未处理
+const SEEKING_ORDER_STATE_ACCEPTED = 'accepted'; //已接受
+const SEEKING_ORDER_STATE_REJECTED = 'rejected'; //已拒绝
+const SEEKING_ORDER_STATE_CANCELED = 'canceled'; //已取消

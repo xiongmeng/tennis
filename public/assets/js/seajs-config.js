@@ -20,6 +20,7 @@ seajs.config({
         fancybox: 'plugin/fancybox/fancybox_cmd.js',
         weiboyi: 'plugin/weiboyi/weiboyi_all_cmd',
         datetimePicker: 'plugin/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.cmd.js',
+        combobox: 'plugin/combobox/js/bootstrap-combobox-cmd.js',
         kkcountdown:'plugin/kkcountdown/js/build/kkcountdown.js',
         bootbox:'plugin/bootbox/bootbox.min.js'
     },

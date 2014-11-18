@@ -114,6 +114,20 @@ return array(
                 ),
             )
         ),
+        'nav_约球一级菜单' => array(
+            'label' => '约球',
+            'url' => '#',
+            'children' => array(
+                'nav_新建约球' => array(
+                    'label' => '新建约球',
+                    'url' => '/seeking/create'
+                ),
+                'nav_约球列表' => array(
+                    'label' => '约球列表',
+                    'url' => '/seeking/list'
+                ),
+            )
+        ),
     ),
 
     'roles' => array(
@@ -156,6 +170,9 @@ return array(
             'nav_扣款',
             'nav_充值记录',
             'nav_扣款记录',
+            'nav_约球一级菜单',
+            'nav_新建约球',
+            'nav_约球列表',
         ),
         ROLE_HALL => array(
             'nav_已售场地列表（场馆侧）',

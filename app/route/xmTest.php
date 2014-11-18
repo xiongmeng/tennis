@@ -229,6 +229,19 @@ Route::group(array('prefix' => 'xm'), function(){
         $client = new \Cooper\Wechat\WeChatClient();
         return $client->getMenu();
     });
+
+    Route::get('qr', function(){
+        $client = new \Cooper\Wechat\WeChatClient();
+        $ticket = $client->getQrcodeTicket(array('scene_id' => 100000));
+        $image = $client->getQrcodeImgUrlByTicket($ticket);
+        return array('ticket' => $ticket, 'image' => $image);
+    });
+
+    Route::get('access_token', function(){
+        $client = new \Cooper\Wechat\WeChatClient();
+        $result = $client->getAccessToken();
+        return $result;
+    });
 });
 
 Route::group(array('domain' => 'homestead1.app'), function()
