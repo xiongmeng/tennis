@@ -96,8 +96,9 @@ define(function (require) {
 
         self.save = function(){
             var defer = $.restPost('/seeking/save', generateOrderData());
-            defer.done(function(){
+            defer.done(function(res, data){
                 console.log(arguments);
+                window.location.href = '/seeking/list';
             });
             defer.fail(function(msg){
                 alert(msg);
