@@ -28,6 +28,10 @@ class Seeking extends Eloquent implements \Finite\StatefulInterface{
         return $this->belongsTo('Hall', 'hall_id', 'id');
     }
 
+    public function Joiners(){
+        return $this->belongsToMany('User', 'gt_seeking_order', 'seeking_id', 'joiner')->withTimestamps();
+    }
+
     public function search($aQuery, $iPageSize =20){
         $query = Seeking::leftJoin('gt_hall_tiny', 'gt_hall_tiny.id', '=', 'gt_seeking.hall_id')
             ->leftJoin('gt_user_tiny', 'gt_user_tiny.user_id', '=', 'gt_seeking.creator');

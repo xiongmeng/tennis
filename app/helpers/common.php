@@ -29,6 +29,16 @@ function option_seeking_state(){
     );
 }
 
+function option_seeking_order_state(){
+    return array(
+        SEEKING_ORDER_STATE_DISPOSING => '处理中',
+        SEEKING_ORDER_STATE_DISPOSE_EXPIRED => '过期未处理',
+        SEEKING_ORDER_STATE_ACCEPTED => '已接受',
+        SEEKING_ORDER_STATE_REJECTED => '已拒绝',
+        SEEKING_ORDER_STATE_CANCELED => '已取消'
+    );
+}
+
 function instant_order_state_option()
 {
     return array(

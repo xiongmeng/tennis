@@ -3,7 +3,7 @@
 class SeekingOrder extends Eloquent implements \Finite\StatefulInterface{
 
     protected $table = 'gt_seeking_order';
-    protected $fillable = array('state', 'seeking_id', 'seeker', 'participant');
+    protected $fillable = array('state', 'seeking_id', 'seeker', 'joiner');
     /**
      * Sets the object state
      *
@@ -23,4 +23,7 @@ class SeekingOrder extends Eloquent implements \Finite\StatefulInterface{
         $this->save();
     }
 
+    public function Joiner(){
+        return $this->hasOne('User', 'user_id', 'joiner');
+    }
 }

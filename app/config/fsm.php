@@ -352,6 +352,8 @@ return array(
             'increase' => array('from' => array(
                 SEEKING_STATE_OPENED, SEEKING_STATE_FULLED), 'to' => SEEKING_STATE_OPENED),
             'decrease' => array('from' => array(SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_FULL_CHECKING),
+            'join' => array('from' => array(SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_FULL_CHECKING),
+//            'break' => array('from' => array(SEEKING_STATE_OPENED, SEEKING_STATE_FULLED), 'to' => SEEKING_STATE_OPENED),
 
             'auto_open' => array('from' => array(SEEKING_STATE_FULL_CHECKING), 'to' => SEEKING_STATE_OPENED),
             'auto_full' => array('from' => array(SEEKING_STATE_FULL_CHECKING), 'to' => SEEKING_STATE_FULLED),
@@ -367,7 +369,7 @@ return array(
                 array( //
                     'to' => SEEKING_STATE_OPENED,
                     'do' => function (Seeking $seeking, \Finite\Event\TransitionEvent $e) {
-                            if($seeking->sold >= $seeking->store){
+                            if($seeking->on_sale <= 0){
                                 throw new Exception('坑已满，不能开门！');
                             }
                         }
@@ -378,7 +380,7 @@ return array(
                     'to' => SEEKING_STATE_FULL_CHECKING,
                     'do' => function (Seeking $seeking, \Finite\Event\TransitionEvent $e) {
                             $fsm = new SeekingFsm($seeking);
-                            $fsm->apply($seeking->sold == $seeking->store ? 'auto_full' : 'auto_open');
+                            $fsm->apply($seeking->on_sale <= 0 ? 'auto_full' : 'auto_open');
                         }
                 ),
                 array(
@@ -407,35 +409,37 @@ return array(
             SEEKING_ORDER_STATE_REJECTED => array( //已拒绝
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
             ),
+            SEEKING_ORDER_STATE_NO_SHOW => array( //已爽约
+                'type' => Finite\State\StateInterface::TYPE_FINAL,
+            ),
             SEEKING_ORDER_STATE_CANCELED => array( //已取消
                 'type' => Finite\State\StateInterface::TYPE_FINAL,
-            )
+            ),
         ),
         'transitions' => array(
             'accept' => array('from' => array(SEEKING_ORDER_STATE_DISPOSING), 'to' => SEEKING_ORDER_STATE_ACCEPTED),
             'reject' => array('from' => array(SEEKING_ORDER_STATE_DISPOSING), 'to' => SEEKING_ORDER_STATE_REJECTED),
-            'cancel' => array('from' => array(SEEKING_ORDER_STATE_ACCEPTED), 'to' => SEEKING_ORDER_STATE_CANCELED),
+            'break' => array('from' => array(SEEKING_ORDER_STATE_ACCEPTED), 'to' => SEEKING_ORDER_STATE_CANCELED),
             'expire' => array('from' => array(SEEKING_ORDER_STATE_DISPOSING), 'to' => SEEKING_ORDER_STATE_DISPOSE_EXPIRED),
-            'rejoin' => array('from' => array(SEEKING_ORDER_STATE_DISPOSE_EXPIRED), 'to' => SEEKING_ORDER_STATE_DISPOSING),
+//            'rejoin' => array('from' => array(SEEKING_ORDER_STATE_DISPOSE_EXPIRED), 'to' => SEEKING_ORDER_STATE_DISPOSING),
+            'no-show' => array('from' => array(SEEKING_ORDER_STATE_ACCEPTED), 'to' => SEEKING_ORDER_STATE_NO_SHOW),
         ),
         'callbacks' => array(
             'before' => array(
                 array( //
-                    'to' => SEEKING_ORDER_STATE_DISPOSING,
-                    'do' => function (Seeking $seeking, \Finite\Event\TransitionEvent $e) {
-                            /**
-                             * 给约球减-
-                             */
+                    'to' => SEEKING_ORDER_STATE_ACCEPTED,
+                    'do' => function (SeekingOrder $seekingOrder, \Finite\Event\TransitionEvent $e) {
+                            $fsm = new SeekingFsm(Seeking::findOrFail($seekingOrder->seeking_id));
+                            $fsm->join(1);
                         }
                 ),
             ),
             'after' => array(
                 array(
                     'to' => SEEKING_ORDER_STATE_CANCELED,
-                    'do' => function (Seeking $seeking, \Finite\Event\TransitionEvent $e) {
-                            /**
-                             * 给约球加-
-                             */
+                    'do' => function (SeekingOrder $seekingOrder, \Finite\Event\TransitionEvent $e) {
+//                            $fsm = new SeekingFsm(Seeking::findOrFail($seekingOrder->seeking_id));
+//                            $fsm->join(-1);
                         }
                 ),
                 array(

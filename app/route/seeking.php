@@ -1,5 +1,5 @@
 <?php
-Route::get('/seeking/create', array('before' => 'auth', function(){
+Route::get('/seeking/create', array('before' => 'auth', function () {
     Layout::setHighlightHeader('nav_新建约球');
     $seeking = Input::only('hall_id');
 
@@ -8,7 +8,7 @@ Route::get('/seeking/create', array('before' => 'auth', function(){
         array('halls' => $publishedHalls, 'seeking' => $seeking));
 }));
 
-Route::get('/seeking/modify/{id}', array('before' => 'auth', function($id){
+Route::get('/seeking/modify/{id}', array('before' => 'auth', function ($id) {
     Layout::setHighlightHeader('nav_约球一级菜单');
     Layout::appendBreadCrumbs('修改约球信息');
 
@@ -18,29 +18,29 @@ Route::get('/seeking/modify/{id}', array('before' => 'auth', function($id){
         array('halls' => $publishedHalls, 'seeking' => $seeking));
 }));
 
-Route::post('/seeking/save', array('before' => 'auth', function(){
+Route::post('/seeking/save', array('before' => 'auth', function () {
     $seekingInput = Input::only(array('event_date', 'start_hour', 'end_hour', 'hall_id', 'court_num',
         'tennis_level', 'sexy', 'sold', 'on_sale', 'store', 'personal_cost', 'content', 'comment'));
     isset($seekingInput['event_date']) && $seekingInput['event_date'] = date('Y-m-d', strtotime($seekingInput['event_date']));
     $id = Input::get('id');
-    if(empty($id)){
+    if (empty($id)) {
         $seekingInput['state'] = SEEKING_STATE_CLOSED;
         $seekingInput['creator'] = user_id();
         $seekingCreated = Seeking::create($seekingInput);
         return rest_success($seekingCreated);
-    }else{
+    } else {
         $seeking = Seeking::findOrFail($id);
         $seekingFsm = new SeekingFsm($seeking);
-        if($seekingFsm->can('modify')){
+        if ($seekingFsm->can('modify')) {
             $seeking->update($seekingInput);
-        }else{
+        } else {
             throw new Exception('当前状态不支持修改');
         }
         return rest_success($seeking);
     }
 }));
 
-Route::any('/seeking/list', array('before' => 'auth', function(){
+Route::any('/seeking/list', array('before' => 'auth', function () {
     Layout::setHighlightHeader('nav_约球列表');
 
     $queries = Input::all();
@@ -57,44 +57,76 @@ Route::get('/seeking/operate/{id?}/{operate?}', array('before' => 'auth', functi
     $seeking = Seeking::findOrFail($id);
     $fsm = new SeekingFsm($seeking);
     $fsm->apply($operate);
-    return $seeking;
+
+    if (Request::ajax()) {
+        return rest_success($seeking);
+    } else {
+        return Redirect::to(URL::previous());
+    }
 }));
 
-Route::get('/seeking/increase/{id}/{num}', array('before' => 'auth', function($id, $num){
-    $fsm = new SeekingFsm(Seeking::findOrFail($id));
-    return $fsm->increase($num);
+Route::get('/seeking/increase/{id}/{num}', array('before' => 'auth', function ($id, $num) {
+    $seeking = Seeking::findOrFail($id);
+    $fsm = new SeekingFsm($seeking);
+    $fsm->increase($num);
+
+    if (Request::ajax()) {
+        return rest_success($seeking);
+    } else {
+        return Redirect::to(URL::previous());
+    }
 }));
 
-Route::get('/seeking/decrease/{id}/{num}', array('before' => 'auth', function($id, $num){
-    $fsm = new SeekingFsm(Seeking::findOrFail($id));
-    return $fsm->decrease($num);
+Route::get('/seeking/decrease/{id}/{num}', array('before' => 'auth', function ($id, $num) {
+    $seeking = Seeking::findOrFail($id);
+    $fsm = new SeekingFsm($seeking);
+    $fsm->decrease($num);
+
+    if (Request::ajax()) {
+        return rest_success($seeking);
+    } else {
+        return Redirect::to(URL::previous());
+    }
 }));
 
-Route::get('/seeking/detail/{id}', function($id){
+Route::get('/seeking/detail/{id}', function ($id) {
     $seeking = Seeking::with('Hall')->findOrFail($id);
     $states = option_seeking_state();
 
+    $orders = SeekingOrder::with('Joiner')->whereSeekingId($id)->get();
+    $orderStates = option_seeking_order_state();
+
     return View::make('layout')->nest('content', 'seeking.detail_mgr',
-        array('seeking' => $seeking, 'states' => $states));
+        array('seeking' => $seeking, 'states' => $states, 'orders' => $orders, 'orderStates' => $orderStates));
 });
 
-Route::get('/seeking/join/{id}', array('before' => 'auth', function($id){
+Route::get('/seeking/join/{id}', array('before' => 'auth', function ($id) {
     $seeking = Seeking::findOrFail($id);
     //仅仅是为了代码提示
     $seeking instanceof Seeking && 1;
 
     $fsm = new SeekingFsm($seeking);
-    if($fsm->can('decrease')){
+    if ($fsm->can('join')) {
         $order = SeekingOrder::create(array('state' => SEEKING_ORDER_STATE_DISPOSING, 'seeking_id' => $id,
-            'seeker' => $seeking->creator, 'participant' => user_id(), 'cost' => $seeking->personal_cost));
-        $fsm->decrease(1);
+            'seeker' => $seeking->creator, 'joiner' => user_id(), 'cost' => $seeking->personal_cost));
 
-        if(Request::ajax()){
+        if (Request::ajax()) {
             return rest_success($order);
-        }else{
+        } else {
             return Redirect::to(URL::previous());
         }
     }
 
     throw new Exception('当前状态不能参加！');
+}));
+
+Route::get('/seeking/order/operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
+    $seekingOrder = SeekingOrder::findOrFail($id);
+    $fsm = new SeekingOrderFsm($seekingOrder);
+    $fsm->apply($operate);
+    if (Request::ajax()) {
+        return rest_success($seekingOrder);
+    } else {
+        return Redirect::to(URL::previous());
+    }
 }));

@@ -107,4 +107,5 @@ const SEEKING_ORDER_STATE_DISPOSING = 'disposing'; //处理中
 const SEEKING_ORDER_STATE_DISPOSE_EXPIRED = 'dispose_expired'; //过期未处理
 const SEEKING_ORDER_STATE_ACCEPTED = 'accepted'; //已接受
 const SEEKING_ORDER_STATE_REJECTED = 'rejected'; //已拒绝
+const SEEKING_ORDER_STATE_NO_SHOW = 'no-show'; //不出现
 const SEEKING_ORDER_STATE_CANCELED = 'canceled'; //已取消

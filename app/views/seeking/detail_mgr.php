@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="panel panel-default" id="order">
-                <div class="panel-heading">约球信息</div>
+                <div class="panel-heading">约球信息(<span><?=$states[$seeking->state]?></span>)</div>
                 <div class="panel-body">
                     <form class="form-horizontal">
 
@@ -74,17 +74,59 @@
                             </div>
                         </div>
 
+                        <?php $fsm = new SeekingFsm($seeking);?>
+                        <?php if($fsm->can('join')){?>
                         <div class="form-group">
                             <div class="col-md-3 pull-right">
                                 <a class="btn btn-primary" href="/seeking/join/<?= $seeking->id?>">我要报名</a>
                             </div>
                         </div>
+                        <?php }?>
                     </form>
                 </div>
             </div>
+
+            <div class="panel panel-default" id="order">
+                <div class="panel-heading">报名信息</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="6%">id</th>
+                            <th width="10%">报名时间</th>
+                            <th width="12%">报名人</th>
+                            <th width="12%">状态</th>
+                            <th width="12%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php $orderFsm = new SeekingOrderFsm(); ?>
+                        <?php foreach ($orders as $order) { ?>
+                            <?php $orderFsm->resetObject($order); ?>
+                            <tr>
+                                <td><?= $order->id; ?></td>
+                                <td><?= substr($order->created_at, 0, 16);?></td>
+                                <td><?= href_user_detail($order->Joiner->user_id, $order->Joiner->nickname) ?></td>
+                                <td><?= $orderStates[$order->state]?></td>
+
+                                <td>
+                                    <?php if ($orderFsm->can('accept')) { ?>
+                                        <a href="/seeking/order/operate/<?= $order->id?>/accept" target="_blank">接受</a>
+                                    <?php } ?>
+                                    <?php if ($orderFsm->can('reject')) { ?>
+                                        <a href="/seeking/order/operate/<?= $order->id?>/reject" target="_blank">拒绝</a>
+                                    <?php } ?>
+                                    <?php if ($orderFsm->can('no-show')) { ?>
+                                        <a href="/seeking/order/operate/<?= $order->id?>/no-show" target="_blank">爽约</a>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-
     </div>
 </div>
 
@@ -97,15 +139,4 @@
     });
 
 
-    $(document).ready(function () {
-        seajs.use(['datetimePicker', 'combobox'], function () {
-            $('.datepicker').datetimepicker({
-                format: 'yyyy-mm-dd',
-                language: 'zh-CN',
-                startView: 2,
-                minView: 2
-            });
-            $('.combobox').combobox({target: $('#hall_id')});
-        });
-    });
 </script>
