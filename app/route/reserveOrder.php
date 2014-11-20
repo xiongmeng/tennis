@@ -18,6 +18,8 @@ Route::get('/reserve_order_mgr/{curTab}', array('before' => 'auth', function ($c
     } else if (isset($queries['stat']) && strlen($queries['stat']) > 0) {
         $queries['stat'] = intval($queries['stat']);
     }
+    //默认不展示预订失败的单子
+    empty($queries['stat']) && $queries['stat_ne'] = RESERVE_STAT_FAILED;
 
     $reserveModel = new ReserveOrder();
     $reserves = $reserveModel->search($queries);
@@ -88,6 +90,7 @@ Route::post('/reserve/save', array('before' => 'auth', function(){
     $orderId = Input::get('id');
 
     $orderInput = Input::only(array('user_id', 'hall_id', 'event_date', 'start_time', 'end_time', 'court_num'));
+    $orderInput['event_date'] = strtotime(date('Y-m-d', $orderInput['event_date']));
     //计算价格
     $reserveOrder = new ReserveOrderManager();
     $result = $reserveOrder->calculate($orderInput);

@@ -64,7 +64,6 @@
                     <th width="12%">预订人</th>
                     <th width="8%">状态</th>
                     <th width="5%">操作</th>
-                    <th width="15%">通知</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -90,12 +89,6 @@
                             <?php if ($fsm->can('modify')) { ?>
                                 <a href="/reserve/modify/<?= $reserve->id ?>" target="_blank">修改</a>
                             <?php } ?>
-                        </td>
-                        <td>
-                            <?= href_notify_create(NOTIFY_TYPE_ORDER_FAILED, $reserve->id, '无场地') ?> |
-                            <?= href_notify_create(NOTIFY_TYPE_ORDER_UNPAY, $reserve->id, '预订') ?> |
-                            <?= href_notify_create(NOTIFY_TYPE_ORDER_PAYED, $reserve->id, '支付') ?> |
-                            <?= href_notify_create(NOTIFY_TYPE_ORDER_CANCEL, $reserve->id, '取消') ?>
                         </td>
                     </tr>
 

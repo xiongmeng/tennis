@@ -56,6 +56,13 @@ class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
                 $query->where('gt_order.stat', '=', $aQuery['stat']);
             }
         }
+        if(isset($aQuery['stat_ne'])){
+            if(is_array($aQuery['stat_ne'])){
+                $query->whereNotIn('gt_order.stat', $aQuery['stat_ne']);
+            }else{
+                $query->where('gt_order.stat', '!=', $aQuery['stat_ne']);
+            }
+        }
         return $query->orderBy('gt_order.id', 'desc')
             ->paginate($iPageSize, array('gt_order.*',
                 'gt_hall_tiny.name as hall_name', 'gt_user_tiny.nickname as buyer_name'));

@@ -96,6 +96,16 @@
                                 </div>
                             <?php } ?>
                         </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">通知用户：</label>
+
+                            <div class="col-md-9 pull-right">
+                                <?= href_notify_create(NOTIFY_TYPE_ORDER_FAILED, $order->id, '无场地') ?> |
+                                <?= href_notify_create(NOTIFY_TYPE_ORDER_UNPAY, $order->id, '预订') ?> |
+                                <?= href_notify_create(NOTIFY_TYPE_ORDER_PAYED, $order->id, '支付') ?> |
+                                <?= href_notify_create(NOTIFY_TYPE_ORDER_CANCEL, $order->id, '取消') ?>                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
