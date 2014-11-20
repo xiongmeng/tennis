@@ -50,21 +50,21 @@ Route::get('/account', function(){
         array('accounts' => $accounts, 'queries' => $queries , 'purposes' => $purposes));
 });
 
-Route::get('/app', function(){
-    Layout::setHighlightHeader('nav_微信用户列表');
-
-    $queries = Input::all();
-
-    $appUserModel = new RelationUserApp();
-
-    $appUsers = $appUserModel->search($queries);
-
-    $appTypes = option_app_type();
-    $appTypes[''] = '应用类型';
-
-    return View::make('layout')->nest('content', 'user.app_user_mgr',
-        array('appUsers' => $appUsers, 'queries' => $queries , 'appTypes' => $appTypes));
-});
+//Route::get('/app', function(){
+//    Layout::setHighlightHeader('nav_微信用户列表');
+//
+//    $queries = Input::all();
+//
+//    $appUserModel = new RelationUserApp();
+//
+//    $appUsers = $appUserModel->search($queries);
+//
+//    $appTypes = option_app_type();
+//    $appTypes[''] = '应用类型';
+//
+//    return View::make('layout')->nest('content', 'user.app_user_mgr',
+//        array('appUsers' => $appUsers, 'queries' => $queries , 'appTypes' => $appTypes));
+//});
 
 Route::any('/set_receive_sms_telephone', array('before' => 'auth', function(){
     Layout::setHighlightHeader('nav_预订信息短信通知手机号码设定');
@@ -131,3 +131,14 @@ Route::get('/billing_buyer/{curTab?}', array('before' => 'auth', function ($curT
     return View::make('layout')->nest('content', 'user.billing_buyer',
         array('tabs' => $tabs, 'curTab' => $curTab, 'queries' => $queries, 'billingStagings' => $billingStagings));
 }));
+
+Route::get('/wechat/list', function(){
+    Layout::setHighlightHeader('nav_微信用户列表');
+    $queries = Input::all();
+
+    $wechatUserModel = new weChatUserProfile();
+    $wechatUsers = $wechatUserModel->search($queries);
+
+    return View::make('layout')->nest(
+        'content', 'user.wechat_user_list', array('wechatUsers' => $wechatUsers, 'queries' => $queries));
+});

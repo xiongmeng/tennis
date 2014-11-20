@@ -62,7 +62,7 @@ return array(
                 ),
                 'nav_微信用户列表' => array(
                     'label' => '微信用户列表',
-                    'url' => '/app',
+                    'url' => '/wechat/list',
                 ),
             )
         ),
