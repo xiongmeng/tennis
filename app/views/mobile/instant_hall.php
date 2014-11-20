@@ -30,17 +30,6 @@
             <li class="table-view-cell media"><p style="text-align: center; width: 100%">未找到有合适场地的场馆！</p></li>
         <?php } else { ?>
             <?php foreach ($hallPriceAggregates as $hallPriceAggregate) { ?>
-                <?php
-                $hall = $halls[$hallPriceAggregate->hall_id];
-                $hallImage = null;
-                if ($hall instanceof Hall) {
-                    if ($hall->Envelope) {
-                        $hallImage = $hall;
-                    } else if ($hall->HallImages->count() > 0) {
-                        $hallImage = $hall->HallImages->first();
-                    }
-                }
-                ?>
                 <li class="table-view-cell media">
                     <a style="padding: 10px 5px" data-ignore="push" href="<?= url_wrapper("/mobile_court_buyer/$hallPriceAggregate->hall_id?date=$hallPriceAggregate->event_date#instant-order-$hallPriceAggregate->court_id-$hallPriceAggregate->start_hour")?>">
                         <img class="media-object pull-left head-img"

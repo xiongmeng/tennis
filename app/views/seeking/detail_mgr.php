@@ -12,7 +12,8 @@
 
                             <div class="col-md-9">
                                 <p class="form-control-static">
-                                    <?= sprintf('%s日%s点-%s点', substr($seeking->event_date, 0, 10), $seeking->start_hour, $seeking->end_hour)?>
+                                    <?= sprintf('%s日 %s时', substr($seeking->event_date, 0, 10),
+                                        display_time_interval($seeking->start_hour, $seeking->end_hour))?>
                                 </p>
                             </div>
                         </div>

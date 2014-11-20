@@ -14,11 +14,13 @@ function weekday_option()
     return array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
 }
 
-function option_published_halls(){
+function option_published_halls()
+{
     return Hall::whereStat(HALL_STAT_PUBlISH)->remember(CACHE_HOUR)->get(array('id', 'name'));
 }
 
-function option_seeking_state(){
+function option_seeking_state()
+{
     return array(
         SEEKING_STATE_CLOSED => '已关门',
         SEEKING_STATE_OPENED => '已开门',
@@ -29,13 +31,28 @@ function option_seeking_state(){
     );
 }
 
-function option_seeking_order_state(){
+function option_seeking_order_state()
+{
     return array(
         SEEKING_ORDER_STATE_DISPOSING => '处理中',
         SEEKING_ORDER_STATE_DISPOSE_EXPIRED => '过期未处理',
         SEEKING_ORDER_STATE_ACCEPTED => '已接受',
         SEEKING_ORDER_STATE_REJECTED => '已拒绝',
         SEEKING_ORDER_STATE_CANCELED => '已取消'
+    );
+}
+
+function option_tennis_level()
+{
+    return array(
+        1 => '1.0',
+        2 => '2.0',
+        3 => '3.0',
+        4 => '3.5',
+        5 => '4.0',
+        6 => '4.5',
+        7 => '5.0',
+        8 => '更高',
     );
 }
 
@@ -146,7 +163,7 @@ function option_user_privilege($sLanguage = 'cn')
 
 function option_sexy()
 {
-    return array(1 => '女', 2 => '男');
+    return array(-1=> '不限', 1 => '女', 2 => '男');
 }
 
 function option_yes_no()
@@ -393,7 +410,8 @@ function option_notify_channel()
     return array_extract_one_key(Config::get('notify.channels'), 'title');
 }
 
-function option_recharge_type(){
+function option_recharge_type()
+{
     return array(
         PAY_TYPE_ALI => '支付宝',
         PAY_TYPE_MGR => '后台手工充值',
@@ -401,7 +419,8 @@ function option_recharge_type(){
     );
 }
 
-function option_recharge_status(){
+function option_recharge_status()
+{
     return array(
         RECHARGE_INIT => '未充值',
         RECHARGE_SUCCESS => '充值成功',
@@ -428,6 +447,7 @@ function db_result_ids($dbResults, $idColumn)
  * @param $hall Hall | array
  * @return string
  */
-function area_hall($hall){
+function area_hall($hall)
+{
     return Area::area($hall['area_text'], $hall['county'], $hall['city'], $hall['province']);
 }
