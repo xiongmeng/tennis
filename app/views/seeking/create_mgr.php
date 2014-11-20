@@ -65,20 +65,14 @@
                             <label class="control-label col-md-3">坑位：</label>
 
                             <div class="input-group col-md-3">
-                                <div class="input-group-addon">已占</div>
-                                <input class="form-control" data-bind="value:sold">
-<!--                                <div class="input-group-addon">位</div>-->
+                                <div class="input-group-addon">共计</div>
+                                <input class="form-control" data-bind="value:store">
                             </div>
                             <div class="input-group col-md-3">
                                 <div class="input-group-addon">尚余</div>
                                 <input class="form-control" data-bind="value:on_sale">
-<!--                                <div class="input-group-addon">位</div>-->
                             </div>
-                            <div class="input-group col-md-3">
-                                <div class="input-group-addon">共计</div>
-                                <input class="form-control" data-bind="value:store">
-<!--                                <div class="input-group-addon">位</div>-->
-                            </div>
+
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3">人均费用：</label>

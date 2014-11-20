@@ -61,10 +61,7 @@ define(function (require) {
         self.personal_cost = ko.observable(seeking.personal_cost);
 
         self.on_sale = ko.observable(seeking.on_sale);
-        self.sold = ko.observable(seeking.sold);
-        self.store = ko.computed(function(){
-            return parseInt(self.on_sale()) + parseInt(self.sold());
-        });
+        self.store = ko.observable(seeking.store);
 
         self.creator = ko.observable(seeking.creator);
 
@@ -83,7 +80,6 @@ define(function (require) {
                 tennis_level: self.tennis_level(),
                 sexy: self.sexy(),
 
-                sold: self.sold(),
                 on_sale: self.on_sale(),
                 store: self.store(),
 

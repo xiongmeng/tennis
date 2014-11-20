@@ -67,7 +67,7 @@
                         <td><?= substr($seeking->event_date, 5, 5) . '日' . display_time_interval($seeking->start_hour, $seeking->end_hour); ?></td>
                         <td><?= href_hall_detail($seeking->hall_id, $seeking->hall_name); ?></td>
                         <td><?= $seeking->court_num; ?>片</td>
-                        <td><?= sprintf('空:%s占:%s总:%s', $seeking->on_sale, $seeking->sold, $seeking->store)?></td>
+                        <td><?= sprintf('空:%s总:%s', $seeking->on_sale, $seeking->store)?></td>
                         <td><?= $seeking->personal_cost; ?>元</td>
                         <td><?= href_user_detail($seeking->user_id, $seeking->creator_name) ?></td>
                         <td><?= $states[$seeking->state]; ?></td>

@@ -4,7 +4,7 @@ class Seeking extends Eloquent implements \Finite\StatefulInterface{
 
     protected $table = 'gt_seeking';
     protected $fillable = array('event_date', 'start_hour', 'end_hour', 'hall_id', 'court_num', 'state', 'creator',
-        'tennis_level', 'sexy', 'sold', 'on_sale', 'store', 'personal_cost', 'content', 'comment');
+        'tennis_level', 'sexy', 'on_sale', 'store', 'personal_cost', 'content', 'comment');
     /**
      * Sets the object state
      *

@@ -20,7 +20,7 @@ Route::get('/seeking/modify/{id}', array('before' => 'auth', function ($id) {
 
 Route::post('/seeking/save', array('before' => 'auth', function () {
     $seekingInput = Input::only(array('event_date', 'start_hour', 'end_hour', 'hall_id', 'court_num',
-        'tennis_level', 'sexy', 'sold', 'on_sale', 'store', 'personal_cost', 'content', 'comment'));
+        'tennis_level', 'sexy', 'on_sale', 'store', 'personal_cost', 'content', 'comment'));
     isset($seekingInput['event_date']) && $seekingInput['event_date'] = date('Y-m-d', strtotime($seekingInput['event_date']));
     $id = Input::get('id');
     if (empty($id)) {

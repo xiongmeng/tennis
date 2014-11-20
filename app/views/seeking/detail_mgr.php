@@ -40,7 +40,7 @@
 
                             <div class="col-md-9">
                                 <p class="form-control-static">
-                                    <?= sprintf('共%s坑，剩余%s坑，已占%s坑', $seeking->store, $seeking->on_sale, $seeking->sold)?>
+                                    <?= sprintf('共%s坑，剩余%s坑', $seeking->store, $seeking->on_sale)?>
                                 </p>
                             </div>
                         </div>
