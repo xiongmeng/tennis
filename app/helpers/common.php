@@ -24,9 +24,8 @@ function option_seeking_state()
     return array(
         SEEKING_STATE_CLOSED => '已关门',
         SEEKING_STATE_OPENED => '已开门',
-        SEEKING_STATE_OPENED_EXPIRED => '开门已过期',
         SEEKING_STATE_FULLED => '已满员',
-        SEEKING_STATE_EXPIRED => '已结束',
+        SEEKING_STATE_COMPLETED => '已结束',
         SEEKING_STATE_FULL_CHECKING => '满员检测中'
     );
 }
@@ -35,9 +34,9 @@ function option_seeking_order_state()
 {
     return array(
         SEEKING_ORDER_STATE_DISPOSING => '处理中',
-        SEEKING_ORDER_STATE_DISPOSE_EXPIRED => '过期未处理',
-        SEEKING_ORDER_STATE_ACCEPTED => '已接受',
-        SEEKING_ORDER_STATE_REJECTED => '已拒绝',
+        SEEKING_ORDER_STATE_PAYING => '支付中',
+        SEEKING_ORDER_STATE_PAYED => '已支付',
+        SEEKING_ORDER_STATE_PAY_FAILED => '支付失败',
         SEEKING_ORDER_STATE_CANCELED => '已取消'
     );
 }
@@ -53,6 +52,29 @@ function option_tennis_level()
         6 => '4.5',
         7 => '5.0',
         8 => '更高',
+    );
+}
+
+function option_finance_relation_type()
+{
+    return array(
+        FINANCE_RELATION_BOOKING => "预订场地：",
+        FINANCE_RELATION_MEMBERFEE => "充值",
+        FINANCE_RELATION_SUBOUT => "参与分账：",
+        FINANCE_RELATION_SUBIN => "发起分账：",
+        FINANCE_RELATION_RECHARGE => '',
+        FINANCE_RELATION_CANCEL_BOOKING => "取消场地：",
+        FINANCE_RELATION_PARTNER_COACH => "提供陪练：",
+        FINANCE_RELATION_PARTNER_STUDENT => "参加陪练：",
+        FINANCE_RELATION_TRAIN_STUDENT => "参加培训：",
+        FINANCE_RELATION_CUSTOM_IN => "费用增加：",
+        FINANCE_RELATION_CUSTOM_OUT => "费用扣除：",
+        FINANCE_RELATION_BUY_INSTANT_ORDER => '购买场地：',
+        FINANCE_RELATION_CANCEL_INSTANT_ORDER => '取消场地：',
+        FINANCE_RELATION_TERMINATE_INSTANT_ORDER => '中止打球：',
+        FINANCE_RELATION_SELL_INSTANT_ORDER => '售出场地：',
+        FINANCE_RELATION_BUY_SEEKING_ORDER => '参加约球：',
+        FINANCE_RELATION_CANCEL_SEEKING_ORDER => '退出约球：',
     );
 }
 
@@ -163,7 +185,7 @@ function option_user_privilege($sLanguage = 'cn')
 
 function option_sexy()
 {
-    return array(-1=> '不限', 1 => '女', 2 => '男');
+    return array(-1 => '不限', 1 => '女', 2 => '男');
 }
 
 function option_yes_no()

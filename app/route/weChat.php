@@ -3,7 +3,7 @@ View::creator('mobile_layout', function (\Illuminate\View\View $view) {
     $view->nest('header', 'format.mobile.header')->nest('footer', 'format.mobile.footer');
 });
 
-View::creator('mobile_layout_no_footer', function(\Illuminate\View\View $view){
+View::creator('mobile_layout_no_footer', function (\Illuminate\View\View $view) {
     $view->nest('header', 'format.mobile.header');
 });
 
@@ -147,6 +147,32 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         }
         return View::make('mobile_layout')->nest('content', 'mobile.get_password', array('queries' => $queries, 'error' => $error));
     });
+
+
+    Route::get('/seeking/list', function () {
+        MobileLayout::$activeService = 'reserve';
+        $queries = Input::all();
+//        $queries['state'] = SEEKING_STATE_OPENED;
+
+        $seeking = new Seeking();
+        $seekingList = $seeking->search($queries);
+
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list',
+            array('seekingList' => $seekingList, 'queries' => $queries));
+    });
+
+    Route::get('/seeking/detail/{id}', function ($id) {
+        $seeking = Seeking::with('Hall')->findOrFail($id);
+        $states = option_seeking_state();
+
+        $orders = SeekingOrder::with('Joiner')->whereSeekingId($id)->get();
+        $orderStates = option_seeking_order_state();
+
+        MobileLayout::$title = sprintf("约球详情（id：%s） %s", $seeking->id, $states[$seeking->state]);
+
+        return View::make('mobile_layout')->nest('content', 'mobile.seeking_detail',
+            array('seeking' => $seeking, 'states' => $states, 'orders' => $orders, 'orderStates' => $orderStates));
+    });
 });
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'), function () {
@@ -161,7 +187,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         $curDate = date('Y-m-d');
         $queries['event_date_start'] = $curDate;
-        $queries['event_date_end'] = date('Y-m-d', strtotime("+" . (WORKTABLE_SUPPORT_DAYS_LENGTH - 1). " day"));
+        $queries['event_date_end'] = date('Y-m-d', strtotime("+" . (WORKTABLE_SUPPORT_DAYS_LENGTH - 1) . " day"));
 
         $queries['state'] = array('on_sale');
 
@@ -338,7 +364,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
                 'name' => sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]));
         }
 
-        $order = array('user_id' =>$user->user_id, 'hall_id' => $hallID,
+        $order = array('user_id' => $user->user_id, 'hall_id' => $hallID,
             'user' => $user, 'hall' => $hall->toArray(), 'dates' => $dates);
         return View::make('mobile_layout')->nest('content', 'mobile.hall_reserve', array('order' => $order));
     });
@@ -633,7 +659,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         return View::make('mobile_layout')->nest('content', 'mobile.recharge', array('noMoney' => $noMoney));
     });
 
-    Route::get('/upgrade', function(){
+    Route::get('/upgrade', function () {
         MobileLayout::$activeService = 'center';
         MobileLayout::$previousUrl = '/mobile_buyer';
         MobileLayout::$title = '升级成为金卡会员';
@@ -649,29 +675,59 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             array('recharge' => $recharge, 'noMoney' => $noMoney));
     });
 
-    Route::get('/seeking/list', function(){
-        MobileLayout::$activeService = 'reserve';
-        $queries = Input::all();
-//        $queries['state'] = SEEKING_STATE_OPENED;
+    Route::any('/seeking/join/{id}', function ($id) {
+        $seeking = Seeking::with('Hall')->findOrFail($id);
 
-        $seeking = new Seeking();
-        $seekingList = $seeking->search($queries);
+        $userId = user_id();
+        $seeking instanceof Seeking && 1;
 
-        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list',
-            array('seekingList' => $seekingList, 'queries' => $queries));
+        $fsm = new SeekingFsm($seeking);
+
+        if ($fsm->can('join')) {
+            if (Request::isMethod('POST')) {
+                //创建约球单
+                $order = SeekingOrder::create(array('state' => SEEKING_ORDER_STATE_PAYING, 'seeking_id' => $id,
+                    'seeker' => $seeking->creator, 'joiner' => $userId, 'cost' => $seeking->personal_cost));
+
+                $finance = new SeekingOrderManager();
+                $result = $finance->batchPay(array($order->id));
+
+                if ($result['status'] == 'no_money') {
+                    $key = Input::get('ali') ? 'adviseForwardUrl' : 'weChatPayUrl';
+                    return Redirect::to($result[$key]);
+                } else {
+                    return '支付成功啦';
+                }
+            } else {
+                $balance = cache_balance();
+                $needRecharge = $seeking->personal_cost - $balance;
+                return View::make('mobile_layout')->nest(
+                    'content', 'mobile.seeking_join', array(
+                    'seeking' => $seeking, 'balance' => $balance, 'needRecharge' => $needRecharge));
+            }
+        }
+        return View::make('mobile_layout')->nest('content', 'mobile.seeking_join');
     });
 
-    Route::get('/seeking/detail/{id}', function($id){
-        $seeking = Seeking::with('Hall')->findOrFail($id);
-        $states = option_seeking_state();
+    Route::get('/seeking/order/pay/{id}', function ($id) {
+        $finance = new SeekingOrderManager();
+        $result = $finance->batchPay(array($id));
 
-        $orders = SeekingOrder::with('Joiner')->whereSeekingId($id)->get();
-        $orderStates = option_seeking_order_state();
+        return View::make('mobile_layout')->nest('content', 'mobile.seeking_pay', array('result' => $result));
+    });
 
-        MobileLayout::$title = sprintf("约球详情（id：%s）", $seeking->id);
+    Route::get('/seeking/order/list', function () {
+        $state = Input::get('state');
 
-        return View::make('mobile_layout')->nest('content', 'mobile.seeking_detail',
-            array('seeking' => $seeking, 'states' => $states, 'orders' => $orders, 'orderStates' => $orderStates));
+        $queries = Input::all();
+        $queries['joiner_id'] = user_id();
+
+//        !isset($queries['state']) && $queries['state'] = SEEKING_ORDER_STATE_PAYED;
+
+        $seekingOrder = new SeekingOrder();
+        $orders = $seekingOrder->search($queries, 10);
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_order_list',
+            array('seekingOrderList' => $orders, 'state' => $state));
     });
 });
 

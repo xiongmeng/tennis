@@ -7,6 +7,7 @@ const MGR_WORKTABLE_SUPPORT_DAYS_LENGTH = 8;
 
 const RECHARGE_CALLBACK_PAY_INSTANT_ORDER = 1;
 const RECHARGE_CALLBACK_PAY_RESERVE_ORDER = 2;
+const RECHARGE_CALLBACK_PAY_SEEKING_ORDER = 3;
 
 const APP_WEB_PC = 1;
 const APP_WE_CHAT = 2;
@@ -98,14 +99,47 @@ const CACHE_HOUR = 60;
 
 const SEEKING_STATE_CLOSED = 'closed'; //已关门
 const SEEKING_STATE_OPENED = 'opened'; //已开门
-const SEEKING_STATE_OPENED_EXPIRED = 'open_expired'; //开门已过期-为了让发起人时不时的去看一下
 const SEEKING_STATE_FULLED = 'fulled'; //已满员
-const SEEKING_STATE_EXPIRED = 'expired'; //已结束
+const SEEKING_STATE_COMPLETED = 'completed'; //已结束
 const SEEKING_STATE_FULL_CHECKING = 'full_checking'; //检测满员状态，这是一个中间状态，如果满则去已满员状态，否则去opened状态
 
-const SEEKING_ORDER_STATE_DISPOSING = 'disposing'; //处理中
-const SEEKING_ORDER_STATE_DISPOSE_EXPIRED = 'dispose_expired'; //过期未处理
-const SEEKING_ORDER_STATE_ACCEPTED = 'accepted'; //已接受
-const SEEKING_ORDER_STATE_REJECTED = 'rejected'; //已拒绝
-const SEEKING_ORDER_STATE_NO_SHOW = 'no-show'; //不出现
+const SEEKING_ORDER_STATE_DISPOSING = 'disposing'; //待处理
+const SEEKING_ORDER_STATE_PAYING = 'paying'; //支付中
+const SEEKING_ORDER_STATE_PAYED = 'payed'; //已支付
+const SEEKING_ORDER_STATE_PAY_FAILED = 'pay_failed'; //支付失败
 const SEEKING_ORDER_STATE_CANCELED = 'canceled'; //已取消
+
+
+const FINANCE_RELATION_REVERSAL = -1; //撤销
+const FINANCE_RELATION_BOOKING = 1; //预定
+const FINANCE_RELATION_MEMBERFEE = 2; //缴纳会籍费
+const FINANCE_RELATION_SUBOUT = 3; //分账支出方
+const FINANCE_RELATION_SUBIN = 4; //分账支入方
+const FINANCE_RELATION_RECHARGE = 5;//充值
+const FINANCE_RELATION_CANCEL_BOOKING = 6;//取消预定
+const FINANCE_RELATION_PARTNER_COACH = 7;//陪练教练收入
+const FINANCE_RELATION_PARTNER_STUDENT = 8;//陪练学员支出
+const FINANCE_RELATION_TRAIN_STUDENT = 9;//培训费学员支出
+const FINANCE_RELATION_CUSTOM_IN = 10;//自定义费用得钱方
+const FINANCE_RELATION_CUSTOM_OUT = 11;//自定义费用出钱方
+const FINANCE_RELATION_BUY_INSTANT_ORDER = 12;//购买即时订单
+const FINANCE_RELATION_CANCEL_INSTANT_ORDER = 13;//取消购买即时订单
+const FINANCE_RELATION_TERMINATE_INSTANT_ORDER = 14;//执行中止即时订单
+const FINANCE_RELATION_SELL_INSTANT_ORDER = 15;//售出即时订单
+
+const FINANCE_RELATION_BUY_SEEKING_ORDER = 16;//售出约球订单
+const FINANCE_RELATION_CANCEL_SEEKING_ORDER = 17;//取消约球订单
+
+/**
+ * 财务支持的操作枚举
+ */
+const FINANCE_OPERATE_RECHARGE = 1; //充值
+const FINANCE_OPERATE_CONSUME = 2;  //消费
+const FINANCE_OPERATE_FREEZE = 3;   //冻结
+const FINANCE_OPERATE_UNFREEZE = 4;   //解冻
+
+/**
+ * 使用原因
+ */
+const FINANCE_PURPOSE_ACCOUNT = 1;//默认账户
+const FINANCE_PURPOSE_POINTS = 2;//积分

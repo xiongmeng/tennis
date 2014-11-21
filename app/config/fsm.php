@@ -330,13 +330,10 @@ return array(
             SEEKING_STATE_OPENED => array( //开门
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
             ),
-            SEEKING_STATE_OPENED_EXPIRED => array( //开门已过期
-                'type' => Finite\State\StateInterface::TYPE_NORMAL,
-            ),
             SEEKING_STATE_FULLED => array( //满员
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
             ),
-            SEEKING_STATE_EXPIRED => array( //已过期
+            SEEKING_STATE_COMPLETED => array( //已结束
                 'type' => Finite\State\StateInterface::TYPE_FINAL,
             ),
             SEEKING_STATE_FULL_CHECKING => array(//满员检测状态
@@ -345,24 +342,22 @@ return array(
         ),
         'transitions' => array(
             'modify' => array('from' => array(SEEKING_STATE_CLOSED), 'to' => SEEKING_STATE_CLOSED),
-            'open' => array('from' => array(
-                SEEKING_STATE_CLOSED, SEEKING_STATE_OPENED_EXPIRED), 'to' => SEEKING_STATE_OPENED),
+            'open' => array('from' => array(SEEKING_STATE_CLOSED), 'to' => SEEKING_STATE_OPENED),
             'close' => array('from' => array(SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_CLOSED),
 
             'increase' => array('from' => array(
                 SEEKING_STATE_OPENED, SEEKING_STATE_FULLED), 'to' => SEEKING_STATE_OPENED),
             'decrease' => array('from' => array(SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_FULL_CHECKING),
+
             'join' => array('from' => array(SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_FULL_CHECKING),
-//            'break' => array('from' => array(SEEKING_STATE_OPENED, SEEKING_STATE_FULLED), 'to' => SEEKING_STATE_OPENED),
+            'out' => array('from' => array(SEEKING_STATE_OPENED, SEEKING_STATE_FULLED), 'to' => SEEKING_STATE_OPENED),
 
             'auto_open' => array('from' => array(SEEKING_STATE_FULL_CHECKING), 'to' => SEEKING_STATE_OPENED),
             'auto_full' => array('from' => array(SEEKING_STATE_FULL_CHECKING), 'to' => SEEKING_STATE_FULLED),
             'refresh' => array('from' => array(SEEKING_STATE_FULL_CHECKING), 'to' => SEEKING_STATE_FULL_CHECKING),
 
             'expire' => array('from' => array(
-                SEEKING_STATE_CLOSED, SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_EXPIRED),
-
-            'open_expire' => array('from' => array(SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_OPENED_EXPIRED),
+                SEEKING_STATE_CLOSED, SEEKING_STATE_OPENED), 'to' => SEEKING_STATE_COMPLETED),
         ),
         'callbacks' => array(
             'before' => array(
@@ -383,73 +378,60 @@ return array(
                             $fsm->apply($seeking->on_sale <= 0 ? 'auto_full' : 'auto_open');
                         }
                 ),
-                array(
-                    'to' => SEEKING_STATE_OPENED_EXPIRED,
-                    'do' => function (Seeking $seeking, \Finite\Event\TransitionEvent $e) {
-                            /**
-                             * 场馆发送提醒短信
-                             */
-                        }
-                )
             )
         )
     ),
 
     'seeking_order' => array(
         'states' => array(
-            SEEKING_ORDER_STATE_DISPOSING => array( //处理中
+            SEEKING_ORDER_STATE_DISPOSING => array( //待处理
                 'type' => Finite\State\StateInterface::TYPE_INITIAL,
             ),
-            SEEKING_ORDER_STATE_DISPOSE_EXPIRED => array( //过期未处理
+            SEEKING_ORDER_STATE_PAYING => array( //支付中
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
             ),
-            SEEKING_ORDER_STATE_ACCEPTED => array( //已接受
+            SEEKING_ORDER_STATE_PAYED => array( //已支付
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
             ),
-            SEEKING_ORDER_STATE_REJECTED => array( //已拒绝
+            SEEKING_ORDER_STATE_PAY_FAILED => array( //支付失败
                 'type' => Finite\State\StateInterface::TYPE_NORMAL,
-            ),
-            SEEKING_ORDER_STATE_NO_SHOW => array( //已爽约
-                'type' => Finite\State\StateInterface::TYPE_FINAL,
             ),
             SEEKING_ORDER_STATE_CANCELED => array( //已取消
                 'type' => Finite\State\StateInterface::TYPE_FINAL,
             ),
         ),
         'transitions' => array(
-            'accept' => array('from' => array(SEEKING_ORDER_STATE_DISPOSING), 'to' => SEEKING_ORDER_STATE_ACCEPTED),
-            'reject' => array('from' => array(SEEKING_ORDER_STATE_DISPOSING), 'to' => SEEKING_ORDER_STATE_REJECTED),
-            'break' => array('from' => array(SEEKING_ORDER_STATE_ACCEPTED), 'to' => SEEKING_ORDER_STATE_CANCELED),
-            'expire' => array('from' => array(SEEKING_ORDER_STATE_DISPOSING), 'to' => SEEKING_ORDER_STATE_DISPOSE_EXPIRED),
-//            'rejoin' => array('from' => array(SEEKING_ORDER_STATE_DISPOSE_EXPIRED), 'to' => SEEKING_ORDER_STATE_DISPOSING),
-            'no-show' => array('from' => array(SEEKING_ORDER_STATE_ACCEPTED), 'to' => SEEKING_ORDER_STATE_NO_SHOW),
+            'accept' => array('from' => array(SEEKING_ORDER_STATE_DISPOSING), 'to' => SEEKING_ORDER_STATE_PAYING),
+            'pay_success' => array('from' => array(SEEKING_ORDER_STATE_PAYING), 'to' => SEEKING_ORDER_STATE_PAYED),
+            'pay_fail' => array('from' => array(SEEKING_ORDER_STATE_PAYING), 'to' => SEEKING_ORDER_STATE_PAY_FAILED),
+            'pay_expire' => array('from' => array(SEEKING_ORDER_STATE_PAYING), 'to' => SEEKING_ORDER_STATE_PAY_FAILED),
+            'cancel' => array('from' => array(SEEKING_ORDER_STATE_PAYED), 'to' => SEEKING_ORDER_STATE_CANCELED),
         ),
         'callbacks' => array(
             'before' => array(
                 array( //
-                    'to' => SEEKING_ORDER_STATE_ACCEPTED,
+                    'to' => SEEKING_ORDER_STATE_PAYING,
                     'do' => function (SeekingOrder $seekingOrder, \Finite\Event\TransitionEvent $e) {
                             $fsm = new SeekingFsm(Seeking::findOrFail($seekingOrder->seeking_id));
-                            $fsm->join(1);
+                            $fsm->join();
+                        }
+                ),
+                array( //
+                    'to' => SEEKING_ORDER_STATE_PAYED,
+                    'do' => function (SeekingOrder $seekingOrder, \Finite\Event\TransitionEvent $e) {
+                            $finance = new SeekingOrderFinance($seekingOrder);
+                            $finance->buy();
                         }
                 ),
             ),
             'after' => array(
                 array(
-                    'to' => SEEKING_ORDER_STATE_CANCELED,
+                    'to' => SEEKING_ORDER_STATE_PAY_FAILED,
                     'do' => function (SeekingOrder $seekingOrder, \Finite\Event\TransitionEvent $e) {
-//                            $fsm = new SeekingFsm(Seeking::findOrFail($seekingOrder->seeking_id));
-//                            $fsm->join(-1);
+                            $fsm = new SeekingFsm(Seeking::findOrFail($seekingOrder->seeking_id));
+                            $fsm->out();
                         }
                 ),
-                array(
-                    'to' => SEEKING_ORDER_STATE_DISPOSE_EXPIRED,
-                    'do' => function (Seeking $seeking, \Finite\Event\TransitionEvent $e) {
-                            /**
-                             * 提醒用户已过期
-                             */
-                        }
-                )
             )
         )
     )

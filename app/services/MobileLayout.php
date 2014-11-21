@@ -7,6 +7,10 @@ class MobileLayout{
     public static $activeService = null;
     public static $setUrl = null;
     public static $services = array(
+//        'seeking' => array(
+//            'url' => '/seeking/list',
+//            'label' => '约球'
+//        ),
         'reserve' => array(
             'url' => '/mobile_home/reserve/recommend',
             'label' => '预约订场'

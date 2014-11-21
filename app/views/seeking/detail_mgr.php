@@ -111,15 +111,7 @@
                                 <td><?= $orderStates[$order->state]?></td>
 
                                 <td>
-                                    <?php if ($orderFsm->can('accept')) { ?>
-                                        <a href="/seeking/order/operate/<?= $order->id?>/accept" target="_blank">接受</a>
-                                    <?php } ?>
-                                    <?php if ($orderFsm->can('reject')) { ?>
-                                        <a href="/seeking/order/operate/<?= $order->id?>/reject" target="_blank">拒绝</a>
-                                    <?php } ?>
-                                    <?php if ($orderFsm->can('no-show')) { ?>
-                                        <a href="/seeking/order/operate/<?= $order->id?>/no-show" target="_blank">爽约</a>
-                                    <?php } ?>
+
                                 </td>
                             </tr>
                         <?php } ?>

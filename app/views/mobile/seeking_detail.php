@@ -39,5 +39,15 @@
                 <label><?= $seeking->comment ?></label>
             </li>
         <?php } ?>
+
+
     </ul>
+    <?php $fsm = new SeekingFsm($seeking);?>
+    <?php if ($fsm->can('join')) { ?>
+        <a style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
+                href="/seeking/join/<?= $seeking->id?>"  data-ignore="push">我要报名</a>
+    <?php } ?>
+
 </div>
+
+

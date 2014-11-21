@@ -54,6 +54,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <?php $types = option_finance_relation_type();?>
                             <?php foreach ($billingStagings as $billingStaging) {
                                 if ($billingStaging instanceof BillingStaging) {
                                     ?>
@@ -62,8 +63,8 @@
                                         <td><?= href_user_detail($billingStaging->user_id, $billingStaging->user_name)?></td>
                                         <td><?php echo date('Y-m-d H:i', $billingStaging->billing_created_time) ?></td>
                                         <td>
-                                            <?php if (isset(FinanceConstant::$relationTypeOptions[$billingStaging->relation_type])) { ?>
-                                                <?php echo FinanceConstant::$relationTypeOptions[$billingStaging->relation_type] ?>
+                                            <?php if (isset($types[$billingStaging->relation_type])) { ?>
+                                                <?php echo $types[$billingStaging->relation_type] ?>
                                             <?php } ?>
                                             <?php if ($billingStaging->relation_type == 5) { ?>
                                                 <?php if ($billingStaging->recharge_type == 1) { ?>

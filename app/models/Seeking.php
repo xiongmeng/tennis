@@ -28,6 +28,10 @@ class Seeking extends Eloquent implements \Finite\StatefulInterface{
         return $this->belongsTo('Hall', 'hall_id', 'id');
     }
 
+    public function Orders(){
+        return $this->hasMany('SeekingOrder', 'seeking_id');
+    }
+
     public function Joiners(){
         return $this->belongsToMany('User', 'gt_seeking_order', 'seeking_id', 'joiner')->withTimestamps();
     }

@@ -137,6 +137,19 @@ define(function (require) {
             });
         };
 
+        self.joinSeeking = function(seeking){
+            var defer = $.restPost('/reserveOrder/pay' ,{'reserve_order_ids' : reservationOrder.id} );
+
+            defer.done(function (res, data) {
+                if (data.status == 'no_money') {
+                    mapping.fromJS({'noMoney' :data},self);
+                    $('#noMoneyModal').addClass('active');
+                } else if (data.status == 'pay_success') {
+                    $('#paySuccessModal').addClass('active');
+                }
+            });
+        };
+
         function getQueryString(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
             var r = window.location.search.substr(1).match(reg);

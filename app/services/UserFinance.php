@@ -66,6 +66,10 @@ class UserFinance
                 $fsm = new ReserveOrderFsm();
                 $fsm->batchPay($recharge->callback_action_token);
                 break;
+            case RECHARGE_CALLBACK_PAY_SEEKING_ORDER:
+                $fsm = new SeekingOrderFsm();
+                $fsm->batchPay($recharge->callback_action_token);
+                break;
             //升级成为VIP
             default:
                 $this->ensureUpgradeToGoldMoney($recharge->user_id);

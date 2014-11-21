@@ -36,9 +36,15 @@ class SeekingFsm extends \Finite\StateMachine\StateMachine {
         return $this->object;
     }
 
-    public function join($num){
-        $this->object->on_sale -= $num;
+    public function join(){
+        $this->object->on_sale -= 1;
         $this->apply('join');
+        return $this->object;
+    }
+
+    public function out(){
+        $this->object->on_sale += 1;
+        $this->apply('out');
         return $this->object;
     }
 }

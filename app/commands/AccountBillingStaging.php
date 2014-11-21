@@ -104,7 +104,14 @@ class AccountBillingStaging extends Command
             UPDATE gt_account_billing_staging b INNER JOIN gt_finance_custom c ON b.relation_id=c.id AND b.relation_type IN (10,11)
              SET b.finance_custom_reason=c.reason' . $where);
 
-         $this->info('migrate completed');
+
+        $this->info('update seeking info');
+        DB::update('
+            UPDATE gt_account_billing_staging b INNER JOIN gt_seeking_order o ON b.relation_id=o.id AND b.relation_type IN(16,17) INNER JOIN gt_seeking s ON o.seeking_id=s.id INNER JOIN gt_hall_tiny h ON s.hall_id=h.id
+            SET b.booking_event_date=UNIX_TIMESTAMP(s.event_date), b.booking_start_time=s.start_hour, b.booking_end_time=s.end_hour,
+            b.hall_id=s.hall_id, b.hall_name=h.`name`' . $where);
+
+        $this->info('migrate completed');
     }
 
     /**
