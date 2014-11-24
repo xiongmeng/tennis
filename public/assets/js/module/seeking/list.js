@@ -30,7 +30,7 @@ define(function (require) {
 
         self.search = function(){
             var queries = mapping.toJS(self.queries);
-            var defer = $.restGet('/seeking/list', queries);
+            var defer = $.restGet('/seeking/search', queries);
             defer.done(function(res, data){
                 initListFromJs(data.data);
             });

@@ -1,8 +1,10 @@
 <header class="bar bar-nav">
-    <form style="display: inline" class="search" action="/mobile_home/reserve/recommend">
-        <input style="width: 65%;font-size:15px;"
-               type="search" name="hall_name" class="pull-left" placeholder="请输入场馆名"
-               value="<?= isset($queries['hall_name']) ? $queries['hall_name'] : '' ?>">
+    <form style="display: inline">
+        <input type="text" style="width: 30%" class="pull-left" placeholder="场馆关键字">
+        <select style="width: 20%" class="pull-left">
+            <option>请选择日期</option>
+        </select>
+<!--        <select style="width: 20%" class="pull-left" data-bind="options:tennis_level.options, optionsText:'name', optionsValue:'id', value:tennis_level"></select>-->
         <input type="submit" class="btn btn-primary" value="search">
     </form>
 </header>
@@ -52,7 +54,7 @@
     seajs.use('seeking/list', function (SeekingListModel) {
         var seekingList = new SeekingListModel({});
         ko.applyBindings(seekingList, $('#content')[0]);
-
+        ko.applyBindings(seekingList, $('header')[0]);
         seekingList.search();
     });
 </script>

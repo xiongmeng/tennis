@@ -3,17 +3,11 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     Route::get('/seeking/list', function () {
         MobileLayout::$activeService = 'reserve';
         $queries = Input::all();
-//        $queries['state'] = SEEKING_STATE_OPENED;
-        if(Request::ajax()){
-            $seeking = new Seeking();
-            $seekingList = $seeking->search($queries);
-            return rest_success($seekingList->toArray());
-
-        }else{
-            return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list_knockout',
-                array('queries' => $queries));
-        }
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list_knockout',
+            array('queries' => $queries));
     });
+
+
 
     Route::get('/seeking/detail/{id}', function ($id) {
         $seeking = Seeking::with('Hall')->findOrFail($id);
@@ -82,6 +76,13 @@ Route::any('/seeking/list', array('before' => 'auth', function () {
     return View::make('layout')->nest('content', 'seeking.list_mgr',
         array('seekingList' => $seekingList, 'queries' => $queries, 'states' => $states));
 }));
+
+Route::get('/seeking/search', function () {
+    $queries = Input::all();
+    $seeking = new Seeking();
+    $seekingList = $seeking->search($queries);
+    return rest_success($seekingList->toArray());
+});
 
 Route::get('/seeking/operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
     $seeking = Seeking::findOrFail($id);
