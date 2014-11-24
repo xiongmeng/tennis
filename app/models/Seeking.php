@@ -45,6 +45,12 @@ class Seeking extends Eloquent implements \Finite\StatefulInterface{
         if(!empty($aQuery['hall_name'])){
             $query->where('gt_hall_tiny.name', 'like', '%' . $aQuery['hall_name'] . '%');
         }
+        if(!empty($aQuery['event_date'])){
+            $query->where('gt_seeking.event_date', '=', $aQuery['event_date']);
+        }
+        if(!empty($aQuery['tennis_level'])){
+            $query->where('gt_seeking.tennis_level', '=', $aQuery['tennis_level']);
+        }
         if(!empty($aQuery['event_date_start'])){
             $query->where('gt_seeking.event_date', '>=', $aQuery['event_date_start']);
         }

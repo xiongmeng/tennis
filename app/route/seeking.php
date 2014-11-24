@@ -7,8 +7,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
             array('queries' => $queries));
     });
 
-
-
     Route::get('/seeking/detail/{id}', function ($id) {
         $seeking = Seeking::with('Hall')->findOrFail($id);
         $states = option_seeking_state();
@@ -79,8 +77,10 @@ Route::any('/seeking/list', array('before' => 'auth', function () {
 
 Route::get('/seeking/search', function () {
     $queries = Input::all();
+    $perPage = Input::get('perPage', 20);
+
     $seeking = new Seeking();
-    $seekingList = $seeking->search($queries);
+    $seekingList = $seeking->search($queries, $perPage);
     return rest_success($seekingList->toArray());
 });
 

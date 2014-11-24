@@ -1,16 +1,23 @@
 <header class="bar bar-nav">
-    <form style="display: inline">
-        <input type="text" style="width: 30%" class="pull-left" placeholder="场馆关键字">
-        <select style="width: 20%" class="pull-left">
-            <option>请选择日期</option>
-        </select>
-<!--        <select style="width: 20%" class="pull-left" data-bind="options:tennis_level.options, optionsText:'name', optionsValue:'id', value:tennis_level"></select>-->
-        <input type="submit" class="btn btn-primary" value="search">
+    <form style="display: inline" data-bind="with:queries">
+        <div class="form-controller pull-left">
+            <input type="text" style="width: 35%; margin: 6px 0" placeholder="场馆关键字" data-bind="value:hall_name">
+            <select style="width: 23%" data-bind="options:event_date.options,
+        optionsText:'name', optionsValue:'id', value:event_date, optionsCaption:'日期'"></select>
+            <select style="width: 20%" data-bind="options:tennis_level.options,
+        optionsText:'name', optionsValue:'id', value:tennis_level, optionsCaption:'级别'"></select>
+            <input data-bind="click:$root.search" type="submit"
+                   style="width: 15%;top: 9px;margin-left: 4px" class="btn btn-primary pull-right" value="查询">
+        </div>
     </form>
 </header>
 
-<div class="content" style="margin-bottom: 50px; padding-top: 66px">
-    <ul class="table-view hall-on-sale" style="display: none" data-bind="visible: seekingList().length>=0">
+<div class="content" style="margin-bottom: 50px; padding-top: 16px">
+    <ul class="table-view hall-on-sale" data-bind="if: seekingList().length<=0">
+        <li class="table-view-cell notice"><p data-bind="text:inSearching()?'正在加载， 请稍候...':'抱歉，没有您想要的约球信息！'">正在加载， 请稍候...</p></li>
+    </ul>
+
+    <ul class="table-view hall-on-sale" style="display: none" data-bind="visible: seekingList().length>0">
         <!-- ko foreach: seekingList-->
         <li class="table-view-cell">
             <a style="padding: 10px" data-bind="attr:{href: detail_url}" data-ignore="push">
@@ -46,15 +53,17 @@
         <!--/ko-->
     </ul>
 
-    <a class="btn btn-primary btn-block from-button" data-ignore="push" data-bind="click:search">点击加载更多</a>
+    <button class="btn btn-primary btn-block from-button" data-ignore="push"
+            data-bind="enable: currentPage()<total(), click:loadNextPage">
+        <span data-bind="text:inSearching()?'正在加载， 请稍候...':'点击加载更多'">正在加载， 请稍候...</span></button>
 
 </div>
 
 <script>
     seajs.use('seeking/list', function (SeekingListModel) {
-        var seekingList = new SeekingListModel({});
-        ko.applyBindings(seekingList, $('#content')[0]);
-        ko.applyBindings(seekingList, $('header')[0]);
+        var seekingList = new SeekingListModel({}, {}, {perPage: 1});
+        ko.applyBindings(seekingList, $('#body')[0]);
+//        ko.applyBindings(seekingList, $('header')[0]);
         seekingList.search();
     });
 </script>
