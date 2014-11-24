@@ -46,7 +46,7 @@ Route::post('/seeking/save', array('before' => 'auth', function () {
     isset($seekingInput['event_date']) && $seekingInput['event_date'] = date('Y-m-d', strtotime($seekingInput['event_date']));
     $id = Input::get('id');
     if (empty($id)) {
-        $seekingInput['state'] = SEEKING_STATE_CLOSED;
+        $seekingInput['state'] = SEEKING_STATE_DRAFT;
         $seekingInput['creator'] = user_id();
         $seekingCreated = Seeking::create($seekingInput);
         return rest_success($seekingCreated);
@@ -130,26 +130,6 @@ Route::get('/seeking/detail/{id}', function ($id) {
     return View::make('layout')->nest('content', 'seeking.detail_mgr',
         array('seeking' => $seeking, 'states' => $states, 'orders' => $orders, 'orderStates' => $orderStates));
 });
-
-Route::get('/seeking/join/{id}', array('before' => 'auth', function ($id) {
-    $seeking = Seeking::findOrFail($id);
-    //仅仅是为了代码提示
-    $seeking instanceof Seeking && 1;
-
-    $fsm = new SeekingFsm($seeking);
-    if ($fsm->can('join')) {
-        $order = SeekingOrder::create(array('state' => SEEKING_ORDER_STATE_DISPOSING, 'seeking_id' => $id,
-            'seeker' => $seeking->creator, 'joiner' => user_id(), 'cost' => $seeking->personal_cost));
-
-        if (Request::ajax()) {
-            return rest_success($order);
-        } else {
-            return Redirect::to(URL::previous());
-        }
-    }
-
-    throw new Exception('当前状态不能参加！');
-}));
 
 Route::get('/seeking/order/operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
     $seekingOrder = SeekingOrder::findOrFail($id);

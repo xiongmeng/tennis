@@ -242,6 +242,10 @@ Route::group(array('prefix' => 'xm'), function(){
         $result = $client->getAccessToken();
         return $result;
     });
+
+    Route::get('seeking/expire', function(){
+        Artisan::call('seeking:expire');
+    });
 });
 
 Route::group(array('domain' => 'homestead1.app'), function()

@@ -22,10 +22,12 @@ function option_published_halls()
 function option_seeking_state()
 {
     return array(
+        SEEKING_STATE_DRAFT => '草稿',
         SEEKING_STATE_CLOSED => '已关门',
         SEEKING_STATE_OPENED => '已开门',
         SEEKING_STATE_FULLED => '已满员',
         SEEKING_STATE_COMPLETED => '已结束',
+        SEEKING_STATE_CANCELED => '已取消',
         SEEKING_STATE_FULL_CHECKING => '满员检测中'
     );
 }
@@ -37,7 +39,8 @@ function option_seeking_order_state()
         SEEKING_ORDER_STATE_PAYING => '支付中',
         SEEKING_ORDER_STATE_PAYED => '已支付',
         SEEKING_ORDER_STATE_PAY_FAILED => '支付失败',
-        SEEKING_ORDER_STATE_CANCELED => '已取消'
+        SEEKING_ORDER_STATE_CANCELED => '已取消',
+        SEEKING_ORDER_STATE_COMPLETED => '已结束',
     );
 }
 

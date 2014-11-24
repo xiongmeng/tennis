@@ -97,16 +97,21 @@ const HALL_ACTIVE_LATEST = 3; //最新
 const CACHE_DAY = 720;
 const CACHE_HOUR = 60;
 
+const INTERVAL_SEEKING_PAY_EXPIRE = 15;//约球报名过期时间
+
+const SEEKING_STATE_DRAFT = 'draft'; //草稿状态
 const SEEKING_STATE_CLOSED = 'closed'; //已关门
 const SEEKING_STATE_OPENED = 'opened'; //已开门
 const SEEKING_STATE_FULLED = 'fulled'; //已满员
 const SEEKING_STATE_COMPLETED = 'completed'; //已结束
+const SEEKING_STATE_CANCELED = 'canceled'; //已结束
 const SEEKING_STATE_FULL_CHECKING = 'full_checking'; //检测满员状态，这是一个中间状态，如果满则去已满员状态，否则去opened状态
 
 const SEEKING_ORDER_STATE_DISPOSING = 'disposing'; //待处理
 const SEEKING_ORDER_STATE_PAYING = 'paying'; //支付中
 const SEEKING_ORDER_STATE_PAYED = 'payed'; //已支付
 const SEEKING_ORDER_STATE_PAY_FAILED = 'pay_failed'; //支付失败
+const SEEKING_ORDER_STATE_COMPLETED = 'completed'; //已结束
 const SEEKING_ORDER_STATE_CANCELED = 'canceled'; //已取消
 
 

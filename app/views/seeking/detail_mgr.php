@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="panel panel-default" id="order">
-                <div class="panel-heading">约球信息(<span><?=$states[$seeking->state]?></span>)</div>
+                <div class="panel-heading">约球信息(<span style="color: red;font-weight: bold"><?=$states[$seeking->state]?></span>)</div>
                 <div class="panel-body">
                     <form class="form-horizontal">
 
@@ -70,19 +70,34 @@
 
                             <div class="col-md-9">
                                 <p class="form-control-static">
-                                    <?= $seeking->comment?>元
+                                    <?= $seeking->comment?>
                                 </p>
                             </div>
                         </div>
 
                         <?php $fsm = new SeekingFsm($seeking);?>
-                        <?php if($fsm->can('join')){?>
                         <div class="form-group">
-                            <div class="col-md-3 pull-right">
-                                <a class="btn btn-primary" href="/seeking/join/<?= $seeking->id?>">我要报名</a>
+                            <div class="col-md-12 pull-right">
+                                <?php if ($fsm->can('modify')) { ?>
+                                    <a class="btn btn-primary" href="/seeking/modify/<?= $seeking->id ?>" target="_blank">修改</a>
+                                <?php } ?>
+                                <?php if ($fsm->can('open')) { ?>
+                                    <a class="btn btn-primary" href="/seeking/operate/<?= $seeking->id ?>/open">开门</a>
+                                <?php } ?>
+                                <?php if ($fsm->can('close')) { ?>
+                                    <a class="btn btn-primary" href="/seeking/operate/<?= $seeking->id ?>/close">关门</a>
+                                <?php } ?>
+                                <?php if ($fsm->can('cancel')) { ?>
+                                    <a class="btn btn-sm btn-primary" href="/seeking/operate/<?= $seeking->id ?>/cancel">取消</a>
+                                <?php } ?>
+                                <?php if ($fsm->can('increase')) { ?>
+                                    <a class="btn btn-primary" href="/seeking/increase/<?= $seeking->id ?>/1">加人</a>
+                                <?php } ?>
+                                <?php if ($fsm->can('decrease')) { ?>
+                                    <a class="btn btn-primary" href="/seeking/decrease/<?= $seeking->id ?>/1">减人</a>
+                                <?php } ?>
                             </div>
                         </div>
-                        <?php }?>
                     </form>
                 </div>
             </div>
@@ -97,6 +112,7 @@
                             <th width="10%">报名时间</th>
                             <th width="12%">报名人</th>
                             <th width="12%">状态</th>
+                            <th width="12%">过期时间</th>
                             <th width="12%">操作</th>
                         </tr>
                         </thead>
@@ -109,9 +125,11 @@
                                 <td><?= substr($order->created_at, 0, 16);?></td>
                                 <td><?= href_user_detail($order->Joiner->user_id, $order->Joiner->nickname) ?></td>
                                 <td><?= $orderStates[$order->state]?></td>
-
+                                <td><?= date('m-d H:i', $order->expire_time);?></td>
                                 <td>
-
+                                    <?php if ($orderFsm->can('cancel')) { ?>
+                                        <a class="btn btn-primary" href="/seeking/order/operate/<?= $order->id ?>/cancel" target="_blank">取消</a>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>

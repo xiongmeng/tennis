@@ -384,7 +384,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         MobileLayout::$title = '我的预约订单';
         MobileLayout::$previousUrl = '/mobile_buyer';
 
-
         //展示预定订单
         $user = Auth::getUser();
         $stat = Input::get('stat');
@@ -659,9 +658,12 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         if ($fsm->can('join')) {
             if (Request::isMethod('POST')) {
+                $orderModel = new SeekingOrder();
                 //创建约球单
-                $order = SeekingOrder::create(array('state' => SEEKING_ORDER_STATE_PAYING, 'seeking_id' => $id,
-                    'seeker' => $seeking->creator, 'joiner' => $userId, 'cost' => $seeking->personal_cost));
+                $order = $orderModel->createFromSeeking($seeking, $userId);
+
+                $orderFsm = new SeekingOrderFsm($order);
+                $orderFsm->apply('accept');
 
                 $finance = new SeekingOrderManager();
                 $result = $finance->batchPay(array($order->id));
@@ -691,16 +693,19 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
     });
 
     Route::get('/seeking/order/list', function () {
+        MobileLayout::$activeService = 'center';
+        MobileLayout::$title = '我的约球单';
+        MobileLayout::$previousUrl = '/mobile_buyer';
+
         $state = Input::get('state');
 
         $queries = Input::all();
         $queries['joiner_id'] = user_id();
 
-//        !isset($queries['state']) && $queries['state'] = SEEKING_ORDER_STATE_PAYED;
-
         $seekingOrder = new SeekingOrder();
-        $orders = $seekingOrder->search($queries, 10);
-        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_order_list',
+        $orders = $seekingOrder->search($queries, 20);
+
+        return View::make('mobile_layout')->nest('content', 'mobile.seeking_order_list',
             array('seekingOrderList' => $orders, 'state' => $state));
     });
 });

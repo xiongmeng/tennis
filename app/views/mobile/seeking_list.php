@@ -61,7 +61,7 @@
 
 <script>
     seajs.use('seeking/list', function (SeekingListModel) {
-        var seekingList = new SeekingListModel({}, {}, {perPage: 10});
+        var seekingList = new SeekingListModel({}, {state:'opened'}, {perPage: 10});
         ko.applyBindings(seekingList, $('#body')[0]);
 //        ko.applyBindings(seekingList, $('header')[0]);
         seekingList.search();

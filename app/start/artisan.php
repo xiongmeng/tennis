@@ -23,3 +23,4 @@ Artisan::add(new InstantOrderRefresh());
 Artisan::add(new InstantOrderBack());
 Artisan::add(new InstantOrderWaste());
 Artisan::add(new HallImageHelper());
+Artisan::add(new SeekingExpire());

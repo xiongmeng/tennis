@@ -32,6 +32,7 @@ define(function (require) {
 
         var QueryModel = function (queries) {
             var self = this;
+            self.state = ko.observable(queries.state);
             self.hall_name = ko.observable(queries.hall_name);
             self.tennis_level = ko.observable(queries.tennis_level).extend({options: op.tennis_level});
             self.event_date = ko.observable(queries.event_date).extend({options: op.event_date});

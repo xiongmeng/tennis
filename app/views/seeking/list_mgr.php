@@ -51,10 +51,10 @@
                     <th width="15%">场馆</th>
                     <th width="5%">片数</th>
                     <th width="20">坑位</th>
-                    <th width="10%">人均费用</th>
+                    <th width="7%">费用</th>
                     <th width="12%">创建人</th>
                     <th width="8%">状态</th>
-                    <th width="10%">操作</th>
+                    <th width="10%">过期时间</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -71,23 +71,7 @@
                         <td><?= $seeking->personal_cost; ?>元</td>
                         <td><?= href_user_detail($seeking->user_id, $seeking->creator_name) ?></td>
                         <td><?= $states[$seeking->state]; ?></td>
-                        <td>
-                            <?php if ($fsm->can('modify')) { ?>
-                                <a href="/seeking/modify/<?= $seeking->id ?>" target="_blank">修改</a>
-                            <?php } ?>
-                            <?php if ($fsm->can('open')) { ?>
-                                <a href="/seeking/operate/<?= $seeking->id ?>/open">开门</a>
-                            <?php } ?>
-                            <?php if ($fsm->can('close')) { ?>
-                                <a href="/seeking/operate/<?= $seeking->id ?>/close">关门</a>
-                            <?php } ?>
-                            <?php if ($fsm->can('increase')) { ?>
-                                <a href="/seeking/increase/<?= $seeking->id ?>/1">加人</a>
-                            <?php } ?>
-                            <?php if ($fsm->can('decrease')) { ?>
-                                <a href="/seeking/decrease/<?= $seeking->id ?>/1">减人</a>
-                            <?php } ?>
-                        </td>
+                        <td><?= date('m-d H:i', $seeking->expire_time) ?></td>
                     </tr>
 
                 <?php } ?>

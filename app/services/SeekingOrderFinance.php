@@ -39,7 +39,7 @@ class SeekingOrderFinance {
 
         //给买方加钱
         $oAction = new ActionObject();
-        $oAction->setUserId($this->seekingOrder->user_id)->setAmount($this->seekingOrder->cost)
+        $oAction->setUserId($this->seekingOrder->joiner)->setAmount($this->seekingOrder->cost)
             ->setPurpose(FINANCE_PURPOSE_ACCOUNT)->setOperateType(FINANCE_OPERATE_RECHARGE);
         $oOperate->addAction($oAction);
 
