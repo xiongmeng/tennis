@@ -20,6 +20,7 @@
 <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
 
 <script type="text/javascript">
+    var jsVersion = '201411241409';
     seajs.config({
         paths: {
             plugin: '/assets/plugins',
@@ -28,8 +29,8 @@
         base: '/assets/js/module/',
         charset: 'utf-8',
         map: [
-            [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201411130929'],
-            [/(.*\/mobile\/js\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201411130929']
+            [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + jsVersion],
+            [/(.*\/mobile\/js\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + jsVersion]
         ]
     });
 </script>

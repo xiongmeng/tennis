@@ -11,7 +11,7 @@ define(function (require) {
                     id: today.getFullYear() + '-' + md,
                     name: md
                 });
-                today.setDate(today.getDate() + i); // 系统会自动转换
+                today.setDate(today.getDate() + 1); // 系统会自动转换
                 i++;
             } while (i <= 7);
             return res;

@@ -3,7 +3,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     Route::get('/seeking/list', function () {
         MobileLayout::$activeService = 'reserve';
         $queries = Input::all();
-        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list_knockout',
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list',
             array('queries' => $queries));
     });
 
