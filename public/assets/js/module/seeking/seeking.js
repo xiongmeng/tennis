@@ -11,6 +11,9 @@ define(function (require) {
     return function (seeking) {
         var self = this;
         self.id = ko.observable(seeking.id);
+        self.detail_url = ko.computed(function(){
+            return '/seeking/detail/' + self.id();
+        });
         self.state = ko.observable(seeking.state);
         self.event_date = ko.observable(seeking.event_date);
         self.start_hour = ko.observable(seeking.start_hour).extend(

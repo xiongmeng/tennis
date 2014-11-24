@@ -147,32 +147,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         }
         return View::make('mobile_layout')->nest('content', 'mobile.get_password', array('queries' => $queries, 'error' => $error));
     });
-
-
-    Route::get('/seeking/list', function () {
-        MobileLayout::$activeService = 'reserve';
-        $queries = Input::all();
-//        $queries['state'] = SEEKING_STATE_OPENED;
-
-        $seeking = new Seeking();
-        $seekingList = $seeking->search($queries);
-
-        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list',
-            array('seekingList' => $seekingList, 'queries' => $queries));
-    });
-
-    Route::get('/seeking/detail/{id}', function ($id) {
-        $seeking = Seeking::with('Hall')->findOrFail($id);
-        $states = option_seeking_state();
-
-        $orders = SeekingOrder::with('Joiner')->whereSeekingId($id)->get();
-        $orderStates = option_seeking_order_state();
-
-        MobileLayout::$title = sprintf("约球详情（id：%s） %s", $seeking->id, $states[$seeking->state]);
-
-        return View::make('mobile_layout')->nest('content', 'mobile.seeking_detail',
-            array('seeking' => $seeking, 'states' => $states, 'orders' => $orders, 'orderStates' => $orderStates));
-    });
 });
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'), function () {
