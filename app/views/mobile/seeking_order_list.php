@@ -38,15 +38,19 @@
                         <p><span
                                 class="header"><?= substr($seekingOrder->event_date, 5, 5) . "日 $seekingOrder->start_hour" . "点-$seekingOrder->end_hour" . "点" ?>
                                 &nbsp;<?= $seekingOrder->court_num ?>片</span></p>
+                <?php if ($seekingOrder->state == SEEKING_ORDER_STATE_PAYING) { ?>
+                    <p><span class="header">过期时间：</span><span><?= date('m-d H:i', $seekingOrder->expire_time)?></span></p>
+                <?php }?>
+
                     </div>
                     <div class="price">
                         <p style="text-align: right"><span class="symbol">￥</span><span class="money">
                                 <?= intval($seekingOrder->cost) ?>
                             </span></p>
                         <?php if ($seekingOrder->state == SEEKING_ORDER_STATE_PAYING) { ?>
-                            <button class="btn btn-primary go"
-                                    onclick="window.location.href='<?= url_wrapper("/mobile_court_buyer/$instant->hall_id?date=$instant->event_date#instant-order-$instant->court_id-$instant->start_hour") ?>'">
-                                去支付
+                            <button class="btn btn-primary go pull-right"
+                                    onclick="window.location.href='<?= url_wrapper("/seeking/order/pay/$seekingOrder->id") ?>'">
+                                现在就支付
                             </button>
                         <?php }else{ ?>
                             <span class="status"><?= $states[$seekingOrder->state]?></span>

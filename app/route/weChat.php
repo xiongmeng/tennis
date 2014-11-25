@@ -659,46 +659,47 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
     Route::any('/seeking/join/{id}', function ($id) {
         $seeking = Seeking::with('Hall')->findOrFail($id);
-
-        $userId = user_id();
         $seeking instanceof Seeking && 1;
 
-        $fsm = new SeekingFsm($seeking);
+        if (Request::isMethod('POST')) {
+            $userId = user_id();
+            $orderModel = new SeekingOrder();
+            //创建约球单
+            $order = $orderModel->createFromSeeking($seeking, $userId);
 
-        if ($fsm->can('join')) {
-            if (Request::isMethod('POST')) {
-                $orderModel = new SeekingOrder();
-                //创建约球单
-                $order = $orderModel->createFromSeeking($seeking, $userId);
+            $orderFsm = new SeekingOrderFsm($order);
+            $orderFsm->apply('accept');
 
-                $orderFsm = new SeekingOrderFsm($order);
-                $orderFsm->apply('accept');
+            return Redirect::to('/seeking/order/pay/' . $order->id);
+        } else {
+            MobileLayout::$title = '约球报名确认';
+            MobileLayout::$previousUrl = '/seeking/detail/' . $id;
 
-                $finance = new SeekingOrderManager();
-                $result = $finance->batchPay(array($order->id));
+            $user = Auth::getUser();
+            $balance = cache_balance();
+            $needRecharge = $seeking->personal_cost - $balance;
 
-                if ($result['status'] == 'no_money') {
-                    $key = Input::get('ali') ? 'adviseForwardUrl' : 'weChatPayUrl';
-                    return Redirect::to($result[$key]);
-                } else {
-                    return '支付成功啦';
-                }
-            } else {
-                $balance = cache_balance();
-                $needRecharge = $seeking->personal_cost - $balance;
-                return View::make('mobile_layout')->nest(
-                    'content', 'mobile.seeking_join', array(
-                    'seeking' => $seeking, 'balance' => $balance, 'needRecharge' => $needRecharge));
-            }
+            $ordersDb = SeekingOrder::whereSeekingId($id)->whereJoiner($user->user_id)->get();
+            $ordersGroupByState = array_regroup_by_key($ordersDb, 'state');
+
+            return View::make('mobile_layout')->nest(
+                'content', 'mobile.seeking_join', array('user' => $user, 'ordersGroupByState' => $ordersGroupByState,
+                'seeking' => $seeking, 'balance' => $balance, 'needRecharge' => $needRecharge));
         }
-        return View::make('mobile_layout')->nest('content', 'mobile.seeking_join');
     });
 
     Route::get('/seeking/order/pay/{id}', function ($id) {
-        $finance = new SeekingOrderManager();
-        $result = $finance->batchPay(array($id));
+        MobileLayout::$previousUrl = URL::previous();
 
-        return View::make('mobile_layout')->nest('content', 'mobile.seeking_pay', array('result' => $result));
+        $orders = SeekingOrder::whereId($id)->get();
+
+        $finance = new SeekingOrderManager();
+        $result = $finance->batchPay($orders);
+
+        MobileLayout::$title = $result['status'] == 'pay_success' ? '支付成功啦' : '余额不够啦';
+
+        return View::make('mobile_layout')->nest('content', 'mobile.seeking_pay',
+            array('result' => $result, 'order' => $orders[0]));
     });
 
     Route::get('/seeking/order/list', function () {

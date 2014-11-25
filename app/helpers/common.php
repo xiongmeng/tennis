@@ -476,8 +476,21 @@ function db_result_ids($dbResults, $idColumn)
 function array_regroup_key_value(&$arrays, $newKey, $newValue)
 {
     $res = array();
-    foreach($arrays as $array){
+    foreach ($arrays as $array) {
         $res[$array[$newKey]] = $array[$newValue];
+    }
+    return $res;
+}
+
+function array_regroup_by_key(&$arrays, $key)
+{
+    $res = array();
+    foreach ($arrays as $array) {
+        $newKey = $array[$key];
+        if(!isset($res[$newKey])){
+            $res[$newKey] = array();
+        }
+        $res[$newKey][] = $array;
     }
     return $res;
 }
@@ -491,8 +504,20 @@ function area_hall($hall)
     return Area::area($hall['area_text'], $hall['county'], $hall['city'], $hall['province']);
 }
 
-function seeking_brief(Seeking $seeking){
+function seeking_brief(Seeking $seeking, $title = '约球：')
+{
     $levels = option_tennis_level();
-    return sprintf('约球： %s，%s日%s-%s时 人均%s元，%s %s片', $levels[$seeking->tennis_level],
-        substr($seeking->event_date, 5, 5),  $seeking->start_hour, $seeking->end_hour, $seeking->personal_cost, $seeking->Hall->name, $seeking->court_num);
+    return sprintf('%s%s日%s-%s时，%s，级别%s，人均%s元，%s片',
+        $title,
+        substr($seeking->event_date, 5, 5),
+        $seeking->start_hour,
+        $seeking->end_hour,
+
+        $seeking->Hall->name,
+
+        $levels[$seeking->tennis_level],
+
+        $seeking->personal_cost,
+        $seeking->court_num
+    );
 }
