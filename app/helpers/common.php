@@ -254,6 +254,11 @@ function hall_head(Hall $hall)
     return $hallImage;
 }
 
+function hall_head_wechat($hallId)
+{
+    return 'http://wangqiuer.com/Images/weixinImage/CourtPic/' . $hallId;
+}
+
 function no_money_array()
 {
     return array(
@@ -484,4 +489,10 @@ function array_regroup_key_value(&$arrays, $newKey, $newValue)
 function area_hall($hall)
 {
     return Area::area($hall['area_text'], $hall['county'], $hall['city'], $hall['province']);
+}
+
+function seeking_brief(Seeking $seeking){
+    $levels = option_tennis_level();
+    return sprintf('约球： %s，%s %s日 %s时 %s片，人均%s元', $seeking->Hall->name, substr($seeking->event_date, 5, 5),
+        $seeking->start_hour, $seeking->end_hour, $levels[$seeking->tennis_level], $seeking->personal_cost);
 }

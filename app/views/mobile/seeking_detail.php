@@ -1,10 +1,15 @@
-<div class="content" style="margin-bottom: 50px; padding-top: 66px">
+<div class="content" style="margin-bottom: 50px; ">
 
     <?php $levels = option_tennis_level(); ?>
     <?php $sexy = option_sexy(); ?>
-
+    <?php $states = option_seeking_state(); ?>
+    <?php $seeking instanceof Seeking && 1;?>
 
     <ul class="table-view" style="color: #777">
+        <li class="table-view-cell">
+            <label>状态：</label>
+            <label><?=$states[$seeking->state]?></label>
+        </li>
         <li class="table-view-cell">
             <label>时间：</label>
             <label><?=
@@ -48,6 +53,46 @@
                 href="/seeking/join/<?= $seeking->id?>"  data-ignore="push">我要报名</a>
     <?php } ?>
 
+    <a style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
+       href="/seeking/list"  data-ignore="push">查看更多约球信息</a>
+
+    <p style="padding: 10px 20px; text-indent: 40px; color: indianred; font-weight: bolder; font-size: 20px">
+        约球有你，点击右上角“发送给朋友”，“分享到朋友圈”，大家一起来约球！
+    </p>
+
 </div>
 
+<script type="text/javascript">
+    <?php $title = seeking_brief($seeking);?>
+    document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+        // 发送给好友
+        WeixinJSBridge.on('menu:share:appmessage', function (argv) {
+            WeixinJSBridge.invoke('sendAppMessage', {
+                "appid": "123",
+                "img_url": <?= hall_head_wechat($seeking->hall_id)?>,
+                "img_width": "200",
+                "img_height": "200",
+                "link":  <?= URL::current()?>,
+                "desc":  <?= $title?>,
+                "title": <?= $title?>
+            }, function (res) {
+                alert(res.err_msg);
+            })
+        });
+
+        // 分享到朋友圈
+        WeixinJSBridge.on('menu:share:timeline', function (argv) {
+            WeixinJSBridge.invoke('shareTimeline', {
+                "img_url": <?= hall_head_wechat($seeking->hall_id)?>,
+                "img_width": "200",
+                "img_height": "200",
+                "link": <?= URL::current()?>,
+                "desc":  <?= $title?>,
+                "title": <?= $title?>
+            }, function (res) {
+                alert(res.err_msg);
+            });
+        });
+    }, false)
+</script>
 

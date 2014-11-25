@@ -1,26 +1,4 @@
 <?php
-Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
-    Route::get('/seeking/list', function () {
-        MobileLayout::$activeService = 'reserve';
-        $queries = Input::all();
-        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list',
-            array('queries' => $queries));
-    });
-
-    Route::get('/seeking/detail/{id}', function ($id) {
-        $seeking = Seeking::with('Hall')->findOrFail($id);
-        $states = option_seeking_state();
-
-        $orders = SeekingOrder::with('Joiner')->whereSeekingId($id)->get();
-        $orderStates = option_seeking_order_state();
-
-        MobileLayout::$title = sprintf("约球详情（id：%s） %s", $seeking->id, $states[$seeking->state]);
-
-        return View::make('mobile_layout')->nest('content', 'mobile.seeking_detail',
-            array('seeking' => $seeking, 'states' => $states, 'orders' => $orders, 'orderStates' => $orderStates));
-    });
-});
-
 Route::get('/seeking/create', array('before' => 'auth', function () {
     Layout::setHighlightHeader('nav_新建约球');
     $seeking = Input::only('hall_id');

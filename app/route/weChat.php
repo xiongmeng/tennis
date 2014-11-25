@@ -147,6 +147,20 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         }
         return View::make('mobile_layout')->nest('content', 'mobile.get_password', array('queries' => $queries, 'error' => $error));
     });
+
+    Route::get('/seeking/list', function () {
+        MobileLayout::$activeService = 'reserve';
+        $queries = Input::all();
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list',
+            array('queries' => $queries));
+    });
+
+    Route::get('/seeking/detail/{id}', function ($id) {
+        $seeking = Seeking::with('Hall')->findOrFail($id);
+
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_detail',
+            array('seeking' => $seeking));
+    });
 });
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'), function () {

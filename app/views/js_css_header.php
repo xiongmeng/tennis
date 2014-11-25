@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>GoTennis</title>
+<title>网球通</title>
 
 <!-- Sets initial viewport load and disables zooming  -->
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
