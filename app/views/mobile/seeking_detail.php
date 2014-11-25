@@ -69,28 +69,28 @@
         WeixinJSBridge.on('menu:share:appmessage', function (argv) {
             WeixinJSBridge.invoke('sendAppMessage', {
                 "appid": "123",
-                "img_url": <?= hall_head_wechat($seeking->hall_id)?>,
+                "img_url": "<?= hall_head_wechat($seeking->hall_id)?>",
                 "img_width": "200",
                 "img_height": "200",
-                "link":  <?= URL::current()?>,
-                "desc":  <?= $title?>,
-                "title": <?= $title?>
+                "link":  "<?= URL::current()?>",
+                "desc":  "<?= $title?>",
+                "title": "<?= $title?>"
             }, function (res) {
-                alert(res.err_msg);
+//                alert(res.err_msg);
             })
         });
 
         // 分享到朋友圈
         WeixinJSBridge.on('menu:share:timeline', function (argv) {
             WeixinJSBridge.invoke('shareTimeline', {
-                "img_url": <?= hall_head_wechat($seeking->hall_id)?>,
+                "img_url": "<?= hall_head_wechat($seeking->hall_id)?>",
                 "img_width": "200",
                 "img_height": "200",
-                "link": <?= URL::current()?>,
-                "desc":  <?= $title?>,
-                "title": <?= $title?>
+                "link": "<?= URL::current()?>",
+                "desc":  "<?= $title?>",
+                "title": "<?= $title?>"
             }, function (res) {
-                alert(res.err_msg);
+//                alert(res.err_msg);
             });
         });
     }, false)

@@ -256,7 +256,7 @@ function hall_head(Hall $hall)
 
 function hall_head_wechat($hallId)
 {
-    return 'http://wangqiuer.com/Images/weixinImage/CourtPic/' . $hallId;
+    return 'http://wangqiuer.com/Images/weixinImage/CourtPic/' . $hallId . '.jpg';
 }
 
 function no_money_array()
@@ -493,6 +493,6 @@ function area_hall($hall)
 
 function seeking_brief(Seeking $seeking){
     $levels = option_tennis_level();
-    return sprintf('约球： %s，%s %s日 %s时 %s片，人均%s元', $seeking->Hall->name, substr($seeking->event_date, 5, 5),
-        $seeking->start_hour, $seeking->end_hour, $levels[$seeking->tennis_level], $seeking->personal_cost);
+    return sprintf('约球： %s，%s日%s-%s时 人均%s元，%s %s片', $levels[$seeking->tennis_level],
+        substr($seeking->event_date, 5, 5),  $seeking->start_hour, $seeking->end_hour, $seeking->personal_cost, $seeking->Hall->name, $seeking->court_num);
 }
