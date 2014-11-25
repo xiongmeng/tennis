@@ -67,7 +67,7 @@ class Seeking extends Eloquent implements \Finite\StatefulInterface{
                 $query->where('gt_seeking.state', '=', $aQuery['state']);
             }
         }
-        return $query->orderBy('gt_seeking.id', 'desc')
+        return $query->orderBy('gt_seeking.event_date', 'desc')->orderBy('gt_seeking.start_hour', 'desc')
             ->paginate($iPageSize, array('gt_seeking.*',
                 'gt_hall_tiny.name as hall_name', 'gt_user_tiny.nickname as creator_name'));
     }
