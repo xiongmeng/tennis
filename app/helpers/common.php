@@ -468,6 +468,15 @@ function db_result_ids($dbResults, $idColumn)
     return $ids;
 }
 
+function array_regroup_key_value(&$arrays, $newKey, $newValue)
+{
+    $res = array();
+    foreach($arrays as $array){
+        $res[$array[$newKey]] = $array[$newValue];
+    }
+    return $res;
+}
+
 /**
  * @param $hall Hall | array
  * @return string

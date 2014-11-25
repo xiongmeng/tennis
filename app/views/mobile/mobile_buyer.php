@@ -68,16 +68,16 @@
            data-ignore="push">
             <span class="icon icon-info"></span><br/>
             待处理
-            <?php if ($pending != 0) { ?>
-                <span class="badge badge-negative "><?= $pending ?></span>
+            <?php if (!empty($reserveStatistics[RESERVE_STAT_INIT])) { ?>
+                <span class="badge badge-negative "><?= $reserveStatistics[RESERVE_STAT_INIT] ?></span>
             <?php } ?>
         </a>
         <a class="control-item" onclick="window.location.href='<?= url_wrapper('/reserve_order_buyer?stat=1') ?>'"
            data-ignore="push">
             <span class="icon icon-check"></span><br/>
             待支付
-            <?php if ($resPaying != 0) { ?>
-                <span class="badge badge-negative"><?= $resPaying ?></span>
+            <?php if (!empty($reserveStatistics[RESERVE_STAT_UNPAY])) { ?>
+                <span class="badge badge-negative"><?= $reserveStatistics[RESERVE_STAT_UNPAY] ?></span>
             <?php } ?>
         </a>
     </div>
@@ -96,16 +96,44 @@
            data-ignore="push">
             <span class="icon icon-info"></span><br/>
             待支付
-            <?php if ($insPaying != 0) { ?>
-                <span class="badge badge-negative "><?= $insPaying ?></span>
+            <?php if (!empty($instantStatistics['paying'])) { ?>
+                <span class="badge badge-negative "><?= $instantStatistics['paying'] ?></span>
             <?php } ?>
         </a>
         <a class="control-item" onclick="window.location.href='<?= url_wrapper('/mobile_buyer_order?state=payed') ?>'"
            data-ignore="push">
             <span class="icon icon-check"></span><br/>
             已支付
-            <?php if ($payed != 0) { ?>
-                <span class="badge badge-positive"><?= $payed ?></span>
+            <?php if (!empty($instantStatistics['payed'])) { ?>
+                <span class="badge badge-positive"><?= $instantStatistics['payed'] ?></span>
+            <?php } ?>
+        </a>
+    </div>
+
+    <ul class="table-view instant">
+        <li class="table-view-cell media">
+            <a class="navigate-right" onclick="window.location.href='/seeking/order/list'" data-ignore="push">
+                <div class="media-body">
+                    约球单<span class="pull-right" style="font-size: 12px">&nbsp;(查看全部)</span>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <div class="segmented-control">
+        <a class="control-item" onclick="window.location.href='/seeking/order/list?state=paying'"
+           data-ignore="push">
+            <span class="icon icon-info"></span><br/>
+            待支付
+            <?php if (!empty($seekingStatistics['paying'])) { ?>
+                <span class="badge badge-negative "><?= $seekingStatistics['paying'] ?></span>
+            <?php } ?>
+        </a>
+        <a class="control-item" onclick="window.location.href='/seeking/order/list?state=payed'"
+           data-ignore="push">
+            <span class="icon icon-check"></span><br/>
+            已支付
+            <?php if (!empty($seekingStatistics['payed'])) { ?>
+                <span class="badge badge-positive"><?= $seekingStatistics['payed'] ?></span>
             <?php } ?>
         </a>
     </div>

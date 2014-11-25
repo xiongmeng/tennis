@@ -21,9 +21,11 @@
 <div class="content" style="margin-bottom: 50px; padding-top: 66px">
     <ul class="table-view hall-on-sale">
         <?php $levels = option_tennis_level(); ?>
+        <?php $states = option_seeking_order_state(); ?>
+
         <?php if (count($seekingOrderList) <= 0) { ?>
-            <?php $stateTexts = array('7' => '您还没有在网球通参加过约球哦', 'paying' => '您目前没有待支付的约球单哦！', 'payed' => '您目前没有待打球的约球单哦！'); ?>
-            <li class="notice"><p><?= $stateTexts[$state] ?></p></li>
+            <?php $stateTexts = array('paying' => '您目前没有待支付的约球单哦！', 'payed' => '您目前没有待打球的约球单哦！'); ?>
+            <li class="notice"><p><?= isset($stateTexts[$state]) ? $stateTexts[$state] : '您还没有在网球通参加过约球哦' ?></p></li>
         <?php } else { ?>
             <?php foreach ($seekingOrderList as $seekingOrder) { ?>
                 <li class="table-view-cell media" style="padding: 5px">
@@ -41,6 +43,14 @@
                         <p style="text-align: right"><span class="symbol">￥</span><span class="money">
                                 <?= intval($seekingOrder->cost) ?>
                             </span></p>
+                        <?php if ($seekingOrder->state == SEEKING_ORDER_STATE_PAYING) { ?>
+                            <button class="btn btn-primary go"
+                                    onclick="window.location.href='<?= url_wrapper("/mobile_court_buyer/$instant->hall_id?date=$instant->event_date#instant-order-$instant->court_id-$instant->start_hour") ?>'">
+                                去支付
+                            </button>
+                        <?php }else{ ?>
+                            <span class="status"><?= $states[$seekingOrder->state]?></span>
+                        <?php }?>
                     </div>
                 </li>
                 <!--/ko-->

@@ -270,31 +270,26 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         MobileLayout::$activeService = 'center';
         $userID = $user['user_id'];
 
-        $instantModel = new InstantOrder();
+        //获取即时订单的统计信息
+        $instantStatisticsDb = InstantOrder::where('buyer', '=', $userID)
+            ->select(array('state', DB::raw('COUNT(1) AS count')))->groupBy('state')->get();
+        $instantStatistics = array_regroup_key_value($instantStatisticsDb, 'state', 'count');
 
-        $pending = $resPaying = $insPaying = $payed = 0;
-        $instant = $instantModel->select(array('state', DB::raw('COUNT(1) AS count')))->where('buyer', '=', $userID)->groupBy('state')->get();
-        foreach ($instant as $ins) {
-            if ($ins->state == 'paying') {
-                $insPaying = $ins->count;
-            } elseif ($ins->state == 'payed') {
-                $payed = $ins->count;
-            }
-        }
+        //获取预约订单的统计信息
+        $reserveStatisticsDb = ReserveOrder::where('user_id', '=', $userID)
+            ->select(array('stat', DB::raw('COUNT(1) AS count')))->groupBy('stat')->get();
+        $reserveStatistics = array_regroup_key_value($reserveStatisticsDb, 'stat', 'count');
 
-        $reserve = ReserveOrder::where('user_id', '=', $user->user_id)->select(array('stat', DB::raw('COUNT(1) AS count')))->groupBy('stat')->get();
-        foreach ($reserve as $res) {
-            if ($res->stat == '0') {
-                $pending = $res->count;
-            } elseif ($res->stat == '1') {
-                $resPaying = $res->count;
-            }
-        }
+        //获取约球的统计信息
+        $seekingStatisticsDb = SeekingOrder::where('joiner', '=', $userID)
+            ->select(array('state', DB::raw('COUNT(1) AS count')))->groupBy('state')->get();
+        $seekingStatistics = array_regroup_key_value($seekingStatisticsDb, 'state', 'count');
 
         $wxUserProfile = cache_weChat_profile($user->user_id);
 
-        return View::make('mobile_layout_hall')->nest('content', 'mobile.mobile_buyer', array('user' => $user, 'wxUserProfile' => $wxUserProfile,
-            'insPaying' => $insPaying, 'payed' => $payed, 'resPaying' => $resPaying, 'pending' => $pending));
+        return View::make('mobile_layout_hall')->nest('content', 'mobile.mobile_buyer', array('user' => $user,
+            'wxUserProfile' => $wxUserProfile, 'instantStatistics' => $instantStatistics,
+            'reserveStatistics' => $reserveStatistics, 'seekingStatistics' => $seekingStatistics));
 
     });
 
