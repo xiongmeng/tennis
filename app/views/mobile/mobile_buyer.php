@@ -1,4 +1,4 @@
-<div class="content user-center">
+<div class="content user-center" style="padding-bottom: 200px">
     <ul class="table-view">
         <li class="table-view-cell media" style="padding: 10px 5px">
             <?php
