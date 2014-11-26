@@ -84,22 +84,22 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-3">活动形式：</label>
-
-                            <div class="col-md-9" data-bind="foreach: content.options">
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" data-bind="attr:{id:id}, value:id,checked:$parent.content">
-                                    <span data-bind="text:name"></span>
-                                </label>
-                            </div>
-                        </div>
+<!--                        <div class="form-group">-->
+<!--                            <label class="control-label col-md-3">活动形式：</label>-->
+<!---->
+<!--                            <div class="col-md-9" data-bind="foreach: content.options">-->
+<!--                                <label class="checkbox-inline">-->
+<!--                                    <input type="checkbox" data-bind="attr:{id:id}, value:id,checked:$parent.content">-->
+<!--                                    <span data-bind="text:name"></span>-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                         <div class="form-group">
                             <label class="control-label col-md-3 ">备注：</label>
 
                             <div class="col-md-9">
-                                <textarea class="form-control" data-bind="value:comment"></textarea>
+                                <textarea class="form-control" data-bind="value:comment" placeholder="内容举例：单打、开新球、洗澡免费"></textarea>
                             </div>
                         </div>
 
