@@ -161,9 +161,12 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     });
 
     Route::get('/seeking/detail/{id}', function ($id) {
+        MobileLayout::$previousUrl = URL::previous();
+        MobileLayout::$title = '约球详情';
+
         $seeking = Seeking::with('Hall')->findOrFail($id);
 
-        return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_detail',
+        return View::make('mobile_layout')->nest('content', 'mobile.seeking_detail',
             array('seeking' => $seeking));
     });
 });

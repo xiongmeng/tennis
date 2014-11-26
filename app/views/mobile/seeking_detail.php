@@ -1,4 +1,4 @@
-<div class="content" style="margin-bottom: 50px; ">
+<div class="content" style="margin-bottom: 50px; padding-top: 20px">
 
     <?php $levels = option_tennis_level(); ?>
     <?php $sexy = option_sexy(); ?>
