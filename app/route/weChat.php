@@ -693,13 +693,19 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         $orders = SeekingOrder::whereId($id)->get();
 
-        $finance = new SeekingOrderManager();
-        $result = $finance->batchPay($orders);
+        DB::beginTransaction();
+        try{
+            $finance = new SeekingOrderManager();
+            $result = $finance->batchPay($orders);
 
-        MobileLayout::$title = $result['status'] == 'pay_success' ? '支付成功啦' : '余额不够啦';
+            MobileLayout::$title = $result['status'] == 'pay_success' ? '支付成功啦' : '余额不够啦';
 
-        return View::make('mobile_layout')->nest('content', 'mobile.seeking_pay',
-            array('result' => $result, 'order' => $orders[0]));
+            return View::make('mobile_layout')->nest('content', 'mobile.seeking_pay',
+                array('result' => $result, 'order' => $orders[0]));
+        }catch (Exception $e){
+            DB::rollBack();
+            throw $e;
+        }
     });
 
     Route::get('/seeking/order/list', function () {
