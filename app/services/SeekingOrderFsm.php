@@ -33,7 +33,7 @@ class SeekingOrderFsm extends \Finite\StateMachine\StateMachine {
             }
 
             $countOri = count($seekingOrders);
-            $seekingOrders = ReserveOrder::whereIn('id', $seekingOrders)->get();
+            $seekingOrders = SeekingOrder::whereIn('id', $seekingOrders)->get();
             if (count($seekingOrders) != $countOri) {
                 throw new Exception(sprintf('选取了不存在的场地：选择(%d)，实际(%d)', count($seekingOrders), $countOri));
             }
