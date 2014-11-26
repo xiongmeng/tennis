@@ -55,7 +55,7 @@ Route::any('/seeking/list', array('before' => 'auth', function () {
 
 Route::get('/seeking/search', function () {
     $queries = Input::all();
-    $perPage = Input::get('perPage', 20);
+    $perPage = Input::get('per_page', 20);
 
     $seeking = new Seeking();
     $seekingList = $seeking->search($queries, $perPage);

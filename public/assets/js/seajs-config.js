@@ -1,5 +1,5 @@
-var lib_last_modify = '201411130928',
-    module_common_last_modify = '201411130928';
+var lib_last_modify = '201411261534',
+    module_common_last_modify = '201411261534';
 
 seajs.config({
     debug: true,

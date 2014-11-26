@@ -10,7 +10,7 @@ define(function (require) {
         var self = this;
         self.cfg = {
             model: 'falls', //falls、page,
-            perPage: 10
+            per_page: 10
         };
         $.extend(self.cfg, cfg);
 
@@ -24,9 +24,9 @@ define(function (require) {
         }
 
         function initPageFromJs(data) {
-            self.currentPage(data.currentPage);
-            self.lastPage(data.lastPage);
-            self.perPage(data.perPage);
+            self.current_page(data.current_page);
+            self.last_page(data.last_page);
+            self.per_page(data.per_page);
             self.total(data.total);
         }
 
@@ -43,17 +43,17 @@ define(function (require) {
 
         self.queries = new QueryModel(queries || {});
 
-        self.currentPage = ko.observable(1);
-        self.lastPage = ko.observable();
-        self.perPage = ko.observable(self.cfg.perPage);
+        self.current_page = ko.observable(1);
+        self.last_page = ko.observable();
+        self.per_page = ko.observable(self.cfg.per_page);
         self.total = ko.observable();
 
         self.inSearching = ko.observable(false);
 
         var doSearch = function (page) {
             var queries = mapping.toJS(self.queries);
-            queries.page = page || self.currentPage();
-            queries.perPage = self.perPage();
+            queries.page = page || self.current_page();
+            queries.per_page = self.per_page();
 
             self.inSearching(true);
 
@@ -66,7 +66,7 @@ define(function (require) {
         };
 
         self.loadNextPage = function () {
-            doSearch(self.currentPage() + 1);
+            doSearch(self.current_page() + 1);
         };
         self.search = function(){
             self.seekingList.removeAll();

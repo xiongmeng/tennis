@@ -40,13 +40,13 @@
                             data-bind="text:store"></span>坑
                     </p>
                 </div>
-                <div class="price">
+                <div class="price" style="width: 20%">
                     <p style="text-align: right"><span style="color: darkolivegreen;font-size: 20px;font-weight: bold"
                                                        data-bind="text:tennis_level.text()"></span></p>
-
                     <p style="text-align: right"><span class="symbol">￥</span><span class="money"
                                                                                     data-bind="text:personal_cost"></span>
                     </p>
+
                 </div>
             </a>
         </li>
@@ -54,14 +54,13 @@
     </ul>
 
     <button class="btn btn-primary btn-block from-button" data-ignore="push"
-            data-bind="enable: currentPage()<total(), click:loadNextPage">
-        <span data-bind="text:inSearching()?'正在加载， 请稍候...':'点击加载更多'">正在加载， 请稍候...</span></button>
-
+            data-bind="enable: current_page()<total(), click:loadNextPage, text:inSearching()?'正在加载， 请稍候...':'点击加载更多'">
+        正在加载， 请稍候...</button>
 </div>
 
 <script>
     seajs.use('seeking/list', function (SeekingListModel) {
-        var seekingList = new SeekingListModel({}, {state:'opened'}, {perPage: 10});
+        var seekingList = new SeekingListModel({}, {state:'opened'}, {per_page: 10});
         ko.applyBindings(seekingList, $('#body')[0]);
 //        ko.applyBindings(seekingList, $('header')[0]);
         seekingList.search();
