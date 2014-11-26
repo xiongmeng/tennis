@@ -44,7 +44,7 @@ class SeekingOrderManager {
             //预先生成recharge表
             $recharge = new Recharge();
             $recharge->generate($result['needRecharge'], $payUserId,
-                RECHARGE_CALLBACK_PAY_RESERVE_ORDER, implode(',', $seekingOrderIds));
+                RECHARGE_CALLBACK_PAY_SEEKING_ORDER, implode(',', $seekingOrderIds));
 
             no_money_generate_url($result, $recharge);
 
