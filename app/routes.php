@@ -90,10 +90,10 @@ Route::post('/logining', function () {
     $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
     $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
     if ($isNickLog | $isTeleLog) {
-        //返回登录前页面
-        $url = URL::previous();
-        return $redirect = Redirect::to($url);
+        $url = Session::get(SESSION_KEY_LOGIN_CALLBACK, '/');
+        Session::forget(SESSION_KEY_LOGIN_CALLBACK);
 
+        return $redirect = Redirect::to($url);
     } else {
         echo '登陆失败';
     }

@@ -148,3 +148,5 @@ const FINANCE_OPERATE_UNFREEZE = 4;   //解冻
  */
 const FINANCE_PURPOSE_ACCOUNT = 1;//默认账户
 const FINANCE_PURPOSE_POINTS = 2;//积分
+
+const SESSION_KEY_LOGIN_CALLBACK = 'login_callback';

@@ -54,7 +54,9 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         }
 
         Auth::loginUsingId($app->user_id, true);
-        return Redirect::to(url_wrapper('/mobile_buyer'));
+
+        $callbackUrl = Session::get(SESSION_KEY_LOGIN_CALLBACK, '/mobile_buyer');
+        return Redirect::to($callbackUrl);
     });
 
     Route::any('/mobile_bond', function () {
@@ -105,8 +107,11 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
                     }
                 }
                 $wxUserProfile = weChatUserProfile::whereOpenid($app->app_user_id)->first();
+
+                $callbackUrl = Session::get(SESSION_KEY_LOGIN_CALLBACK, '/mobile_buyer');
+
                 return View::make('mobile_layout')->nest('content', 'mobile.bond_success',
-                    array('user' => $user, 'wxUserProfile' => $wxUserProfile));
+                    array('user' => $user, 'wxUserProfile' => $wxUserProfile, 'callbackUrl' => $callbackUrl));
             }
             return View::make('mobile_layout')->nest('content', 'mobile.bond',
                 array('queries' => $queries, 'errors' => $validator->messages()));

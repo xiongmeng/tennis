@@ -36,6 +36,7 @@ Route::filter('auth', function () {
         if (Request::ajax()) {
             return Response::make('Unauthorized', 401);
         } else {
+            Session::put(SESSION_KEY_LOGIN_CALLBACK, URL::current());
             return Redirect::guest('login');
         }
     }
@@ -116,6 +117,7 @@ Route::filter('weChatAuth', function () {
         if ($app) {
             Auth::loginUsingId($app->user_id, true);
         } else {
+            Session::put(SESSION_KEY_LOGIN_CALLBACK, URL::current());
             return Redirect::to("/mobile_bond?app_user_id=$openid&app_id=$appId");
         }
     }
