@@ -10,7 +10,7 @@
 
 <!-- Include the compiled Ratchet CSS -->
 <link href="/mobile/css/ratchet.css" rel="stylesheet">
-<link href="/mobile/css/app.css" rel="stylesheet">
+<link href="/mobile/css/app.css?201411261211" rel="stylesheet">
 
 <!-- Include the compiled Ratchet JS -->
 <!--<script src="/mobile/js/ratchet.js"></script>-->
