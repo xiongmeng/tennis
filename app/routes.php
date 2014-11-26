@@ -91,8 +91,6 @@ Route::post('/logining', function () {
     $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
     if ($isNickLog | $isTeleLog) {
         $url = Session::get(SESSION_KEY_LOGIN_CALLBACK, '/');
-        Session::forget(SESSION_KEY_LOGIN_CALLBACK);
-
         return $redirect = Redirect::to($url);
     } else {
         echo '登陆失败';
