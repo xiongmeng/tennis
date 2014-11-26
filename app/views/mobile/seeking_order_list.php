@@ -47,6 +47,8 @@
                             <?php } ?>
 
                         </div>
+
+                    </a>
                         <div class="price" style="width: 20%">
                             <p style="text-align: right"><span class="symbol">￥</span><span class="money">
                                 <?= intval($seekingOrder->cost) ?>
@@ -60,7 +62,6 @@
                                 <span class="status"><?= $states[$seekingOrder->state] ?></span>
                             <?php } ?>
                         </div>
-                    </a>
                 </li>
             <?php } ?>
         <?php } ?>
