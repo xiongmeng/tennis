@@ -237,12 +237,25 @@ define(function (require) {
         };
 
         self.update = function () {
-            var hall = mapping.toJS(self);
-            hall.province = self.area.province();
-            hall.city = self.area.city();
-            hall.county = self.area.county();
+            var data = {};
+            data.name = self.name();
+            data.code = self.code();
+            data.telephone = self.telephone();
+            data.linkman = self.linkman();
+            data.province = self.area.province();
+            data.city = self.area.city();
+            data.county = self.area.county();
 
-            var defer = $.restPost('/hall/update/' + self.id(), hall);
+            data.sort = self.sort();
+            data.business = self.business();
+            data.air = self.air();
+            data.bath = self.bath();
+            data.park = self.park();
+            data.thread = self.thread();
+            data.good = self.good();
+            data.comment = self.comment();
+
+            var defer = $.restPost('/hall/update/' + self.id(), data);
             defer.done(function (res, data) {
                 window.location.reload();
             });
