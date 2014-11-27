@@ -16,7 +16,7 @@
                 sprintf('%s日 %s时', substr($seeking->event_date, 0, 10),
                     display_time_interval($seeking->start_hour, $seeking->end_hour))?></label>
         </li>
-        <li class="table-view-cell">
+        <li class="table-view-cell" style="padding-right: 0">
             <label>场馆：</label>
             <label><?= $seeking->Hall->name ?></label>
         </li>
