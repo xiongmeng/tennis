@@ -245,7 +245,7 @@ define(function (require) {
             data.province = self.area.province();
             data.city = self.area.city();
             data.county = self.area.county();
-
+            data.area_text = self.area_text();
             data.sort = self.sort();
             data.business = self.business();
             data.air = self.air();
