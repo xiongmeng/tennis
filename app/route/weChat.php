@@ -167,8 +167,10 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
 
         $seeking = Seeking::with('Hall')->findOrFail($id);
 
+        $orders = SeekingOrder::with('Joiner')->whereSeekingId($id)->whereIn('state', array('payed', 'completed'))->get();
+
         return View::make('mobile_layout')->nest('content', 'mobile.seeking_detail',
-            array('seeking' => $seeking));
+            array('seeking' => $seeking, 'orders' => $orders));
     });
 });
 

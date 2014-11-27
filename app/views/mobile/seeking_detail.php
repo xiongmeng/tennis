@@ -49,7 +49,20 @@
             </li>
         <?php } ?>
 
-
+        <?php if (count($orders) > 0) { ?>
+            <li class="table-view-cell" style="padding-right: 0">
+                <label>已经报名的球友：</label>
+                <label>
+                    <?php foreach ($orders as $order) { ?>
+                        <span style="color: royalblue; padding-right: 10px"><?= $order->Joiner->nickname ?></span>
+                    <?php } ?>
+                </label>
+            </li>
+        <?php } else { ?>
+            <li class="table-view-cell" style="padding-right: 0">
+                <label>目前还没有球友报名哦</label>
+            </li>
+        <?php } ?>
     </ul>
     <?php $fsm = new SeekingFsm($seeking); ?>
     <?php if ($fsm->can('join')) { ?>
@@ -59,6 +72,7 @@
 
     <a style="width:90%; margin: 5px auto ;" class="btn btn-primary btn-block"
        href="/seeking/list" data-ignore="push">查看更多约球信息</a>
+
 
     <p style="padding: 10px 20px; text-indent: 40px; color: indianred; font-weight: bolder; font-size: 20px">
         约球有你，点击右上角“发送给朋友”，“分享到朋友圈”，大家一起来约球！
