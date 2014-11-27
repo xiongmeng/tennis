@@ -53,9 +53,9 @@
         <!--/ko-->
     </ul>
 
-    <button class="btn btn-primary btn-block from-button" data-ignore="push"
-            data-bind="enable: current_page()<total(), click:loadNextPage, text:inSearching()?'正在加载， 请稍候...':'点击加载更多'">
-        正在加载， 请稍候...</button>
+<!--    <button class="btn btn-primary btn-block from-button" data-ignore="push"-->
+<!--            data-bind="enable: current_page()<total(), click:loadNextPage, text:inSearching()?'正在加载， 请稍候...':'点击加载更多'">-->
+<!--        正在加载， 请稍候...</button>-->
 </div>
 
 <script>

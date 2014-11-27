@@ -154,13 +154,14 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
     });
 
     Route::get('/seeking/list', function () {
-        MobileLayout::$activeService = 'reserve';
+        MobileLayout::$activeService = 'seeking';
         $queries = Input::all();
         return View::make('mobile_layout_hall')->nest('content', 'mobile.seeking_list',
             array('queries' => $queries));
     });
 
     Route::get('/seeking/detail/{id}', function ($id) {
+        MobileLayout::$activeService = 'seeking';
         MobileLayout::$previousUrl = URL::previous();
         MobileLayout::$title = '约球详情';
 
@@ -666,6 +667,8 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
     });
 
     Route::any('/seeking/join/{id}', function ($id) {
+        MobileLayout::$activeService = 'seeking';
+
         $seeking = Seeking::with('Hall')->findOrFail($id);
         $seeking instanceof Seeking && 1;
 
@@ -697,6 +700,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
     });
 
     Route::get('/seeking/order/pay/{id}', function ($id) {
+        MobileLayout::$activeService = 'seeking';
         MobileLayout::$previousUrl = URL::previous();
 
         $orders = SeekingOrder::whereId($id)->get();

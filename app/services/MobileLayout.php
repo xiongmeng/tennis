@@ -9,7 +9,7 @@ class MobileLayout{
     public static $services = array(
 //        'seeking' => array(
 //            'url' => '/seeking/list',
-//            'label' => '约球'
+//            'label' => '约球畅打'
 //        ),
         'reserve' => array(
             'url' => '/mobile_home/reserve/recommend',
