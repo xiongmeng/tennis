@@ -220,21 +220,15 @@ function option_hall_stat()
     );
 }
 
-function user_roles(User $user = null)
+function option_roles()
 {
-    static $roles = null;
-    if ($roles === null) {
-        empty($user) && $user = Auth::getUser();
-        if (!empty($user)) {
-            $roles = $user->roles;
-            if (count($roles) <= 0) {
-                $role = new Role();
-                $role->role_id = ROLE_USER;
-                $roles[] = $role;
-            }
-        }
-    }
-    return $roles;
+    return array(
+        ROLE_VISITOR => '游客',
+        ROLE_USER => '球友',
+        ROLE_HALL => '场馆',
+        ROLE_MGR => '管理员',
+        ROLE_DEVELOPER => '开发',
+    );
 }
 
 /**
@@ -520,4 +514,25 @@ function seeking_brief(Seeking $seeking, $title = '约球：')
         $seeking->personal_cost,
         $seeking->court_num
     );
+}
+
+function current_role($roleInput = null)
+{
+    $role = ROLE_VISITOR;
+    if(Auth::check()){
+        $user = Auth::getUser();
+        $roles = array_regroup_by_key($user->roles, 'role_id');
+
+        if($roleInput !== null){
+            if(!isset($roleInput, $roles)){
+                throw new Exception(sprintf('%s is not support!', $roleInput));
+            }
+            Session::put(SESSION_KEY_CURRENT_ROLE, $roleInput);
+        }
+
+        $recordRole = Session::get(SESSION_KEY_CURRENT_ROLE);
+        $role = isset($roles[$recordRole]) ? $recordRole : ROLE_VISITOR;
+    }
+
+    return $role;
 }

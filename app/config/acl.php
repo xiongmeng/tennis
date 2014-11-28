@@ -2,6 +2,14 @@
 
 return array(
     'headers' => array(
+        'nav_用户_首页' => array(
+            'label' => '首页',
+            'url' => '/'
+        ),
+        'nav_用户_场馆一览' => array(
+            'label' => '场馆一览',
+            'url' => '/user/hall/list'
+        ),
         'nav_即时订场（用户侧）' => array(
             'label' => '即时订场',
             'url' => '/hall_on_sale',
@@ -9,7 +17,7 @@ return array(
         'nav_我的订单' => array(
             'label' => '我的订单',
             'url' => '/instant_order_buyer',
-            ),
+        ),
         'nav_账户明细（用户侧）' => array(
             'label' => '账户明细',
             'url' => '/billing_buyer/account_balance',
@@ -63,6 +71,10 @@ return array(
                 'nav_微信用户列表' => array(
                     'label' => '微信用户列表',
                     'url' => '/wechat/list',
+                ),
+                'nav_角色设置' => array(
+                    'label' => '角色设置',
+                    'url' => '/role/setting',
                 ),
             )
         ),
@@ -142,12 +154,27 @@ return array(
         ROLE_HALL => array(
             'label' => '场馆',
             'name' => 'hall'
+        ),
+        ROLE_VISITOR => array(
+            'label' => '游客',
+            'name' => 'visitor',
+        ),
+        ROLE_DEVELOPER => array(
+            'label' => '开发',
+            'name' => 'developer'
         )
     ),
 
     'roles_headers' => array(
+        ROLE_VISITOR => array(
+            'nav_用户_首页',
+//            'nav_用户_场馆一览',
+        ),
         ROLE_USER => array(
-             'nav_即时订场（用户侧）', 'nav_我的订单', 'nav_账户明细（用户侧）'
+//            'nav_用户_场馆一览',
+            'nav_即时订场（用户侧）',
+            'nav_我的订单',
+            'nav_账户明细（用户侧）'
         ),
         ROLE_MGR => array(
             'nav_即时订单列表（管理员侧）',
@@ -173,6 +200,7 @@ return array(
             'nav_约球一级菜单',
             'nav_新建约球',
             'nav_约球列表',
+            'nav_角色设置',
         ),
         ROLE_HALL => array(
             'nav_已售场地列表（场馆侧）',

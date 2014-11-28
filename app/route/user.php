@@ -24,13 +24,19 @@ Route::get('/user', function(){
 
     $sexy = option_sexy();
 
-    if(Input::get('ajax') || Request::ajax()){
-        return rest_success(
-            array('users' => $users->toArray(), 'queries' => $queries));
-    }else{
-        return View::make('layout')->nest('content', 'user.user_mgr',
-            array('users' => $users, 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy));
-    }
+    return View::make('layout')->nest('content', 'user.user_mgr',
+        array('users' => $users, 'queries' => $queries, 'privileges' => $privileges, 'sexy' => $sexy));
+});
+
+Route::get('/user/search', function(){
+    $perPage = Input::get('per_page', 20);
+    $queries = Input::all();
+
+    $userModel = new User();
+    $users = $userModel->search($queries, $perPage, Input::get('relations', ''));
+    adjustTimeStamp($users);
+
+    return rest_success(array('users' => $users->toArray(), 'queries' => $queries));
 });
 
 Route::get('/account', function(){
@@ -141,4 +147,42 @@ Route::get('/wechat/list', function(){
 
     return View::make('layout')->nest(
         'content', 'user.wechat_user_list', array('wechatUsers' => $wechatUsers, 'queries' => $queries));
+});
+
+//设置角色
+Route::get('/role/setting', array('before' => 'auth', function(){
+    Layout::setHighlightHeader('nav_角色设置');
+    return View::make('layout')->nest('content', 'user.role_setting');
+}));
+
+/**
+ * 切换角色
+ */
+Route::any('/role/active', array('before' => 'auth', function(){
+    Layout::setHighlightHeader('nav_用户_首页');
+    $user = Auth::getUser();
+    return View::make('layout')->nest('content', 'user.role_active', array('roles' => $user->roles));
+}));
+
+/**
+ * 切换角色
+ */
+Route::any('/role/active/{roleId}', array('before' => 'auth', function($roleId){
+    Session::put(SESSION_KEY_CURRENT_ROLE, $roleId);
+    return Redirect::to('/');
+}));
+
+Route::post('role/save/{userId}/{roleId}', function($userId, $roleId){
+    $id = Input::get('id');
+    if(empty($id)){
+        $role = Role::create(array('role_id' => $roleId, 'user_id' => $userId));
+    }else{
+        $role = Role::whereId($id)->update(array('role_id' => $roleId, 'user_id' => $userId));
+    }
+    return rest_success($role);
+});
+
+Route::post('role/delete/{id}', function($id){
+    $res = Role::whereId($id)->delete();
+    return rest_success($res);
 });

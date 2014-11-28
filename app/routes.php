@@ -25,45 +25,41 @@ require_once 'route/seeking.php';
 
 Route::get('/', function () {
     if (Auth::check()) {
-        $roles = user_roles();
-        $role = $roles[0]->role_id;
-        if ($role == 1) {
+        $role = current_role();
+        if ($role == ROLE_USER) {
             return Redirect::to('hall_on_sale');
         }
-        if ($role == 2) {
+        if ($role == ROLE_MGR) {
             return Redirect::to('/reserve_order_mgr/book_pending');
         }
-        if ($role == 3) {
+        if ($role == ROLE_HALL) {
             return Redirect::to('/set_receive_sms_telephone');
         }
     } else {
+        Layout::setHighlightHeader('nav_用户_首页');
         return View::make('layout')->nest('content', 'login');
     }
 });
 
-View::creator('format.header', function ($view) {
-    if (Auth::check()) {
-        $user = Auth::getUser();
-        $roles = user_roles();
-        $roleIds = array();
-        foreach ($roles as $role) {
-            $roleIds[] = $role->role_id;
-        }
+View::creator('format.header', function (\Illuminate\View\View $view) {
+    $currentRole = current_role();
 
-        $headers = Config::get('acl.headers');
-        $allRolesHeaders = Config::get('acl.roles_headers');
-        $acl = array();
-        foreach ($allRolesHeaders as $roleId => $rolesHeaders) {
-            if (in_array($roleId, $roleIds)) {
-                $acl = array_merge($acl, $rolesHeaders);
-            }
-        }
-        $view->with('headers', $headers)->with('acl', $acl)->with('user', $user);
+    $headers = Config::get('acl.headers');
+    $allRolesHeaders = Config::get('acl.roles_headers');
+    $acl = $allRolesHeaders[$currentRole];
+    $arguments = array('acl' => $acl, 'headers' => $headers);
+
+    if (Auth::check()) {
+        $arguments['user'] = $user = Auth::getUser();
+        $arguments['roles'] = $user->roles;
     }
+
+    $view->with($arguments);
 });
 
 View::creator('layout', function (\Illuminate\View\View $view) {
-    $view->nest('header', 'format.header')->nest('copyright', 'format.copyright')->nest('breadcrumb', 'format.breadcrumb');
+    $view->nest('header', 'format.header')
+        ->nest('copyright', 'format.copyright')->nest('breadcrumb', 'format.breadcrumb');
 });
 
 Route::get('/home', function () {
@@ -90,8 +86,25 @@ Route::post('/logining', function () {
     $isNickLog = Auth::attempt(array('nickname' => $nickname, 'password' => $password));
     $isTeleLog = Auth::attempt(array('telephone' => $nickname, 'password' => $password));
     if ($isNickLog | $isTeleLog) {
+        $user = Auth::getUser();
+        $roles = $user->roles;
+
         $url = Session::get(SESSION_KEY_LOGIN_CALLBACK, '/');
-        return $redirect = Redirect::to($url);
+        $currentRole = current_role();
+        if($currentRole != ROLE_VISITOR){
+            return Redirect::to($url);
+        }else if(count($roles) < 2){
+            //设置合适的角色
+            $activeRole = ROLE_USER;
+            if(count($roles) > 0){
+                $activeRole = $roles[0]->role_id;
+            }
+            current_role($activeRole);
+
+            return Redirect::to($url);
+        }else{
+            return Redirect::to('/role/active');
+        }
     } else {
         echo '登陆失败';
     }

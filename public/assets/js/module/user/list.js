@@ -5,8 +5,12 @@ define(function (require) {
     require('rest');
     require('knockout_area');
 
-    return function (userList, queries) {
+    return function (userList, queries, cfg) {
         var self = this;
+        self.cfg = {
+            relations : null
+        };
+        $.extend(self.cfg, cfg);
 
         function initListFromJs(userList){
             self.userList.removeAll();
@@ -29,7 +33,9 @@ define(function (require) {
 
         self.search = function(){
             var queries = mapping.toJS(self.queries);
-            var defer = $.restGet('/user', queries);
+            cfg.relations && (queries['relations'] = cfg.relations);
+
+            var defer = $.restGet('/user/search', queries);
             defer.done(function(res, data){
                 initListFromJs(data.users.data);
             });

@@ -9,9 +9,13 @@
             <div class="top">
                 <div class="container">
                     <ul class="loginbar pull-right">
-                        <?php if (isset($user)) { ?>
-                            <li>欢迎:</li>
+                        <?php if (!empty($user)) { ?>
+                            <?php $roleTypes = option_roles();?>
+                            <li>欢迎 <?= $roleTypes[current_role()]?><?php if (!empty($roles) && count($roles) > 1) { ?>
+                                （<a href="/role/active">切换角色</a>）
+                            <?php } ?>:</li>
                             <li><a href="/login"><?php echo $user->nickname ?></a></li>
+
                             <li class="devider"></li>
                             <li><a href="/logout">退出登录</a></li>
                         <?php } ?>

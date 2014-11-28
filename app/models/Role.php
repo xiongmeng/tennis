@@ -18,7 +18,7 @@ class Role extends Eloquent implements UserInterface, RemindableInterface {
 
     protected $primaryKey = 'role_id';
 
-    protected $fillable = array('role_id');
+    protected $fillable = array('role_id', 'user_id');
 
     public function headers(){
         return $this->belongsToMany('Header', 'gt_relation_role_header', 'role_id', 'header_id');

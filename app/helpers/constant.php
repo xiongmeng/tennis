@@ -26,9 +26,12 @@ const RECHARGE_ASSIGN = 4;//充值已充到用户账户上 - 不知道有没有�
 
 const CACHE_PREFIX_VALID_CODE = 'valid_code_';
 
-const ROLE_USER = 1;//用户会员角色
+const ROLE_VISITOR = -1;//游客
+const ROLE_USER = 1;//球友
 const ROLE_MGR = 2;//管理员
 const ROLE_HALL = 3;//场馆角色
+const ROLE_DEVELOPER = 999; //开发角色
+
 
 const RESERVE_STAT_INIT =  0;  //初始化 - 草稿 - 待处理
 const RESERVE_STAT_UNPAY = 1; //待支付
@@ -149,4 +152,5 @@ const FINANCE_OPERATE_UNFREEZE = 4;   //解冻
 const FINANCE_PURPOSE_ACCOUNT = 1;//默认账户
 const FINANCE_PURPOSE_POINTS = 2;//积分
 
-const SESSION_KEY_LOGIN_CALLBACK = 'login_callback';
+const SESSION_KEY_LOGIN_CALLBACK = 'login_callback';    //登录成功后的回调地址
+const SESSION_KEY_CURRENT_ROLE = 'current_role';    //当前角色
