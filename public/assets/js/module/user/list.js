@@ -33,7 +33,7 @@ define(function (require) {
 
         self.search = function(){
             var queries = mapping.toJS(self.queries);
-            cfg.relations && (queries['relations'] = cfg.relations);
+            self.cfg.relations && (queries['relations'] = self.cfg.relations);
 
             var defer = $.restGet('/user/search', queries);
             defer.done(function(res, data){
