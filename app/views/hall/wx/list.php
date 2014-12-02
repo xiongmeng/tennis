@@ -87,7 +87,7 @@
                 name: '搜索场馆',
                 cfg: {
                     url: '/hall/search',
-                    per_page: 10
+                    per_page: 2
                 }
             },
             {
@@ -104,7 +104,10 @@
 
             tab.cfg && (hallList.cfg = $.extend(hallList.cfg, tab.cfg));
 
-            hallList.search();
+            hallList.data.removeAll();
+            if(tab.id != 'search'){
+                hallList.search();
+            }
         };
 
         hallList.queries.stat(<?= HALL_STAT_PUBlISH?>);

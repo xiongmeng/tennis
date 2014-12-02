@@ -91,9 +91,10 @@ define(function (require) {
             var defer = $.restGet(self.cfg.url, queries);
             defer.done(function (res, data) {
                 self.fillData(data);
-
-                self.inSearching(false);
             });
+            defer.always(function(){
+                self.inSearching(false);
+            })
         };
 
         self.pre = function () {

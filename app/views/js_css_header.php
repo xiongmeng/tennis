@@ -16,11 +16,11 @@
 <!--<script src="/mobile/js/ratchet.js"></script>-->
 
 <script type="text/javascript" src="/assets/plugins/seajs/sea.js"></script>
-<script type="text/javascript" src="/assets/js/seajs-config.js?201411261534"></script>
+<script type="text/javascript" src="/assets/js/seajs-config.js?201412022201"></script>
 <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
 
 <script type="text/javascript">
-    var jsVersion = '201411261534';
+    var jsVersion = '201412022201';
     seajs.config({
         paths: {
             plugin: '/assets/plugins',
