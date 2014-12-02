@@ -281,3 +281,38 @@ Route::get('/hall/active/list/{type}', function($type){
 
     return rest_success($halls->toArray());
 });
+
+Route::get('/hall/history', array('before'=>'auth', function(){
+    $userId= user_id();
+    $historyHalls = ReserveOrder::remember(CACHE_HOUR)->whereUserId($userId)->groupBy('hall_id')
+        ->orderBy(DB::raw('COUNT(1)'), 'desc')->limit(10)->get(array('hall_id', DB::raw('COUNT(1)')));
+    $historyHallIds = db_result_ids($historyHalls, 'hall_id');
+
+    $hallModel = new Hall();
+    $halls = $hallModel->search(array('ids' => $historyHallIds), 1000, Input::get('relations', ''), CACHE_LESS);
+
+    return rest_success($halls->toArray());
+}));
+
+Route::get('/hall/nearby', array('before'=>'auth', function(){
+    $halls = array();
+
+    $location = WXLocation::where('openid', '=', app_user_id())->orderBy('created_at', 'desc')->first();
+
+    if ($location) {
+        $lat = $location->lat;
+        $lon = $location->lon;
+        $nearbyHalls = DB::select('select `hall_id`,`long`,`lat`,ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) * SIN((`lat` * 3.1415) / 180 ) + COS((' . $lat . '* 3.1415) / 180 ) * COS((`lat` * 3.1415) / 180 ) * COS((' . $lon . ' * 3.1415) / 180 - (`long` * 3.1415) / 180 ) ) * 6380 as description from `gt_hall_tiny` as a join `gt_hall_map` as b on a.id=b.`hall_id` where
+                          a.`stat` =2 and
+                          b.`lat` > ' . $lat . '-1 and
+                          b.`lat` < ' . $lat . '+1 and
+                          b.`long` > ' . $lon . '-1 and
+                          b.`long` <  ' . $lon . '+1 order by description asc limit 7');
+        $nearbyHallIds = db_result_ids($nearbyHalls, 'hall_id');
+
+        $hallModel = new Hall();
+        $halls = $hallModel->search(array('ids' => $nearbyHallIds), 1000, Input::get('relations', ''), CACHE_LESS);
+    }
+
+    return rest_success($halls->toArray());
+}));

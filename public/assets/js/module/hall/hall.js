@@ -135,7 +135,6 @@ define(function (require) {
         ];
         self.hours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
 
-
         self.envelope = ko.observable(new ImageModel(hallData.envelope || {}));
         self.image = ko.observable(hallData.image);
         self.images = ko.observable();
@@ -171,6 +170,9 @@ define(function (require) {
                 return host + self.hall_images()[0].path();
             }
             return '';
+        });
+        self.head_wx_url = ko.computed(function(){
+            return 'http://wangqiuer.com/Images/weixinImage/CourtPic/' + self.id() + '.jpg';
         });
 
         self.area = ko.observable(hallData.area).extend({area:hallData});

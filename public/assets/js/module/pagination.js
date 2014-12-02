@@ -104,6 +104,7 @@ define(function (require) {
             doSearch(self.current_page() + 1);
         };
         self.search = function () {
+            self.data.removeAll();
             doSearch(1);
         };
         self.go = function(data){
