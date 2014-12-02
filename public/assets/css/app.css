@@ -1109,6 +1109,46 @@ i.style-switcher-btn-option:hover {
 
 }
 
+.hall{
+    border-radius: 5px !important;
+}
+
+.hall .head-img{
+    padding: 1px 0;
+}
+.hall .head-img .thumbnail{
+    margin: 1px;
+    padding: 3px;
+    background-color: #FFFFFF;
+    border: 1px solid #cccccc;
+}
+
+.hall .name{
+    color: #009A10;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.hall .description .title{
+    font-weight: bold;
+}
+
+.hall .price-standard{
+    font-weight: bold;
+}
+
+.hall .price-standard th{
+    background-color: #B1E1F5;
+}
+
+.hall .price-standard td{
+    background-color: #E0EBEF;
+}
+
+.hall .price-standard .vip{
+    color: #A50021;
+}
+
 .panel-body .item {
     /*border: 1px solid  lightgray;*/
     /*border-bottom: 1px  solid lightgray;*/

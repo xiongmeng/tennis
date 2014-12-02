@@ -1,5 +1,5 @@
 <?php if (!empty(Layout::$breadcrumb)) { ?>
-    <div class="breadcrumbs">
+    <div class="breadcrumbs margin-bottom-10">
         <div class="container">
             <ul class="pull-left breadcrumb">
                 <?php foreach (Layout::$breadcrumb as $index => $breadcrumb) { ?>

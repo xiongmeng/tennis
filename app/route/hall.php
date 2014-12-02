@@ -253,3 +253,31 @@ Route::get('/hall/register/list', array("before"=>'auth' ,function(){
     return View::make('layout')->nest('content', 'hall.register_list', array('registers' => $registers));
 
 }));
+
+Route::get('/hall/frontend/list', function(){
+    Layout::setHighlightHeader('nav_用户_场馆一览');
+
+    $queries = Input::all();
+
+    return View::make('layout')->nest('content', 'hall.frontend.list', array('queries' => $queries));
+});
+
+Route::get('/hall/search', function(){
+    $perPage = Input::get('per_page', 20);
+    $queries = Input::all();
+
+    $hallModel = new Hall();
+    $halls = $hallModel->search($queries, $perPage, Input::get('relations', ''), CACHE_LESS);
+
+    return rest_success($halls->toArray());
+});
+
+Route::get('/hall/active/list/{type}', function($type){
+    $activeHalls = HallActive::remember(CACHE_HOUR)->whereType($type)->get();
+    $activeHallIds = db_result_ids($activeHalls, 'hall_id');
+
+    $hallModel = new Hall();
+    $halls = $hallModel->search(array('ids' => $activeHallIds), 1000, Input::get('relations', ''), CACHE_LESS);
+
+    return rest_success($halls->toArray());
+});

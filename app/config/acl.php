@@ -8,7 +8,7 @@ return array(
         ),
         'nav_用户_场馆一览' => array(
             'label' => '场馆一览',
-            'url' => '/user/hall/list'
+            'url' => '/hall/frontend/list'
         ),
         'nav_即时订场（用户侧）' => array(
             'label' => '即时订场',
@@ -168,10 +168,10 @@ return array(
     'roles_headers' => array(
         ROLE_VISITOR => array(
             'nav_用户_首页',
-//            'nav_用户_场馆一览',
+            'nav_用户_场馆一览',
         ),
         ROLE_USER => array(
-//            'nav_用户_场馆一览',
+            'nav_用户_场馆一览',
             'nav_即时订场（用户侧）',
             'nav_我的订单',
             'nav_账户明细（用户侧）'

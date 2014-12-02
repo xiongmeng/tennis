@@ -112,16 +112,3 @@
 </div>
 
 <!--=== End Content ===-->
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        seajs.use('datetimePicker', function () {
-            $('.datepicker').datetimepicker({
-                format: 'yyyy-mm-dd',
-                language: 'zh-CN',
-                startView: 2,
-                minView: 2
-            });
-        });
-    });
-</script>

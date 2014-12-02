@@ -38,15 +38,18 @@ class Hall extends Eloquent {
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function Envelope(){
-        return $this->hasOne('HallImage', 'hall_id', 'image');
+        return $this->hasOne('HallImage', 'id', 'image');
     }
 
     public function Map(){
         return $this->hasOne('HallMap', 'hall_id');
     }
 
-    public function search($aQuery, $iPageSize = 20){
-        $query = Hall::leftJoin('gt_hall_court', 'gt_hall_tiny.id', '=', 'gt_hall_court.hall_id');
+    public function search($aQuery, $iPageSize = 20, $relations = array(), $remember = null)
+    {
+        is_string($relations) && ($relations = (strlen($relations) > 0) ? explode(',', $relations) : array());
+
+        $query = Hall::with($relations)->leftJoin('gt_hall_court', 'gt_hall_tiny.id', '=', 'gt_hall_court.hall_id');
         if(!empty($aQuery['id'])){
             $query->where('gt_hall_tiny.id', '=', $aQuery['id']);
         }
@@ -68,9 +71,20 @@ class Hall extends Eloquent {
         if(!empty($aQuery['stat'])){
             $query->where('gt_hall_tiny.stat', '=', $aQuery['stat']);
         }
-        return $query->orderBy('gt_hall_tiny.sort', 'desc')
+
+        $remember !== null && $query->remember($remember);
+
+        $halls = $query->orderBy('gt_hall_tiny.sort', 'desc')
             ->paginate($iPageSize, array('gt_hall_tiny.*',
                 'gt_hall_court.name as court_name', 'gt_hall_court.count as court_num'));
+
+        adjustTimeStamp($halls);
+
+        foreach($halls as $hall){
+            $hall->area = Area::area($hall->area_text, $hall->county, $hall->city, $hall->province);
+        }
+
+        return $halls;
     }
 
     public function generateUser($hallId, $username, $initPassword){

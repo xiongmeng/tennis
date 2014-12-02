@@ -152,7 +152,7 @@
                             <th>场地</th>
                         </tr>
                         </thead>
-                        <tbody data-bind="foreach: hallList">
+                        <tbody data-bind="foreach: data">
                             <tr data-bind="click: $parent.select,css:{success:id()==$root.reserveOrder.hall().id()}">
                                 <td><a data-bind="attr:{href:detail_url}, text:name" target="_blank"></a></td>
                                 <td data-bind="text:area"></td>
@@ -187,12 +187,12 @@
             model.userList.userList().length && model.reserveOrder.user(model.userList.userList()[0]);
         });
 
-        model.hallList = new HallList();
+        model.hallList = new HallList({per_page: 20, model: 'page'});
         model.hallList.select = function(hall){
             model.reserveOrder.hall(hall);
         };
-        model.hallList.hallList.subscribe(function(newValue){
-            model.hallList.hallList().length && model.reserveOrder.hall(model.hallList.hallList()[0]);
+        model.hallList.data.subscribe(function(newValue){
+            model.hallList.data().length && model.reserveOrder.hall(model.hallList.data()[0]);
         });
 
         ko.applyBindings(model, $('#workspace')[0]);

@@ -99,6 +99,7 @@ const HALL_ACTIVE_LATEST = 3; //最新
 
 const CACHE_DAY = 720;
 const CACHE_HOUR = 60;
+const CACHE_LESS = 10;
 
 const INTERVAL_SEEKING_PAY_EXPIRE = 15;//约球报名过期时间
 
