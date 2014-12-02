@@ -172,32 +172,16 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
         return View::make('mobile_layout')->nest('content', 'mobile.seeking_detail',
             array('seeking' => $seeking, 'orders' => $orders));
     });
-
-    Route::get('/hall/wx/list', function(){
-        MobileLayout::$activeService = 'reserve';
-
-        $types = array(
-            'recommend' => array(
-                'label' => '全部场馆',
-                'url' => '/mobile_home/reserve/recommend',
-            ),
-            'nearby' => array(
-                'label' => '附近场馆',
-                'url' => '/mobile_home/reserve/nearby',
-            ),
-            'ordered' => array(
-                'label' => '常订场馆',
-                'url' => '/mobile_home/reserve/ordered',
-            ),
-        );
-
-        return View::make('mobile_layout_hall')->nest('content', 'hall.wx.list', array());
-    });
 });
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'), function () {
     Route::get('/', function () {
         return Redirect::to('/mobile_home/reserve/recommend');
+    });
+
+    Route::get('/hall/wx/list', function(){
+        MobileLayout::$activeService = 'reserve';
+        return View::make('mobile_layout_hall')->nest('content', 'hall.wx.list', array());
     });
 
     Route::get('/mobile_home/instant', function () {

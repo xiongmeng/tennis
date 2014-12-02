@@ -284,19 +284,21 @@ Route::get('/hall/active/list/{type}', function($type){
 
 Route::get('/hall/history', array('before'=>'auth', function(){
     $userId= user_id();
-    $historyHalls = ReserveOrder::remember(CACHE_HOUR)->whereUserId($userId)->groupBy('hall_id')
+
+    $historyHalls = ReserveOrder::whereUserId($userId)->groupBy('hall_id')
         ->orderBy(DB::raw('COUNT(1)'), 'desc')->limit(10)->get(array('hall_id', DB::raw('COUNT(1)')));
-    $historyHallIds = db_result_ids($historyHalls, 'hall_id');
+    if($historyHalls->count() > 0){
+        $historyHallIds = db_result_ids($historyHalls, 'hall_id');
 
-    $hallModel = new Hall();
-    $halls = $hallModel->search(array('ids' => $historyHallIds), 1000, Input::get('relations', ''), CACHE_LESS);
+        $hallModel = new Hall();
+        $halls = $hallModel->search(array('ids' => $historyHallIds), 1000, Input::get('relations', ''), CACHE_LESS);
+        return rest_success($halls->toArray());
+    }
 
-    return rest_success($halls->toArray());
+    return rest_success(array());
 }));
 
 Route::get('/hall/nearby', array('before'=>'auth', function(){
-    $halls = array();
-
     $location = WXLocation::where('openid', '=', app_user_id())->orderBy('created_at', 'desc')->first();
 
     if ($location) {
@@ -312,7 +314,8 @@ Route::get('/hall/nearby', array('before'=>'auth', function(){
 
         $hallModel = new Hall();
         $halls = $hallModel->search(array('ids' => $nearbyHallIds), 1000, Input::get('relations', ''), CACHE_LESS);
+        return rest_success($halls->toArray());
     }
 
-    return rest_success($halls->toArray());
+    return rest_success(array());
 }));

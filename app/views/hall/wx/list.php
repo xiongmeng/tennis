@@ -17,13 +17,11 @@
 </header>
 
 <div class="content" style="margin-bottom: 50px;" data-bind="style:{'padding-top': curTab()!='search' ? '40px' :'80px'}">
-    <ul class="table-view hall-on-sale" data-bind="visible:total()<1" style="display: none">
+    <ul class="table-view hall-on-sale" data-bind="visible:total()<1 && !inSearching()" style="display: none">
         <li class="notice">
-            <!--ko switch: curTab()-->
-            <p data-bind="case.nearby">您还没有同意上传地理位置信息哦！</p>
-            <p data-bind="case.history">您还没有预订过场地哦！</p>
-            <p data-bind="case.search">木有找见合适的场馆哦！</p>
-            <!--/ko-->
+            <p data-bind="visible:curTab()=='nearby'">您还没有同意上传地理位置信息哦！</p>
+            <p data-bind="visible:curTab()=='history'">您还没有预订过场地哦！</p>
+            <p data-bind="visible:curTab()=='search'">木有找见合适的场馆哦！</p>
         </li>
     </ul>
     <ul class="table-view hall-on-sale" data-bind="foreach: data, visible:total()>0" style="display: none">

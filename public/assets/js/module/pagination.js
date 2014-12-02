@@ -62,12 +62,11 @@ define(function (require) {
         self.inSearching = ko.observable(false);
 
         self.fillData = function (pagination) {
-            self.current_page(pagination.current_page);
-            self.last_page(pagination.last_page);
-            self.per_page(pagination.per_page);
-            self.total(pagination.total);
-            self.from(pagination.from);
-            self.to(pagination.to);
+            self.current_page(pagination.current_page || 1);
+            self.last_page(pagination.last_page || 1);
+            self.total(pagination.total || 0);
+            self.from(pagination.from || 0);
+            self.to(pagination.to || 0);
 
             $.each(pagination.data || [], function (index, item) {
                 self.data.push(new dataModel(item));
