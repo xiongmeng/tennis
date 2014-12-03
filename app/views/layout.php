@@ -37,7 +37,7 @@
 
     <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
 
-    <?= require_once('seajs_config.php');?>
+    <?php require_once('seajs_config.php');?>
 </head>
 
 <body>
