@@ -15,22 +15,6 @@
 <!-- Include the compiled Ratchet JS -->
 <!--<script src="/mobile/js/ratchet.js"></script>-->
 
-<script type="text/javascript" src="/assets/plugins/seajs/sea.js"></script>
-<script type="text/javascript" src="/assets/js/seajs-config.js?201412022201"></script>
 <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
 
-<script type="text/javascript">
-    var jsVersion = '201412022201';
-    seajs.config({
-        paths: {
-            plugin: '/assets/plugins',
-            module: '/assets/js/module'
-        },
-        base: '/assets/js/module/',
-        charset: 'utf-8',
-        map: [
-            [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + jsVersion],
-            [/(.*\/mobile\/js\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + jsVersion]
-        ]
-    });
-</script>
+<?= require_once('seajs_config.php');?>

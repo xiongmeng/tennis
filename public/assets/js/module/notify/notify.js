@@ -3,7 +3,6 @@ define(function(require){
     var mapping = require('knockout_mapping');
     require('knockout_switch_case');
     require('rest');
-    require('bootbox');
 
     var option = {
         'submitUrl' : ''
@@ -47,10 +46,7 @@ define(function(require){
 
         self.send = function(){
             if(self.event() && self.channel() && self.object() && self.who() && self.msg()){
-                bootbox.confirm('确认要发送此通知吗？', function(result){
-                    if(!result){
-                        return ;
-                    }
+                if(confirm('确认要发送此通知吗？')){
                     var defer = $.restPost('/notify/send',
                         {'event' : self.event(), 'channel' : self.channel(),
                             'object' : self.object(), 'who' : self.who(), 'msg' : self.msg()});
@@ -61,7 +57,7 @@ define(function(require){
                     defer.fail(function(){
                         console.log(arguments);
                     });
-                });
+                }
             }
         };
 

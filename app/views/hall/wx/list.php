@@ -17,6 +17,7 @@
 </header>
 
 <div class="content" style="margin-bottom: 50px;" data-bind="style:{'padding-top': curTab()!='search' ? '40px' :'80px'}">
+
     <ul class="table-view hall-on-sale" data-bind="visible:total()<1 && !inSearching()" style="display: none">
         <li class="notice">
             <p data-bind="visible:curTab()=='nearby'">您还没有同意上传地理位置信息哦！</p>
@@ -58,9 +59,10 @@
         </li>
     </ul>
 
+    <p data-bind="text:inSearching() + ' '"></p>
+
     <button class="btn btn-primary btn-block from-button" data-ignore="push" style="display: none"
-            data-bind="visible:curTab()=='search', click:next, text:inSearching()?'正在加载， 请稍候...':'点击加载更多'">
-        正在加载， 请稍候...</button>
+            data-bind="visible:curTab()=='search', click:next, text:!inSearching()?'点击加载更多':'正在加载， 请稍候...'"></button>
     <button class="btn btn-primary btn-block from-button" style="display: none" disabled
             data-bind="visible:curTab()!='search' && inSearching(), text:inSearching()?'正在加载， 请稍候...':'点击加载更多'">
         正在加载， 请稍候...</button>
@@ -111,6 +113,10 @@
         };
 
         hallList.queries.stat(<?= HALL_STAT_PUBlISH?>);
+
+        hallList.nextText = ko.computed(function(){
+            return !hallList.inSearching()?'点击加载更多':'正在加载， 请稍候...';
+        });
 
         ko.applyBindings(hallList, $('#body')[0]);
 

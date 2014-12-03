@@ -2,7 +2,6 @@ define(function (require) {
     var ko = require('knockout');
     var mapping = require('knockout_mapping');
     require('rest');
-    require('bootbox');
     require('knockout_options');
 
 //    var User = require('user/user');

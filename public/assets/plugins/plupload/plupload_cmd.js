@@ -1,8 +1,6 @@
 define(function(require) {
     var plupload = require('./plupload.full.js');
-    var W = require('weiboyi');
     require('./uploadimages.css');
-    var alertMsg = W.alert;
 
     var imagesTpl = '<li class="upload_item js_item">' +
         '<div class="upload_item_wrap">' +
@@ -22,11 +20,17 @@ define(function(require) {
         '<a href="javascript:void(0)" class="js_removeitem uploadattach_remove">删除</a>' +
         '</li>';
 
+    function getAutoID(prefix) {
+        this.autoID = this.autoID || 0;
+        this.autoID++;
+        return (prefix || "weiboyiCmp") + this.autoID;
+    }
+
     function processAutoID($el) {
         if ($el.attr('id')) {
             return $el.attr('id')
         } else {
-            var id = W.getAutoID('plupload');
+            var id = getAutoID('plupload');
             $el.attr('id', id);
             return id;
         }
@@ -125,9 +129,9 @@ define(function(require) {
             clearTimeout(timer);
             timer = setTimeout(function() {
                 if (errors.length > 4) {
-                    alertMsg(errors.length + '个文件上传失败！', 'error');
+                    alert(errors.length + '个文件上传失败！', 'error');
                 } else {
-                    alertMsg(errors.join('<br/>'), 'error');
+                    alert(errors.join('<br/>'), 'error');
                 }
                 errors = [];
             }, 100);
@@ -198,7 +202,7 @@ define(function(require) {
                     settings.onitemschange.apply(self, [uploader, $list, result]);
                     return;
                 } else{
-                    alertMsg(r.error || '文件上传失败', 'error');
+                    alert(r.error || '文件上传失败', 'error');
                 }
             }
 

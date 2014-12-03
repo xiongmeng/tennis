@@ -35,28 +35,9 @@
     <!-- datePicker css-->
     <link rel="stylesheet" href="/assets/plugins/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
 
-    <script type="text/javascript" src="/assets/plugins/seajs/sea.js"></script>
-    <script type="text/javascript" src="/assets/js/seajs-config.js"></script>
     <script type="text/javascript" src="/assets/plugins/jquery-1.10.2.min.js"></script>
 
-    <script type="text/javascript">
-        seajs.config({
-            paths: {
-                plugin: '/assets/plugins',
-                module: '/assets/js/module'
-//                'module_common': '<{$UI_resources_site}>/js/module_common',
-//                lib: '<{$UI_resources_site}>/js/lib'
-            },
-            base: '/assets/js/module/',
-            charset: 'utf-8',
-            alias: {
-//                ueditor: '/js/lib/ueditor/1.2.6/ueditor_cmd.js'
-            },
-            map: [
-                [/(.*\/assets\/js\/module\/.*\.(?:css|js|tpl))(?:.*)$/i, '$1?' + '201411130929']
-            ]
-        });
-    </script>
+    <?= require_once('seajs_config.php');?>
 </head>
 
 <body>

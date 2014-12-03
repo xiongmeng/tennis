@@ -1,7 +1,6 @@
 define(function(require) {
     var ko = require('knockout');
     require('plupload');
-    require('fancybox');
 
     ko.bindingHandlers.plupload = {
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
@@ -36,7 +35,6 @@ define(function(require) {
                     target(pathArr.join(','));
                 },
                 onitemappend: function(up, $list, $item, filepath) {
-                    $item.find('.js_link').fancybox();
                     $item.find('img').imageScale({
                         height: 70,
                         width: 70

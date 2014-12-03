@@ -2,7 +2,6 @@ define(function (require) {
     var ko = require('knockout');
     var mapping = require('knockout_mapping');
     require('rest');
-    require('bootbox');
     require('knockout_plupload');
     require('knockout_area');
 
@@ -179,15 +178,12 @@ define(function (require) {
 
         self.generateUser = function () {
             var $user = mapping.toJS(self.user);
-            bootbox.confirm('确认要为此场馆添加用户吗？', function (result) {
-                if (!result) {
-                    return;
-                }
+            if(confirm('确认要为此场馆添加用户吗？')){
                 var defer = $.restPost('/hall/generateUser/' + self.id(), $user);
                 defer.done(function (res, data) {
                     window.location.reload();
                 });
-            });
+            }
         };
 
         self.saveMap = function () {
