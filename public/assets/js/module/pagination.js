@@ -94,7 +94,6 @@ define(function (require) {
             });
             defer.always(function(){
                 self.inSearching(false);
-                alert(1111);
             })
         };
 

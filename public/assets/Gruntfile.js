@@ -105,5 +105,5 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['cachebuster']);
+    grunt.registerTask('default', ['clean', 'transport', 'concat', 'uglify', 'cachebuster', 'clean']);
 }
