@@ -21,6 +21,8 @@ define(function (require) {
         self.data = ko.observableArray();
         self.queries = new queryModel({});
 
+        self.cacheData = ko.observableArray();
+
         function getPageRange(pages, start, end){
             for (i = start; i <= end; i++) {
                 pages.push({name:i});
@@ -70,6 +72,11 @@ define(function (require) {
 
             $.each(pagination.data || [], function (index, item) {
                 self.data.push(new dataModel(item));
+            });
+
+            self.cacheData.removeAll();
+            $.each(self.data(), function(index, item){
+                self.cacheData.push(item);
             });
 
             self.pages.removeAll();
