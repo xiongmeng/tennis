@@ -12,7 +12,7 @@ class MobileLayout{
 //            'label' => '约球畅打'
 //        ),
         'reserve' => array(
-            'url' => '/mobile_home/reserve/recommend',
+            'url' => '/hall/wx/list',
             'label' => '预约订场'
         ),
         'instant' => array(

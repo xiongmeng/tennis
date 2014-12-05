@@ -9,7 +9,7 @@
 </div>
 
 <header class="bar bar-standard bar-header-secondary" data-bind="visible:curTab()=='search',with:queries" style="display: none; border: 0">
-    <form style="display: inline" class="search" action="/mobile_home/reserve/recommend">
+    <form style="display: inline" class="search">
         <input style="width: 65%;font-size:15px;"
                type="search" class="pull-left" placeholder="请输入场馆名" data-bind="value:name">
         <input type="submit" class="btn btn-primary" data-bind="click: $root.search" value="search">

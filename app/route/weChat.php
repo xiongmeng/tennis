@@ -176,7 +176,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT']), function () {
 
 Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'), function () {
     Route::get('/', function () {
-        return Redirect::to('/mobile_home/reserve/recommend');
+        return Redirect::to('/hall/wx/list');
     });
 
     Route::get('/hall/wx/list', function(){
@@ -229,70 +229,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
     });
 
     Route::get('/mobile_home/reserve/{curType?}', function ($curType) {
-        MobileLayout::$activeService = 'reserve';
-
-        $types = array(
-            'recommend' => array(
-                'label' => '全部场馆',
-                'url' => '/mobile_home/reserve/recommend',
-            ),
-            'nearby' => array(
-                'label' => '附近场馆',
-                'url' => '/mobile_home/reserve/nearby',
-            ),
-            'ordered' => array(
-                'label' => '常订场馆',
-                'url' => '/mobile_home/reserve/ordered',
-            ),
-        );
-
-        $queries = Input::all();
-        $hallDbResults = array();
-        $halls = array();
-
-        if ($curType == 'recommend') {
-            $hallDbResults = Hall::with('HallPrices')->whereStat(2)
-                ->where(function (\Illuminate\Database\Eloquent\Builder $builder) use ($queries) {
-                    if (!empty($queries['hall_name'])) {
-                        $builder->where('name', 'like', '%' . $queries['hall_name'] . '%');
-                    }
-                })->get();
-        } else {
-            if ($curType == 'nearby') {
-                $location = WXLocation::where('openid', '=', app_user_id())->orderBy('created_at', 'desc')->first();
-                if ($location) {
-                    $lat = $location->lat;
-                    $lon = $location->lon;
-                    $Halls = DB::select('select `hall_id`,`long`,`lat`,ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) * SIN((`lat` * 3.1415) / 180 ) + COS((' . $lat . '* 3.1415) / 180 ) * COS((`lat` * 3.1415) / 180 ) * COS((' . $lon . ' * 3.1415) / 180 - (`long` * 3.1415) / 180 ) ) * 6380 as description from `gt_hall_tiny` as a join `gt_hall_map` as b on a.id=b.`hall_id` where
-                          a.`stat` =2 and
-                          b.`lat` > ' . $lat . '-1 and
-                          b.`lat` < ' . $lat . '+1 and
-                          b.`long` > ' . $lon . '-1 and
-                          b.`long` <  ' . $lon . '+1 order by description asc limit 7');
-                } else {
-                    $Halls = array();
-                }
-            } elseif ($curType == 'ordered') {
-                $user = Auth::getUser();
-                $Halls = ReserveOrder::whereUserId($user->user_id)->orderBy('event_date', 'desc')->select('hall_id')->distinct()->get();
-            }
-
-            $hallIds = array();
-            foreach ($Halls as $Hall) {
-                $hallIds[$Hall->hall_id] = $Hall->hall_id;
-            }
-
-            if (count($hallIds) > 0) {
-                $hallDbResults = Hall::with('HallPrices')->whereIn('id', $hallIds)->get();
-            }
-        }
-
-        foreach ($hallDbResults as $hallDbResult) {
-            $halls[$hallDbResult->id] = $hallDbResult;
-        }
-
-        return View::make('mobile_layout_hall')->nest('content', 'mobile.reserve_hall',
-            array('curType' => $curType, 'types' => $types, 'halls' => $halls, 'queries' => $queries));
+        return Redirect::to('/hall/wx/list');
     });
 
     Route::get('/mobile_buyer', function () {
