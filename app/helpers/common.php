@@ -493,7 +493,7 @@ function array_regroup_by_key(&$arrays, $key)
  * @param $hall Hall | array
  * @return string
  */
-function area_hall($hall)
+function hall_area($hall)
 {
     return Area::area($hall['area_text'], $hall['county'], $hall['city'], $hall['province']);
 }

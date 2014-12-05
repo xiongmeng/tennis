@@ -93,7 +93,7 @@ Route::get('/instant_order_seller', array('before' => 'auth', function () {
         array('instants' => $instants, 'queries' => $queries, 'states' => $states, 'userID' => $userID));
 }));
 
-Route::get('/hall_on_sale', array('before' => 'auth', function () {
+Route::get('/hall_on_sale', function () {
     Layout::setHighlightHeader('nav_即时订场（用户侧）');
 
     $queries = Input::all();
@@ -135,7 +135,7 @@ Route::get('/hall_on_sale', array('before' => 'auth', function () {
     return View::make('layout')->nest('content', 'instantOrder.hall_on_sale',
         array('queries' => $queries, 'hallPriceAggregates' => $hallPriceAggregates,
             'halls' =>$halls, 'dates' => $dates, 'hours' => $hours));
-}));
+});
 
 Route::get('/instant_order_buyer', array('before' => 'auth', function () {
     Layout::setHighlightHeader('nav_我的订单');

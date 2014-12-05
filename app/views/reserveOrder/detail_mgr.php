@@ -132,7 +132,7 @@
                 <div class="panel-body">
                     <p>名称： <a data-bind="attr:{href:detail_url}, text:name" target="_blank"></a></span></p>
 
-                    <p>地址： <span><?= area_hall($order['hall']) ?></span></p>
+                    <p>地址： <span><?= hall_area($order['hall']) ?></span></p>
 
                     <p>电话： <span data-bind="text:telephone"></span></p>
 

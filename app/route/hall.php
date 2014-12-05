@@ -262,6 +262,16 @@ Route::get('/hall/frontend/list', function(){
     return View::make('layout')->nest('content', 'hall.frontend.list', array('queries' => $queries));
 });
 
+Route::get('/hall/frontend/detail/{id}', function($id){
+    Layout::setHighlightHeader('nav_用户_场馆一览');
+    $hall = Hall::with(array('CourtGroup', 'HallMarkets', 'HallPrices', 'HallImages', 'Map'))->findOrFail($id);
+    Layout::appendBreadCrumbs($hall->name);
+
+    $hall->area = hall_area($hall);
+
+    return View::make('layout')->nest('content', 'hall.frontend.detail', array('hall' => $hall));
+});
+
 Route::get('/hall/search', function(){
     $perPage = Input::get('per_page', 20);
     $queries = Input::all();

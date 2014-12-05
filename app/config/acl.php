@@ -169,6 +169,7 @@ return array(
         ROLE_VISITOR => array(
             'nav_用户_首页',
             'nav_用户_场馆一览',
+            'nav_即时订场（用户侧）',
         ),
         ROLE_USER => array(
             'nav_用户_场馆一览',

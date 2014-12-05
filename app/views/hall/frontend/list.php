@@ -51,6 +51,12 @@
                                     data-bind="text: name()+count()+'片'"></span></p>
                         </div>
 
+                        <div class="col-md-3">
+                            <a data-bind="attr:{href:'/hall/frontend/detail/'+id()}" class="btn btn-primary btn-lg margin-bottom-10 btn-block" target="_blank" >
+                                查看详细
+                            </a>
+                        </div>
+
                         <table class="table table-bordered margin-bottom-10 price-standard">
                             <thead>
                             <tr>
