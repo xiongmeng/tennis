@@ -6,7 +6,7 @@ return array(
      {
            "type":"view",
            "name":"预约订场",
-           "url":"http://wechat.gotennis.cn/mobile_home/reserve/recommend"
+           "url":"http://wechat.gotennis.cn/hall/wx/list"
        },
        {
            "type":"view",
