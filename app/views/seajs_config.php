@@ -48,7 +48,7 @@
     };
 </script>
 
-<?php if (debug()) { ?>
+<?php if (!debug()) { ?>
     <?php
     function getModuleHashInfo(){
         $hashInfo = json_decode(file_get_contents(public_path() . '/assets/hash_info.json'), true);
