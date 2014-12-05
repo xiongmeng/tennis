@@ -93,7 +93,7 @@
                 name: '搜索场馆',
                 cfg: {
                     url: '/hall/search',
-                    per_page: 20
+                    per_page: 10
                 }
             },
             {
