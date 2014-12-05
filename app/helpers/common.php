@@ -290,7 +290,7 @@ function user_id(User $user = null)
 
 function debug()
 {
-    return Config::get('app.debug');
+    return Config::get('app.debug') || Input::get('debug');
 }
 
 function app_id()
