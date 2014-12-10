@@ -111,8 +111,8 @@ require app_path().'/filters.php';
 
 
 DB::listen(function($sql, $bindings, $time){
-//    if(Config::get('app.debug')){
+    if(Config::get('app.debug')){
         Log::info(sprintf('sql:%s', substr($sql, 0, 1024)), array(
             'bindings' => count($bindings) > 100 ? 'binding is over 100' : $bindings, 'time'=> $time));
-//    }
+    }
 });
