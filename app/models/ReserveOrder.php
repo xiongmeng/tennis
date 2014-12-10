@@ -31,8 +31,10 @@ class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
         return $this->belongsTo('Hall', 'hall_id', 'id');
     }
 
-    public function search($aQuery, $iPageSize =20){
-        $query = ReserveOrder::leftJoin('gt_hall_tiny', 'gt_hall_tiny.id', '=', 'gt_order.hall_id')
+    public function search($aQuery, $iPageSize = 20, $relations = array(), $remember = null){
+        is_string($relations) && ($relations = (strlen($relations) > 0) ? explode(',', $relations) : array());
+
+        $query = ReserveOrder::with($relations)->leftJoin('gt_hall_tiny', 'gt_hall_tiny.id', '=', 'gt_order.hall_id')
             ->leftJoin('gt_user_tiny', 'gt_user_tiny.user_id', '=', 'gt_order.user_id');
         if(!empty($aQuery['id'])){
             $query->where('gt_order.id', '=', $aQuery['id']);
@@ -50,10 +52,19 @@ class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
             $query->where('gt_user_tiny.nickname', 'like', '%' . $aQuery['buyer_name'] . '%');
         }
         if(isset($aQuery['stat'])){
-            if(is_array($aQuery['stat'])){
-                $query->whereIn('gt_order.stat', $aQuery['stat']);
-            }else if(is_integer($aQuery['stat'])){
-                $query->where('gt_order.stat', '=', $aQuery['stat']);
+            $stat = $aQuery['stat'];
+            if(is_array($stat)){
+                $query->whereIn('gt_order.stat', $stat);
+            }else {
+                $query->where('gt_order.stat', '=', $stat);
+            }
+        }
+        if(isset($aQuery['user_id'])){
+            $userId = $aQuery['user_id'];
+            if(is_array($userId)){
+                $query->whereIn('gt_order.user_id', $userId);
+            }else {
+                $query->where('gt_order.user_id', '=', $userId);
             }
         }
         if(isset($aQuery['stat_ne'])){
@@ -63,9 +74,13 @@ class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
                 $query->where('gt_order.stat', '!=', $aQuery['stat_ne']);
             }
         }
-        return $query->orderBy('gt_order.id', 'desc')
+        $remember !== null && $query->remember($remember);
+
+        $reserves = $query->orderBy('gt_order.id', 'desc')
             ->paginate($iPageSize, array('gt_order.*',
                 'gt_hall_tiny.name as hall_name', 'gt_user_tiny.nickname as buyer_name'));
+
+        return $reserves;
     }
 
     public function generate($order){

@@ -19,22 +19,16 @@ require_once 'route/notify.php';
 require_once 'route/user.php';
 require_once 'route/hall.php';
 require_once 'route/instantOrder.php';
-require_once 'route/reserveOrder.php';
+require_once 'route/reserve.php';
 require_once 'route/area.php';
 require_once 'route/seeking.php';
 
 Route::get('/', function () {
     if (Auth::check()) {
         $role = current_role();
-        if ($role == ROLE_USER) {
-            return Redirect::to('hall_on_sale');
-        }
-        if ($role == ROLE_MGR) {
-            return Redirect::to('/reserve_order_mgr/book_pending');
-        }
-        if ($role == ROLE_HALL) {
-            return Redirect::to('/set_receive_sms_telephone');
-        }
+        $roles = Config::get('acl.roles');
+
+        return Redirect::to($roles[$role]['home']);
     } else {
         Layout::setHighlightHeader('nav_用户_首页');
         return View::make('layout')->nest('content', 'login');

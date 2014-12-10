@@ -23,7 +23,6 @@ Route::get('/reserve_order_mgr/{curTab}', array('before' => 'auth', function ($c
 
     $reserveModel = new ReserveOrder();
     $reserves = $reserveModel->search($queries);
-    adjustTimeStamp($reserves);
 
     $states = reserve_order_status_option();
     return View::make('layout')->nest('content', 'reserveOrder.order_mgr',
@@ -62,6 +61,27 @@ Route::any('/reserve/create', array('before' => 'auth', function () {
     return View::make('layout')->nest('content', 'reserveOrder.create_mgr', array('order' => $order));
 }));
 
+//前端用户创建预约订单
+Route::get('/reserve/frontend/create', array('before' => 'auth', function () {
+    Layout::setHighlightHeader('nav_用户_场馆一览');
+    Layout::appendBreadCrumbs('预订场地');
+    $order = Input::only(array('hall_id', 'event_date', 'start_time', 'end_time', 'court_num'));
+
+    $user = Auth::getUser();
+    $order['user'] = $user->toArray();
+
+    return View::make('layout')->nest('content',
+        'reserveOrder.frontend.create', array('order' => $order, 'halls' => option_published_halls()));
+}));
+
+//我的预约订单列表
+Route::get('/reserve/frontend/list', array('before' => 'auth', function () {
+    Layout::setHighlightHeader('nav_用户_预约订单列表');
+
+    $queries = Input::all();
+    return View::make('layout')->nest('content', 'reserveOrder.frontend.list', array('queries' => $queries));
+}));
+
 /**
  * 计算金额
  */
@@ -77,7 +97,7 @@ Route::any('/reserve/calculate', function () {
 /**
  * 更新订单
  */
-Route::any('/reserve/modify/{orderId}', array('before' => 'auth', function($orderId){
+Route::any('/reserve/modify/{orderId}', array('before' => 'auth', function ($orderId) {
     $order = ReserveOrder::findOrFail($orderId);
     Layout::setHighlightHeader('nav_预约订单一级列表');
     Layout::appendBreadCrumbs('修改订单');
@@ -86,7 +106,7 @@ Route::any('/reserve/modify/{orderId}', array('before' => 'auth', function($orde
         array('order' => $order));
 }));
 
-Route::post('/reserve/save', array('before' => 'auth', function(){
+Route::post('/reserve/save', array('before' => 'auth', function () {
     $orderId = Input::get('id');
 
     $orderInput = Input::only(array('user_id', 'hall_id', 'event_date', 'start_time', 'end_time', 'court_num'));
@@ -95,10 +115,10 @@ Route::post('/reserve/save', array('before' => 'auth', function(){
     $reserveOrder = new ReserveOrderManager();
     $result = $reserveOrder->calculate($orderInput);
 
-    if(!empty($orderId)){
+    if (!empty($orderId)) {
         ReserveOrder::whereId($orderId)->update($orderInput);
         $order = ReserveOrder::findOrFail($orderId);
-    }else{
+    } else {
         //生成订单
         $orderModel = new ReserveOrder();
         $order = $orderModel->create($orderInput);
@@ -113,20 +133,35 @@ Route::post('/reserve/save', array('before' => 'auth', function(){
 /**
  * 预约订单详情
  */
-Route::get('/reserve/detail/{orderId}', array('before' => 'auth', function($orderId){
+Route::get('/reserve/detail/{orderId}', array('before' => 'auth', function ($orderId) {
     $order = ReserveOrder::findOrFail($orderId);
-    adjustTimestampForOneModel($order);
     Layout::setHighlightHeader('nav_预约订单一级列表');
     Layout::appendBreadCrumbs('订单详情');
 
     $user = User::remember(CACHE_HOUR)->findOrFail($order['user_id']);
     $user->balance = cache_balance($order['user_id']);
-    adjustTimestampForOneModel($user);
     $order['user'] = $user->toArray();
 
     $hall = Hall::remember(CACHE_HOUR)->find($order['hall_id']);
-    adjustTimestampForOneModel($hall);
     $order['hall'] = $hall->toArray();
 
     return View::make('layout')->nest('content', 'reserveOrder.detail_mgr', array('order' => $order));
 }));
+
+Route::get('/reserve/search', function(){
+    $perPage = Input::get('per_page', 20);
+    $queries = Input::all();
+
+    if(current_role() != ROLE_MGR){
+        $queries['user_id'] = user_id();
+    }
+
+    if(isset($queries['stat']) && strlen($queries['stat'])<=0) {
+        unset($queries['stat']);
+    };
+
+    $reserveModel = new ReserveOrder();
+    $reserveOrders = $reserveModel->search($queries, $perPage, Input::get('relations', ''));
+
+    return rest_success($reserveOrders->toArray());
+});

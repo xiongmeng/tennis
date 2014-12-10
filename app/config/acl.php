@@ -10,13 +10,24 @@ return array(
             'label' => '场馆一览',
             'url' => '/hall/frontend/list'
         ),
+        'nav_用户_个人中心' => array(
+            'label' => '个人中心',
+            'url' => '#',
+            'children' => array(
+                'nav_用户_预约订单列表' => array(
+                    'label' => '我的预约订单',
+                    'url' => '/reserve/frontend/list',
+                ),
+                'nav_用户_即时订单列表' => array(
+                    'label' => '我的即时订单',
+                    'url' => '/instant_order_buyer',
+                ),
+            )
+        ),
+        'nav_用户_信息设置' => array(),
         'nav_即时订场（用户侧）' => array(
             'label' => '即时订场',
             'url' => '/hall_on_sale',
-        ),
-        'nav_我的订单' => array(
-            'label' => '我的订单',
-            'url' => '/instant_order_buyer',
         ),
         'nav_账户明细（用户侧）' => array(
             'label' => '账户明细',
@@ -144,16 +155,19 @@ return array(
 
     'roles' => array(
         ROLE_USER => array(
-            'label' => '会员',
-            'name' => 'user'
+            'label' => '球友',
+            'name' => 'user',
+            'home' => 'hall_on_sale',
         ),
         ROLE_MGR => array(
             'label' => '管理员',
-            'name' => 'mgr'
+            'name' => 'mgr',
+            'home' => '/reserve_order_mgr/book_pending',
         ),
         ROLE_HALL => array(
             'label' => '场馆',
-            'name' => 'hall'
+            'name' => 'hall',
+            'home' => '/set_receive_sms_telephone',
         ),
         ROLE_VISITOR => array(
             'label' => '游客',
@@ -161,7 +175,13 @@ return array(
         ),
         ROLE_DEVELOPER => array(
             'label' => '开发',
-            'name' => 'developer'
+            'name' => 'developer',
+            'home' => 'hall_on_sale',
+        ),
+        ROLE_TESTER => array(
+            'label' => '测试',
+            'name' => 'tester',
+            'home' => '/reserve/frontend/list',
         )
     ),
 
@@ -171,10 +191,19 @@ return array(
             'nav_用户_场馆一览',
             'nav_即时订场（用户侧）',
         ),
+        ROLE_TESTER => array(
+            'nav_用户_场馆一览',
+            'nav_即时订场（用户侧）',
+            'nav_用户_个人中心',
+            'nav_用户_即时订单列表',
+            'nav_用户_预约订单列表',
+            'nav_账户明细（用户侧）'
+        ),
         ROLE_USER => array(
             'nav_用户_场馆一览',
             'nav_即时订场（用户侧）',
-            'nav_我的订单',
+            'nav_用户_个人中心',
+            'nav_用户_即时订单列表',
             'nav_账户明细（用户侧）'
         ),
         ROLE_MGR => array(

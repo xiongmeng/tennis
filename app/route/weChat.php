@@ -290,7 +290,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
         $hallID = Input::get('hall_id');
         $hall = Hall::find($hallID);
         $user = Auth::getUser();
-        adjustTimestampForOneModel($user);
 
         $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
         $dates = array();
@@ -355,8 +354,6 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
             $orderDbResults = ReserveOrder::with('Hall')->where('user_id', '=', $user->user_id)->orderBy('event_date', 'desc')->get();
             $stat = '7';
         }
-
-        adjustTimeStamp($orderDbResults);
 
         $reserves = array();
         foreach ($orderDbResults as $orderDbResult) {

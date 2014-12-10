@@ -1,7 +1,7 @@
 <?php
 
 function href_hall_detail($hall_id, $hall_name){
-    return sprintf("<a target='_blank' href='/hall/detail/%s'>%s</a>", $hall_id, $hall_name);
+    return sprintf("<a target='_blank' href='/hall/mgr/detail%s'>%s</a>", $hall_id, $hall_name);
 }
 
 function href_user_detail($user_id, $user_name){

@@ -52,9 +52,16 @@
                         </div>
 
                         <div class="col-md-3">
-                            <a data-bind="attr:{href:'/hall/frontend/detail/'+id()}" class="btn btn-primary btn-lg margin-bottom-10 btn-block" target="_blank" >
+                            <a data-bind="attr:{href:'/hall/frontend/detail/'+id()}"
+                               class="btn btn-primary btn-lg margin-bottom-10 btn-block">
                                 查看详细
                             </a>
+                            <?php if (current_role() == ROLE_TESTER) { ?>
+                                <a data-bind="attr:{href:'/reserve/frontend/create?hall_id='+id()}"
+                                   class="btn btn-warning btn-lg margin-bottom-10 btn-block">
+                                    预订场地
+                                </a>
+                            <?php } ?>
                         </div>
 
                         <table class="table table-bordered margin-bottom-10 price-standard">

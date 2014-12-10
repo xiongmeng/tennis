@@ -31,7 +31,7 @@ const ROLE_USER = 1;//球友
 const ROLE_MGR = 2;//管理员
 const ROLE_HALL = 3;//场馆角色
 const ROLE_DEVELOPER = 999; //开发角色
-
+const ROLE_TESTER = 555; //测试角色
 
 const RESERVE_STAT_INIT =  0;  //初始化 - 草稿 - 待处理
 const RESERVE_STAT_UNPAY = 1; //待支付

@@ -17,7 +17,8 @@ define(function (require) {
                 {id: 1, name: '球友'},
                 {id: 2, name: '管理员'},
                 {id: 3, name: '场馆'},
-                {id: 999, name: '开发'}
+                {id: 999, name: '开发'},
+                {id: 555, name: '测试'}
             ]});
             self.created_at = ko.observable(role.created_at);
         };

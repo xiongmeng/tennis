@@ -72,7 +72,6 @@ class ReserveOrderManager
         $hallMarkets = HallMarket::with('HallPrice')->whereHallId($order['hall_id'])->get();
 
         $user = User::findOrFail($order['user_id']);
-        adjustTimestampForOneModel($user);
 
         $eventDate = strtotime(date('Y-m-d', $order['event_date']));
         $holiday = LegalHolidays::whereDate($eventDate)->first();

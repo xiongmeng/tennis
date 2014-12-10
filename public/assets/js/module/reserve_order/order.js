@@ -51,7 +51,7 @@ define(function (require) {
 
         };
 
-        function generateOrderData(){
+        self.generateOrderData = function(){
             var data = mapping.toJS(self);
             return {
                 id: data.id,
@@ -65,7 +65,7 @@ define(function (require) {
         }
 
         self.create = function () {
-            var defer = $.restPost('/reserve/save', generateOrderData());
+            var defer = $.restPost('/reserve/save', self.generateOrderData());
             defer.done(function(res, data){
                 self.callback_saved(data.order);
             });
@@ -76,7 +76,7 @@ define(function (require) {
         };
 
         self.calculate = function(){
-            var defer = $.restPost('/reserve/calculate', generateOrderData());
+            var defer = $.restPost('/reserve/calculate', self.generateOrderData());
             defer.done(function (res, data) {
                 self.cost(data.order.cost);
             });

@@ -1,5 +1,5 @@
 <?php
-Route::get('/hall/detail/{id}', array('before' => 'auth',function($id){
+Route::get('/hall/mgr/detail{id}', array('before' => 'auth',function($id){
     Layout::setHighlightHeader('nav_场馆列表（管理员）');
     $hall = Hall::with(array('CourtGroup', 'HallMarkets', 'HallPrices', 'Users', 'HallImages', 'Map'))->findOrFail($id);
     Layout::appendBreadCrumbs($hall->name);
@@ -10,6 +10,16 @@ Route::get('/hall/detail/{id}', array('before' => 'auth',function($id){
     return View::make('layout')->nest('content', 'hall.detail_mgr',
         array('hall' => $hall));
 }));
+
+//场馆详情-api
+Route::get('/hall/detail/{id}/{relations?}', function($id, $relations=""){
+    $relations = strlen(trim($relations)) > 0 ? explode(',', $relations) : array();
+
+    $hall = Hall::with($relations)->remember(CACHE_HOUR)->find($id);
+    $hall['area'] = hall_area($hall);
+
+    return rest_success($hall);
+});
 
 Route::get('/hall/list/{curTab}', array("before"=>'auth' ,function($curTab){
     Layout::setHighlightHeader('nav_场馆列表（管理员）');
@@ -47,7 +57,6 @@ Route::get('/hall/list/{curTab}', array("before"=>'auth' ,function($curTab){
 
     $hallModel = new Hall();
     $halls = $hallModel->search($queries);
-    adjustTimeStamp($halls);
 
     foreach($halls as $hall){
         $hall->is_latest = in_array($hall->id, $latestIds);
@@ -202,7 +211,7 @@ Route::any('/hall/create', array('before' => 'auth', function(){
         $data['stat'] = HALL_STAT_DRAFT;
         $hall = Hall::create($data);
 
-        return Redirect::to('/hall/detail/' . $hall->id);
+        return Redirect::to('/hall/mgr/detail' . $hall->id);
     }
     return View::make('layout')->nest('content', 'hall.create');
 }));

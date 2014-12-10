@@ -222,13 +222,13 @@ function option_hall_stat()
 
 function option_roles()
 {
-    return array(
-        ROLE_VISITOR => '游客',
-        ROLE_USER => '球友',
-        ROLE_HALL => '场馆',
-        ROLE_MGR => '管理员',
-        ROLE_DEVELOPER => '开发',
-    );
+    $roles = Config::get('acl.roles');
+
+    $options = array();
+    foreach($roles as $key => $role){
+        $options[$key] = $role['label'];
+    }
+    return $options;
 }
 
 /**
@@ -273,13 +273,6 @@ function adjustTimestampForOneModel($model)
     }
     empty($model->updated_at) && $model->updated_at = \Carbon\Carbon::now();
     empty($model->created_at) && $model->created_at = \Carbon\Carbon::now();
-}
-
-function adjustTimeStamp($models)
-{
-    foreach ($models as $model) {
-        adjustTimestampForOneModel($model);
-    }
 }
 
 function user_id(User $user = null)

@@ -78,8 +78,6 @@ class Hall extends Eloquent {
             ->paginate($iPageSize, array('gt_hall_tiny.*',
                 'gt_hall_court.name as court_name', 'gt_hall_court.count as court_num'));
 
-        adjustTimeStamp($halls);
-
         foreach($halls as $hall){
             $hall->area = Area::area($hall->area_text, $hall->county, $hall->city, $hall->province);
         }

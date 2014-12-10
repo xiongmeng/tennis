@@ -66,7 +66,7 @@ define(function (require) {
 
         self.id = ko.observable(hallData.id);
         self.detail_url = ko.computed(function(){
-            return '/hall/detail/' + self.id();
+            return '/hall/mgr/detail' + self.id();
         });
         self.name = ko.observable(hallData.name);
         self.code = ko.observable(hallData.code);

@@ -17,7 +17,6 @@ Route::get('/user', function(){
     $userModel = new User();
 
     $users = $userModel->search($queries);
-    adjustTimeStamp($users);
 
     $privileges = option_user_privilege();
     $privileges[''] = '会员类型';
@@ -34,7 +33,6 @@ Route::get('/user/search', function(){
 
     $userModel = new User();
     $users = $userModel->search($queries, $perPage, Input::get('relations', ''));
-    adjustTimeStamp($users);
 
     return rest_success(array('users' => $users->toArray(), 'queries' => $queries));
 });

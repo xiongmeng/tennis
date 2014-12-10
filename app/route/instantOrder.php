@@ -138,7 +138,7 @@ Route::get('/hall_on_sale', function () {
 });
 
 Route::get('/instant_order_buyer', array('before' => 'auth', function () {
-    Layout::setHighlightHeader('nav_我的订单');
+    Layout::setHighlightHeader('nav_用户_即时订单列表');
 
     $queries = Input::all();
     $user = Auth::getUser();
