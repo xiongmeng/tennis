@@ -3,6 +3,7 @@
 //支持的最大天数-目前是一周内的
 const WORKTABLE_SUPPORT_DAYS_LENGTH = 7;
 const MGR_WORKTABLE_SUPPORT_DAYS_LENGTH = 8;
+const RESERVE_SUPPORT_DAYS_LENGTH = 8;
 
 
 const RECHARGE_CALLBACK_PAY_INSTANT_ORDER = 1;
@@ -153,5 +154,8 @@ const FINANCE_OPERATE_UNFREEZE = 4;   //解冻
 const FINANCE_PURPOSE_ACCOUNT = 1;//默认账户
 const FINANCE_PURPOSE_POINTS = 2;//积分
 
+const PAY_GOOD_RESERVE_ORDER = 'ReserveOrder'; //支付过程中的预约订单
+
 const SESSION_KEY_LOGIN_CALLBACK = 'login_callback';    //登录成功后的回调地址
 const SESSION_KEY_CURRENT_ROLE = 'current_role';    //当前角色
+

@@ -293,7 +293,7 @@ Route::group(array('domain' => $_ENV['DOMAIN_WE_CHAT'], 'before' => 'weChatAuth'
 
         $weekdayOption = array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
         $dates = array();
-        for ($i = 0; $i < WORKTABLE_SUPPORT_DAYS_LENGTH; $i++) {
+        for ($i = 0; $i < RESERVE_SUPPORT_DAYS_LENGTH; $i++) {
             $time = strtotime("+$i day");
             $dates[] = array('id' => $time,
                 'name' => sprintf('%s（%s）', date('m月d日', $time), $weekdayOption[date('w', $time)]));
