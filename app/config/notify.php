@@ -140,7 +140,8 @@ return array(
         //网站创建预约订单后的管理员短信通知
         NOTIFY_TYPE_ORDER_NOTICE => array(
             'who' => function ($reserve_order_id, $channel) {
-                    return '15210489872';
+                    return '17710241439';
+//                    return '15210489872';
                 },
             'msg' => function ($reserve_order_id, $channel) {
                     $order = cache_reserve_order($reserve_order_id);
