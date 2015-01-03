@@ -39,6 +39,9 @@ class ReserveOrder extends Eloquent implements \Finite\StatefulInterface{
         if(!empty($aQuery['id'])){
             $query->where('gt_order.id', '=', $aQuery['id']);
         }
+        if(!empty($aQuery['hall_id'])){
+            $query->where('gt_order.hall_id', '=', $aQuery['hall_id']);
+        }
         if(!empty($aQuery['hall_name'])){
             $query->where('gt_hall_tiny.name', 'like', '%' . $aQuery['hall_name'] . '%');
         }

@@ -15,18 +15,31 @@ Route::get('/reserve_order_mgr/{curTab}', array('before' => 'auth', function ($c
     $queries = Input::all();
     if ($curTab == 'book_pending') {
         $queries['stat'] = 0;
-    } else if (isset($queries['stat']) && strlen($queries['stat']) > 0) {
-        $queries['stat'] = intval($queries['stat']);
+    } else if (isset($queries['stat'])) {
+        if (strlen($queries['stat']) > 0) {
+            $queries['stat'] = intval($queries['stat']);
+        }else{
+            unset($queries['stat']);
+        }
     }
     //默认不展示预订失败的单子
     empty($queries['stat']) && $queries['stat_ne'] = RESERVE_STAT_FAILED;
 
     $reserveModel = new ReserveOrder();
     $reserves = $reserveModel->search($queries);
+    $publishedHalls = option_published_halls();
 
     $states = reserve_order_status_option();
     return View::make('layout')->nest('content', 'reserveOrder.order_mgr',
-        array('reserves' => $reserves, 'queries' => $queries, 'states' => $states, 'curTab' => $curTab, 'tabs' => $tabs));
+        array('halls' => $publishedHalls, 'reserves' => $reserves, 'queries' => $queries, 'states' => $states, 'curTab' => $curTab, 'tabs' => $tabs));
+}));
+
+//我的预约订单列表
+Route::get('/reserve/mgr/list', array('before' => 'auth', function () {
+    Layout::setHighlightHeader('nav_预约订单列表（管理员）');
+
+    $queries = Input::all();
+    return View::make('layout')->nest('content', 'reserveOrder.frontend.list', array('queries' => $queries));
 }));
 
 Route::get('/reserve/operate/{id?}/{operate?}', array('before' => 'auth', function ($id, $operate) {
@@ -148,15 +161,15 @@ Route::get('/reserve/detail/{orderId}', array('before' => 'auth', function ($ord
     return View::make('layout')->nest('content', 'reserveOrder.detail_mgr', array('order' => $order));
 }));
 
-Route::get('/reserve/search', function(){
+Route::get('/reserve/search', function () {
     $perPage = Input::get('per_page', 20);
     $queries = Input::all();
 
-    if(current_role() != ROLE_MGR){
+    if (current_role() != ROLE_MGR) {
         $queries['user_id'] = user_id();
     }
 
-    if(isset($queries['stat']) && strlen($queries['stat'])<=0) {
+    if (isset($queries['stat']) && strlen($queries['stat']) <= 0) {
         unset($queries['stat']);
     };
 

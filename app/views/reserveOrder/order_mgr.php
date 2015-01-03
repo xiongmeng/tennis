@@ -22,9 +22,13 @@
                     array('class' => 'form-control datepicker', 'placeholder' => '活动结束时间'))?>
             </div>
             <div class="form-group">
-                <?=
-                Form::input('text', 'hall_name', null,
-                    array('class' => 'form-control', 'placeholder' => '场馆名称'))?>
+                <input type="hidden" name="hall_id" id="hall_id" value="<?= isset($queries['hall_id']) ? $queries['hall_id'] : ''?>">
+                <select class="combobox form-control" name="hall_id" >
+                    <option></option>
+                    <?php foreach($halls as $hall){?>
+                        <option value="<?= $hall->id?>" <?= isset($queries['hall_id']) && $hall->id == $queries['hall_id'] ? 'selected' : '';?>><?= $hall->name?></option>
+                    <?php }?>
+                </select>
             </div>
             <div class="form-group">
                 <?=
@@ -115,13 +119,14 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        seajs.use('datetimePicker', function () {
+        seajs.use(['datetimePicker', 'combobox'], function () {
             $('.datepicker').datetimepicker({
                 format: 'yyyy-mm-dd',
                 language: 'zh-CN',
                 startView: 2,
                 minView: 2
             });
+            $('.combobox').combobox({target: $('#hall_id')});
         });
     });
 </script>
