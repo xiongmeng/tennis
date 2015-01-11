@@ -20,6 +20,13 @@ App::after(function ($request, $response) {
     //
 });
 
+Event::listen('auth.login', function(User $user)
+{
+    $user->logontime = time();
+    $user->logonnum += 1;
+    $user->save();
+});
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Filters

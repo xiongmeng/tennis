@@ -39,6 +39,7 @@
                         <tr>
                             <th width="8%">ID</th>
                             <th width="10%">注册时间</th>
+                            <th width="10%">登录信息</th>
                             <th width="8%">类型</th>
                             <th width="20%">昵称</th>
                             <th width="10%">联系电话</th>
@@ -57,6 +58,7 @@
                                         } else if ($user->created_at) {
                                             echo substr($user->created_at, 0, 10);
                                         }?></td>
+                                    <td><?= $user->logonnum?>|<?= date('m-d H:i',$user->logontime)?></td>
                                     <td><?= isset($privileges[$user->privilege]) ? $privileges[$user->privilege] : '普通会员'; ?></td>
                                     <td><?= href_user_detail($user->user_id, $user->nickname);?></td>
                                     <td><?= $user->telephone; ?></td>
