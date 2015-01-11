@@ -75,7 +75,6 @@
         <p class="content-padded">您当前可用余额<mark data-bind="text: balance"></mark>元</p>
         <p class="content-padded">您还需要支付<mark data-bind="text: needRecharge"></mark>元</p>
         <div class="content-padded">
-            <a class="btn btn-positive btn-block" data-bind="attr:{href: adviseForwardUrl}" data-ignore="push">支付宝支付</a>
             <a class="btn btn-positive btn-block" data-bind="click:$root.goToWXPay,text:$root.wxPayText,enable:$root.ttl()<=0" data-ignore="push">微信支付</a>
         </div>
     </div>

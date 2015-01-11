@@ -1,6 +1,5 @@
 <div class="content page-notice">
     <p class="description">充值<mark> <?=$recharge->money ?></mark>元即可升级为金卡会员</p>
-    <a class="btn btn-positive btn-block" href="<?= $noMoney['adviseForwardUrl'] ?>" data-ignore="push">支付宝支付</a>
     <a class="btn btn-positive btn-block"
        data-bind="click:$root.goToWXPay,text:$root.wxPayText,enable:$root.ttl()<=0"
        data-ignore="push">微信支付</a>
