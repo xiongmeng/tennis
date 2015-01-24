@@ -205,6 +205,7 @@
         if(order.hall_id){
             model.hallList.queries.id(order.hall_id);
             model.hallList.search();
+            model.hallList.queries.id("");
         }
     });
 

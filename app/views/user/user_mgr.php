@@ -33,7 +33,7 @@
                     <h3 class="panel-title"><i class="icon-li"></i></h3>
                 </div>
 
-                <div class="panel-body">
+                <div class="panel-body table-responsive">
                     <table class="table">
                         <thead>
                         <tr>
