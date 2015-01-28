@@ -135,8 +135,10 @@ Route::post('/reserve/save', array('before' => 'auth', function () {
         //生成订单
         $orderModel = new ReserveOrder();
         $order = $orderModel->create($orderInput);
-        //发送消息
-        Notify::sendWithBusiness(NOTIFY_TYPE_ORDER_NOTICE, $order->id);
+        if(current_role() != ROLE_MGR){
+            //发送消息
+            Notify::sendWithBusiness(NOTIFY_TYPE_ORDER_NOTICE, $order->id);
+        }
     }
     $result['order'] = $order;
 
